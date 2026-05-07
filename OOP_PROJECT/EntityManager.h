@@ -28,12 +28,14 @@ public:
 	void addEnemy(Enemy* e);
 	void addSoldier(Soldier* s);
 
-	void update(float frameTime);
+	void update(float frameTime, const World& w);
 	void render(RenderWindow& w, Camera& cam);
 
 	void checkProjectileWorldCollisions(World& w);
 	void checkProjectileCollisions();
 	void checkEnemyPlayerCollisions();
+
+	void checkGrenadeBlast();
 	
 	Soldier* getSoldierCurr(int index) const;
 };

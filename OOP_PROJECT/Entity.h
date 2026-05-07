@@ -1,20 +1,21 @@
 #pragma once
 #include <iostream>
-#include <fstream>
-#include <cmath>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
 #include "World.h"
 #include "Camera.h"
+
+using namespace sf;
+
 class Entity
 {
 protected:
 	float x, y;
 	float velocityX = 0;
 	float velocityY = 0;
-	sf::Sprite sprite;
-	sf::Texture texture;
+	Sprite sprite;
+	Texture texture;
 	float width, height;
 	bool isActive = true;
 public:

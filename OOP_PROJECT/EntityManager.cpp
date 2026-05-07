@@ -1,5 +1,5 @@
 #include "EntityManager.h"
-
+#include "Soldier.h"
 EntityManager::EntityManager() {
 	for (int i = 0; i < MAX_PROJECTILES; i++) 
 		projectiles[i] = nullptr;
@@ -10,29 +10,29 @@ EntityManager::EntityManager() {
 
 }
 
-Soldier* EntityManager::getSoldier(int index) const {
+Soldier* EntityManager::getSoldierCurr(int index) const {
 	if (index<0|| index >= MAX_SOLDIERS) return nullptr;
 	return  soldiers[index];
 }
 
 
 void EntityManager::addSoldier(Soldier* c) {
-	if (soldierCount >= MAX_SOLDIERS) return;
+	if (sCount >= MAX_SOLDIERS) return;
 	for (int i = 0; i < MAX_SOLDIERS;i++) {
 		if (!soldiers[i]) {
 			soldiers[i] = c;
-			soldierCount += 1;
+			sCount += 1;
 			return;
 		}
 	}
 }
 
-void EntityManager::update(float frameTime) {
+void EntityManager::update(float frameTime, const World& w) {
 	
 	//updating soldiers
 	for (int i = 0; i < MAX_SOLDIERS;i++) {
 		if (soldiers[i] && soldiers[i]->getActive()) {
-			soldiers[i]->update(frameTime);
+			soldiers[i]->update(frameTime, w);
 		}
 	}
 
@@ -40,12 +40,7 @@ void EntityManager::update(float frameTime) {
 	for (int i = 0; i < MAX_ENEMIES;i++) {
 		if (!enemies[i]) continue;
 		if (enemies[i]->getActive()) {
-			enemies[i]->update(frameTime);
-		}
-		if (!enemies[i]->getActive()) {
-			delete enemies[i];
-				enemies[i] = nullptr;
-			eCount -= 1;
+			enemies[i]->update(frameTime, w);
 		}
 	}
 
@@ -54,10 +49,24 @@ void EntityManager::update(float frameTime) {
 		if (!projectiles[i]) continue;
 
 		if (projectiles[i]->getActive()) {
-			projectiles[i]->update(frameTime);
+			projectiles[i]->update(frameTime, w);
 		}
+	}
 
-		if (!projectiles[i]->getActive()) {
+	checkGrenadeBlast();
+
+	//updating enemies
+	for (int i = 0; i < MAX_ENEMIES;i++) {
+		if (enemies[i] && !enemies[i]->getActive()) {
+			delete enemies[i];
+			enemies[i] = nullptr;
+			eCount -= 1;
+		}
+	}
+
+	//projectiles
+	for (int i = 0; i < MAX_PROJECTILES;i++) {
+		if (projectiles[i] && !projectiles[i]->getActive()) {
 			delete projectiles[i];
 			projectiles[i] = nullptr;
 			pCount -= 1;
@@ -100,12 +109,17 @@ void EntityManager::checkProjectileWorldCollisions(World& w) {
 void EntityManager::checkProjectileCollisions() {
 	if (coolDown > 0) return;
 
-	for (int i = 0; i < MAX_SOLDIERS;i++) {
-		if (!soldiers[i] || !soldiers[i]->getActive() || !soldiers[i]->isAlive()) continue;
+	for (int i = 0; i < MAX_PROJECTILES;i++) {
+		if (!projectiles[i] || !projectiles[i]->getActive() || !projectiles[i]->isFromPlayer()) continue;
 
 		for (int j = 0; j < MAX_ENEMIES;j++) {
 			if (!enemies[j] || !enemies[j]->getActive()) {
 				continue;
+			}
+
+			if (projectiles[i]->collision(*enemies[j])) {
+				enemies[j]->onHitByProjectile(projectiles[i]);
+				if (!projectiles[i]->getActive()) break;
 			}
 
 		}
@@ -113,6 +127,63 @@ void EntityManager::checkProjectileCollisions() {
 
 	}
 }
+
+void EntityManager::checkGrenadeBlast() {
+	for (int i = 0; i < MAX_PROJECTILES;i++) {
+		if (!projectiles[i] || !projectiles[i]->didExplode() || projectiles[i]->getBlastRadius() <= 0) {
+			continue;
+		}
+
+		//blast locaiton
+		float bx = projectiles[i]->getX() + projectiles[i]->getWidth() / 2.f;
+		float by = projectiles[i]->getY() + projectiles[i]->getHeight() / 2.f;
+		float bradius = projectiles[i]->getBlastRadius();
+		int   dmg = projectiles[i]->getDamage();
+
+		for (int j = 0; j < MAX_ENEMIES;j++) {
+			if (!enemies[j] || !enemies[j]->getActive() || !enemies[j]->isAlive()) {
+				continue;
+			}
+
+			//finding the distance from the bomb
+			float ex = enemies[j]->getX() + enemies[j]->getWidth() / 2.f;
+			float ey = enemies[j]->getY() + enemies[j]->getHeight() / 2.f;
+
+			float diffX = bx - ex;
+			float diffY = by - ey;
+
+			float modSquared= (diffX * diffX) + (diffY * diffY);
+
+			if (modSquared < (bradius * bradius)) {
+				enemies[j]->onHitByProjectiles(projectiles[i]);
+			}
+
+		}
+
+		//check for the soldiers too
+		for (int j = 0; j < MAX_SOLDIERS;j++) {
+			if (!soldiers[j] || !soldiers[j]->getActive() || !soldiers[j]->isAlive()) {
+				continue;
+			}
+
+			//finding the distance from the bomb
+			float sx = soldiers[j]->getX() + soldiers[j]->getWidth() / 2.f;
+			float sy = soldiers [j] ->getY() + soldiers[j]->getHeight() / 2.f;
+
+			float diffX = bx - sx;
+			float diffY = by - sy;
+
+			float modSquared = (diffX * diffX) + (diffY * diffY);
+
+			if (modSquared < (bradius * bradius)) {
+				soldiers[j]->takeDamage(dmg/2);
+			}
+		}
+	}
+}
+
+
+
 
 EntityManager::~EntityManager() {
 	for (int i = 0; i < MAX_PROJECTILES; i++)
