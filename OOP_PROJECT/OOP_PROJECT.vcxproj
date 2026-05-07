@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -133,7 +133,41 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BallisticProjectile.cpp" />
+    <ClCompile Include="DamagableEntity.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameStateManager.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="OOP_PROJECT.cpp" />
+    <ClCompile Include="PlayState.cpp" />
+    <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="ProjectileWeapon.cpp" />
+    <ClCompile Include="Soldier.cpp" />
+    <ClCompile Include="StraightProjectile.cpp" />
+    <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="World.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BallisticProjectile.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="DamagableEntity.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameState.h" />
+    <ClInclude Include="GameStateManager.h" />
+    <ClInclude Include="MenuState.h" />
+    <ClInclude Include="PlayState.h" />
+    <ClInclude Include="Projectile.h" />
+    <ClInclude Include="ProjectileWeapon.h" />
+    <ClInclude Include="Soldier.h" />
+    <ClInclude Include="StraightProjectile.h" />
+    <ClInclude Include="Voxel.h" />
+    <ClInclude Include="Weapon.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,0 +1,27 @@
+#include "Game.h"
+#include "MenuState.h"
+using namespace sf;
+
+Game::Game() : window(VideoMode(1600, 900), "Metal Slug", Style::Close) {
+	window.setFramerateLimit(60);
+	stateManager.changeState(new MenuState(stateManager));
+}
+
+void Game::run() {
+	while (window.isOpen()) {
+		float frameTime = clock.restart().asSeconds();
+
+		Event ev;
+		while (window.pollEvent(ev)) {
+			if (ev.type == Event::Closed) window.close();
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) window.close();
+
+		stateManager.handleInput();
+		stateManager.update(frameTime);
+		window.clear();
+		stateManager.render(window);
+		window.display();
+	}
+}
