@@ -12,6 +12,11 @@ void DamagableEntity::applyGravity(float frameTime) {
 		velocityY = 0;
 	}
 }
+void DamagableEntity::setPosition(float X, float Y) {// its purpose is to fix the char position when in vehicle to vehicle position
+	x = X;
+	y = Y;
+
+}
 
 void DamagableEntity::checkGroundCollisions(const World& w) {
 	

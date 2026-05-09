@@ -45,6 +45,8 @@ public:
 	bool isTouchingLeftWall(const World& w) const;  // left edge only
 	bool isTouchingRightWall(const World& w) const; // right edge only
 
+	
+
 
 	virtual ~Entity() = default;
 

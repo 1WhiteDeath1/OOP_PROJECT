@@ -30,6 +30,7 @@ public:
 	bool isAlive() const { return currentHp > 0;}
 	int getHp() const { return currentHp; }
 	int getMaXHp() const { return maxHp; }
+	void setPosition(float X, float Y);
 	virtual ~DamagableEntity() = default;
 
 };

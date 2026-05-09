@@ -2,13 +2,13 @@
 
 
 World::World() {
-	texture.loadFromFile("SPRITE/blocks/grass_block_side");
+	texture.loadFromFile("SPRITE/blocks/grass_block_side");// loads the grass texture
 
     //check
     for (int col = 0; col < WIDTH; col++) {
         setTile(11, col, 1, true, false);
         setTile(12, col, 1, true, false);
-        setTile(13, col, 1, true, false);
+        setTile(13, col, 1, true, false);// sets the 11, 12 ,13 row to grass
     }
 
     // Platform — like their lvl[7][3..9]='#'
@@ -22,7 +22,7 @@ World::World() {
 }
 
 void World::setTile(int row, int col, int type, bool solid, bool water) {
-    Voxel& v = grid[row][col];
+    Voxel& v = grid[row][col];// v refers to the same whole grid[row][col]
     v.type = type;
     v.blockX = col;
     v.blockY = row;
