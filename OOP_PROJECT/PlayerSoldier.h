@@ -42,19 +42,40 @@ public:
 		if (characterType == 0) {//marco
 			fireRateMultiplier = 1.25;
 			grenadeCount = 8;
+
+			texture.loadFromFile("Sprites/marco.png");
+			sprite.setTexture(texture);
+			sprite.setScale((32 / texture.getSize().x), 48 / texture.getSize().y);
 		}
 		else if (characterType == 1) {//tarma
 			speedMultiplier = 0.8;
+
+			texture.loadFromFile("Sprites/tarma.png");
+			sprite.setTexture(texture);
+			sprite.setScale((32 / texture.getSize().x), 48 / texture.getSize().y);
+
 		}
 		else if (characterType == 2) { //eri
 			grenadeCount = 20;
 			fireRateMultiplier = 0.8;
+			texture.loadFromFile("Sprites/eri.png");
+			sprite.setTexture(texture);
+			sprite.setScale((32 / texture.getSize().x), 48 / texture.getSize().y);
+
 		}
 		else if (characterType == 3) {//fio
 			fireRateMultiplier = 1.1;
 			bonusAmmoPercent = 50;
 			grenadeCount = 8;
+
+			texture.loadFromFile("Sprites/fio.png");
+			sprite.setTexture(texture);
+			sprite.setScale((32 / texture.getSize().x), 48 / texture.getSize().y);
+
 		}
+
+
+	
 
 	}
 	~PlayerSoldier() {

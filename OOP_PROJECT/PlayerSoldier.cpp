@@ -65,6 +65,13 @@ const char* PlayerSoldier::getName() const
 
 void PlayerSoldier::render(sf::RenderWindow& window, const Camera& cam)
 {
-	sprite.setPosition(cam.toScreenX(x), cam.toScreenY(y));
+	if (facingRight) {
+		sprite.setScale(-(32/texture.getSize().x), 48/texture.getSize().y);
+		sprite.setPosition(cam.toScreenX(x)+width, cam.toScreenY(y));
+	}
+	else {
+		sprite.setScale((32 / texture.getSize().x), 48 / texture.getSize().y);
+		sprite.setPosition(cam.toScreenX(x), cam.toScreenY(y));
+	}
 	window.draw(sprite);
 }

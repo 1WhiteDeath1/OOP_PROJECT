@@ -4,53 +4,58 @@
 MenuState::MenuState(GameStateManager& gsm) : gsManager(gsm) {}
 
 void MenuState::enter() {
-	font.loadFromFile("C:/Windows/Fonts/arial.ttf");
+	bgTex.loadFromFile("Sprites/menu_bg.png");
+	bgSprite.setTexture(bgTex);
+	bgSprite.setPosition(0, 0);
+	bgSprite.setScale(1600 / bgTex.getSize().x, 900 / bgTex.getSize().y);
 
-	title.setFont(font);
-	title.setString("MENTAL SLUG");
-	title.setCharacterSize(72);
-	title.setFillColor(Color::Yellow);
-	title.setPosition(550, 200);
+	survivalTex.loadFromFile("Sprites/menu_survival.png");
+	survivalSprite.setTexture(survivalTex);
 
-	option1.setFont(font);
-	option1.setString("Survival Mode");
-	option1.setCharacterSize(36);
-	option1.setPosition(620, 390);
+	exitTex.loadFromFile("Sprites/menu_exit.png");
+	exitSprite.setTexture(exitTex);
 
-	option2.setFont(font);
-	option2.setString("Campaign Mode");
-	option2.setCharacterSize(36);
-	option2.setPosition(620, 490);
 
 }
 
 void MenuState::handleInput() {
 	if (!keyHeld) {
 		if (Keyboard::isKeyPressed(Keyboard::Up)) {
-			choice= 0;
+			choice = choice <= 0 ? 0 : choice - 1;
 			keyHeld = true;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Down)) {
-			choice = 1;
+			choice = choice>=1 ? 1 : choice +1;
 			keyHeld = true;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Return)) {
-			gsManager.changeState(new PlayState(gsManager));
+			keyHeld = true;
+			if (choice == 0) gsManager.changeState(new PlayState(gsManager));
+			else {
+			}
 		}
 	}
 
-	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
-		!sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&
-		!sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+	if (!Keyboard::isKeyPressed(Keyboard::Up) &&
+		!Keyboard::isKeyPressed(Keyboard::Down) &&
+		!Keyboard::isKeyPressed(Keyboard::Return)) {
 		keyHeld = false;
 	}
 }
 
 void MenuState::render(RenderWindow& w) {
-	w.draw(title);
-	option1.setFillColor(choice == 0 ? Color::White : Color(150, 150, 150));
-	option2.setFillColor(choice == 1 ? Color::White : Color(150, 150, 150));
-	w.draw(option1);
-	w.draw(option2);
+	w.draw(bgSprite);
+	
+
+	survivalSprite.setScale(choice == 0 ? 0.3 : 0.2, choice == 0 ? 0.3 : 0.2);
+	exitSprite.setScale(choice == 1 ? 0.3 : 0.2, choice == 1 ? 0.3 : 0.2);
+
+
+	float choicesXPOS = 800;
+	survivalSprite.setPosition(choicesXPOS - 500 / 2, 300);
+	exitSprite.setPosition(choicesXPOS - 500 / 2, 550);
+
+	w.draw(survivalSprite);
+	w.draw(exitSprite);
 
 }

@@ -1,23 +1,24 @@
 #include "World.h"
+#include <random>
+
+int World::clamp(int val, int min, int max) {
+    if (val < min) return min;
+    if (val > max) return max;
+    return val;
+}
 
 
 World::World() {
-	texture.loadFromFile("SPRITE/blocks/grass_block_side");// loads the grass texture
+    stoneTex.loadFromFile("Sprites/stone.png");
+    snowTex.loadFromFile("Sprites/snow.png");
+    grassTex.loadFromFile("Sprites/grass.png");
+    dirtTex.loadFromFile("Sprites/dirt.png");
+    sandTex.loadFromFile("Sprites/sand.png");
+    waterTex.loadFromFile("Sprites/water.png");
 
-    //check
-    for (int col = 0; col < WIDTH; col++) {
-        setTile(11, col, 1, true, false);
-        setTile(12, col, 1, true, false);
-        setTile(13, col, 1, true, false);// sets the 11, 12 ,13 row to grass
-    }
-
-    // Platform — like their lvl[7][3..9]='#'
-    for (int col = 20; col < 28; col++)
-        setTile(8, col, 1, true, false);
-
-    // Another platform
-    for (int col = 40; col < 50; col++)
-        setTile(6, col, 1, true, false);
+    generateAerial();
+    generatePlains();
+    generateAquatic();
 
 }
 
@@ -28,12 +29,99 @@ void World::setTile(int row, int col, int type, bool solid, bool water) {
     v.blockY = row;
     v.isSolid = solid;
     v.isWater = water;
-    v.sprite.setTexture(texture);
+
+    switch (type) {
+    case 1:
+        v.sprite.setTexture(stoneTex); 
+        break;
+    case 2:
+        v.sprite.setTexture(grassTex);
+        break;
+    case 3:
+        v.sprite.setTexture(dirtTex);
+        break;
+    case 4:
+        v.sprite.setTexture(sandTex);
+        break;
+    case 5:
+        v.sprite.setTexture(waterTex);
+        break;
+    case 6:
+        v.sprite.setTexture(snowTex);
+        break;
+
+   }
+
+
+
     v.sprite.setScale(
-        (float)CELL / texture.getSize().x,
-        (float)CELL / texture.getSize().y
+        (float)CELL / v.sprite.getTexture()->getSize().x,
+        (float)CELL / v.sprite.getTexture()->getSize().y
     );
 }
+
+
+
+
+
+
+
+
+void World::generateAerial() {
+    int surfaceHeight = 8;
+    for (int i = 0; i < aerialEND;i++) {
+        int rigidness = (rand() % 7) - 3;
+        surfaceHeight += rigidness;
+        surfaceHeight = clamp(surfaceHeight, 3, 18);
+
+        for (int j = surfaceHeight; j< HEIGHT;j++) {
+            setTile(j, i, 1, true, false);
+        }
+    }
+}
+
+void World::generatePlains() {
+    int surfaceHeight = 20;
+
+    for (int i = aerialEND; i < plainsEND;i++) {
+        int rigidness = (rand() % 3) - 1;
+        surfaceHeight += rigidness;
+        surfaceHeight = clamp(surfaceHeight, 17, 25);
+
+        //grass on the surface, and beneath it dirt, smarty ants
+
+        setTile(surfaceHeight, i, 2, true, false);
+
+        for (int j = surfaceHeight+1; j < HEIGHT;j++) {
+            setTile(j, i, 3, true, false);
+        }
+    }
+}
+
+
+void World::generateAquatic() {
+    for (int i = plainsEND; i < WIDTH;i++) {
+       
+        int bed = 33 + (rand() % 4);
+        bed = clamp(bed, 33, HEIGHT - 2);
+
+        for (int j = bed; j < HEIGHT;j++) {
+            setTile(j, i, 4, true, false);
+        }
+
+        for (int j = seaLEVEL; j < bed; j++) {
+            setTile(j, i, 5, false, true);
+        }
+    }
+}
+
+
+
+
+
+
+
+
 
 void World::render(RenderWindow& w, const Camera& cam) {
     for (int i = 0; i <HEIGHT; i++) {
