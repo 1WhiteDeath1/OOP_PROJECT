@@ -63,16 +63,13 @@
     <ClCompile Include="BallisticProjectile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WeaponsEach.cpp">
+    <ClCompile Include="GroundVehiclecpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerSoldier.cpp">
+    <ClCompile Include="AerialVehicle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TransformativeState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="AquaticVehicle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -128,16 +125,16 @@
     <ClInclude Include="BallisticProjectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WeaponsEach.h">
+    <ClInclude Include="Vehicle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerSoldier.h">
+    <ClInclude Include="GroundVehicle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TransformativeState.h">
+    <ClInclude Include="AerialVehicle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="AquaticVehicle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
