@@ -2,6 +2,7 @@
 
 
 void PlayerSoldier::update(float frameTime, const World& w) {
+	meleeActive = false;
 	if (currState->getType() != 0) {
 		stateTimer -= frameTime;
 		if (stateTimer <= 0) {
@@ -62,7 +63,8 @@ const char* PlayerSoldier::getName() const
 	return "Unknown";
 }
 
-void PlayerSoldier::render(sf::RenderWindow& window, Camera& cam)
+void PlayerSoldier::render(sf::RenderWindow& window, const Camera& cam)
 {
+	sprite.setPosition(cam.toScreenX(x), cam.toScreenY(y));
 	window.draw(sprite);
 }

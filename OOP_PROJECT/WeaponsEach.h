@@ -3,7 +3,101 @@
 #include "StraightProjectile.h"
 #include "BallisticProjectile.h"
 #include "DamagableEntity.h"
+#include "ProjectileWeapon.h"
 using namespace sf;
+
+
+
+
+class Pistol : public ProjectileWeapon {
+public:
+	Pistol() : ProjectileWeapon(0.25, 0, true) {};
+
+	Projectile* fire(float x, float y, float angle, bool facingRight) override {
+		if (!canFire()) return nullptr;
+		coolDown = fireRate;
+		float dx, dy;
+		getDirection(angle, facingRight, dx, dy);
+		return new Bullet(x, y, dx, dy, true, 3);
+	}
+
+};
+
+
+class HeavyMachineGun : public ProjectileWeapon {
+public: 
+	HeavyMachineGun(int ammo) :ProjectileWeapon(0.125, ammo, false) {}
+
+	Projectile* fire(float x, float y, float angle, bool facingRight) override {
+		if (!canFire()) return nullptr;
+
+		coolDown = fireRate;
+		currAmmo -= 1;
+		float dx, dy;
+		getDirection(angle, facingRight, dx, dy);
+		return new Bullet(x, y, dx, dy, true, 3);
+	}
+};
+
+class RocketLauncher : public ProjectileWeapon {
+public: 
+	RocketLauncher(int ammo) : ProjectileWeapon(2, ammo, false) {}
+
+	Projectile* fire(float x, float y, float angle, bool facingRight) override{
+		if (!canFire()) return nullptr;
+
+		coolDown = fireRate;
+		currAmmo -= 1;
+		float dx, dy;
+		getDirection(angle, facingRight, dx, dy);
+		return new Rocket(x, y, dx, dy, true, 5);
+	}
+};
+
+class FlameShot : public ProjectileWeapon {
+public:
+	FlameShot(int ammo) : ProjectileWeapon(0.05, ammo, false) {}
+
+	Projectile* fire(float x, float y, float angle, bool facingRight) override {
+		if (!canFire()) return nullptr;
+
+		coolDown = fireRate;
+		currAmmo -= 1;
+		float dx, dy;
+		getDirection(angle, facingRight, dx, dy);
+		return new FireStream(x, y, dx, dy, true, 2);
+	}
+};
+
+class LaserGun : public ProjectileWeapon {
+public:
+	LaserGun(int ammo) : ProjectileWeapon(0.5, ammo, false) {}
+
+	Projectile* fire(float x, float y, float angle, bool facingRight) override {
+		if (!canFire()) return nullptr;
+
+		coolDown = fireRate;
+		currAmmo -= 1;
+		float dx, dy;
+		getDirection(angle, facingRight, dx, dy);
+		return new LaserBeam(x, y, dx, dy, true);
+	}
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class Bullet:public StraightProjectile
 {
@@ -11,7 +105,7 @@ private:
 	static Texture tex;
 	static bool texIsLoaded;
 public:
-	Bullet(float x, float y, float dx, float dy, float fromPlayer) : StraightProjectile(x, y, 10, 5, 20, fromPlayer, dx, dy, 900) {
+	Bullet(float x, float y, float dx, float dy, bool fromPlayer, int damage =20) : StraightProjectile(x, y, 10, 5, damage, fromPlayer, dx, dy, 900) {
 		if (!texIsLoaded)
 		{
 			tex.loadFromFile("Sprites/bullet.png");
@@ -38,7 +132,7 @@ private:
 
 	float blastRadius = 100;
 public:
-	Rocket(float x, float y, float dx, float dy, float fromPlayer) : StraightProjectile(x, y, 20, 10, 80, fromPlayer, dx, dy, 700) {
+	Rocket(float x, float y, float dx, float dy, bool fromPlayer, int damage = 80) : StraightProjectile(x, y, 20, 10, damage, fromPlayer, dx, dy, 700) {
 		if (!texIsLoaded)
 		{
 			tex.loadFromFile("Sprites/rocket.png");
@@ -63,8 +157,8 @@ class FireStream :public StraightProjectile {
 	float life = 0;
 	float lifeTime = 0.4;
 public:
-	FireStream(float x, float y, float dx, float dy, bool fromPlayer) : StraightProjectile(x, y, 12.f, 12.f,
-		8,
+	FireStream(float x, float y, float dx, float dy, bool fromPlayer, int damage=8) : StraightProjectile(x, y, 12.f, 12.f,
+		damage,
 		fromPlayer,
 		dx, dy,
 		350.f)

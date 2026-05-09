@@ -26,9 +26,9 @@ public:
 		delete vehicle;
 	}
 
-	void handleInput(float frameTime, const World& w);
+	void handleInput(float frameTime, const World& w, EntityManager& eManager);
 	void update(float frameTime, const World& w);
-	void render(RenderWindow& windowm, Camera& cam);
+	void render(RenderWindow& windowm, const Camera& cam);
 
 	void switchCharacter();
 	void mountVehicle(PlayerVehicle* v);

@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "World.h"
 #include "Projectile.h"
+#include "Player.h"
 using namespace sf;
 
 
@@ -15,7 +16,7 @@ class EntityManager
 
 	Projectile* projectiles[MAX_PROJECTILES];
 	Enemy* enemies[MAX_ENEMIES];
-	Soldier* soldiers[MAX_SOLDIERS];
+	Player* player = nullptr;
 
 	int pCount = 0;
 	int eCount = 0;
@@ -26,17 +27,16 @@ public:
 	~EntityManager();
 	void addProjectile(Projectile* p);
 	void addEnemy(Enemy* e);
-	void addSoldier(Soldier* s);
+	void setPlayer(Player* p) { player = 0; }
 
 	void update(float frameTime, const World& w);
-	void render(RenderWindow& w, Camera& cam);
+	void render(RenderWindow& w, const Camera& cam);
 
 	void checkProjectileWorldCollisions(World& w);
 	void checkProjectileCollisions();
 	void checkEnemyPlayerCollisions();
+	void checkMeleeCollisions();
 
 	void checkGrenadeBlast();
-	
-	Soldier* getSoldierCurr(int index) const;
 };
 

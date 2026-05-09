@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include "EntityManager.h"
 void Player::switchCharacter() {
 	int attempts = 0;
 	do {
@@ -18,7 +18,7 @@ void Player::update(float frameTime, const World& w) {
 }
 
 
-void Player::handleInput(float frameTime, const World& w) {
+void Player::handleInput(float frameTime, const World& w, EntityManager& eManager) {
 	if (Keyboard::isKeyPressed(Keyboard::Z)) {
 		switchCharacter();
 	}
@@ -45,11 +45,13 @@ void Player::handleInput(float frameTime, const World& w) {
 
 		//firing
 		if (Keyboard::isKeyPressed(Keyboard::Space)) {
-			curr->fire();
+			Projectile* p=curr->fire();
+			if (p) eManager.addProjectile(p);
 		}
 		//gernading
 		if (Keyboard::isKeyPressed(Keyboard::E)) {
-			curr->throwGrenade();
+			Projectile* g = curr->throwGrenade();
+			if (g) eManager.addProjectile(g);
 		}
 		//meleeing
 		if (Keyboard::isKeyPressed(Keyboard::R)) {
@@ -63,7 +65,7 @@ void Player::handleInput(float frameTime, const World& w) {
 
 	}
 
-void Player::render(RenderWindow& window, Camera& cam) {
+void Player::render(RenderWindow& window, const Camera& cam) {
 	if (isPiloting()) {
 		vehicle->render(window, cam);
 	}

@@ -1,6 +1,8 @@
 #pragma once
 #include "Soldier.h"
 #include "TransformativeState.h"
+#include "ProjectileWeapon.h"
+#include "WeaponsEach.h"
 using namespace sf;
 class PlayerSoldier: public Soldier
 {
@@ -10,6 +12,7 @@ private:
 	bool powerUPActive;
 	float powerUPTimer;
 	bool isDead;
+	
 
 	float fireRateMultiplier;
 	float speedMultiplier;
@@ -32,6 +35,7 @@ public:
 		currLives = 2;
 		totalLives = 2;
 		grenadeCount = 10;
+		inventory[0] = new Pistol();;
 
 		//each character stats
 
@@ -64,7 +68,7 @@ public:
 	void infect(int type); //0 for undead and 1 for mummy
 
 	void update(float frameTime, const World& w) override;
-	void render(RenderWindow& window, Camera& cam) override;
+	void render(RenderWindow& window, const Camera& cam) override;
 
 	// character specific
 	int  getCharacterType() const { return characterType; }
@@ -79,7 +83,6 @@ public:
 	bool canUseMelee() const { if (characterType == 2) {
 		return false;
 	} return currState->canUseMelee(); }
-
 	Projectile* fire();
 
 
@@ -88,7 +91,25 @@ public:
 	void moveRight(float frameTime) { accelerate(walkSpeed * 3 * frameTime); };
 	void jump() { Soldier::jump(); };
 	void crouch(bool c) { Soldier:crouch(c); };
-	void throwGrenade();
-	void meleeAttack();
+
+
+	Projectile* throwGrenade() {
+		if (grenadeCount <= 0) return nullptr;
+		grenadeCount -= 1;
+		float spawnX = facingRight ? (x + width) : x;
+		float spawnY = y + height / 3;
+
+		float dx, dy;
+		ProjectileWeapon::getDirection(aimAngle, facingRight, dx, dy);
+		return new NormalGrenade(spawnX, spawnY, dx, dy, true);
+	}
+
+	void meleeAttack() {
+		if (!canUseMelee()) {
+			return;
+		}
+		meleeActive = true;
+	}
+	
 };
 

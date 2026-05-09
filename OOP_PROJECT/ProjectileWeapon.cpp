@@ -189,7 +189,7 @@ const float ProjectileWeapon::cos_values[91] = {
      0.7071f  // 45
 };
 
-void ProjectileWeapon::getDirection(float a, bool facingRight, float& x, float& y) const {
+void ProjectileWeapon::getDirection(float a, bool facingRight, float& x, float& y) {
     int angle = (int)a;
 
     if (angle < -45) angle = -45;

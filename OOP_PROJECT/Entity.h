@@ -21,7 +21,7 @@ protected:
 public:
 	Entity(float x, float y, float w, float h) : x(x), y(y), width(w), height(h) {}
 	virtual void update(float dt, const World& w) = 0;
-	virtual void render(sf::RenderWindow& window,  Camera& cam) = 0;
+	virtual void render(RenderWindow& window, const Camera& cam) = 0;
 
 
 	bool collision(const Entity& other) const {

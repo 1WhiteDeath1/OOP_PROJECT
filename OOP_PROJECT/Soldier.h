@@ -22,6 +22,8 @@ protected:
 	float aimAngle = 0;
 	float walkSpeed = 300;
 	float jumpStrength = 700;
+
+	bool meleeActive = false;
 public:
 	Soldier(float x, float y, float w, float h, int hp);
 	virtual ~Soldier();
@@ -68,4 +70,26 @@ public:
 	bool getIsCouching() const {
 		return isCrouching;
 	}
+	bool isMeleeActive() const {
+		return meleeActive; }
+
+
+
+	bool checkMeleeCollision(const Entity& target) const {
+
+
+		float Mx = facingRight ? (x + width) : (x - 50.f);
+		float mMidX = Mx + 25.f;
+		float mMidY = y + height / 2.f;
+		float tMidX = target.getX() + target.getWidth() / 2.f;
+		float tMidY = target.getY() + target.getHeight() / 2.f;
+
+		bool hitX = abs(mMidX - tMidX) < (25.f + target.getWidth() / 2.f);
+		bool hitY = abs(mMidY - tMidY) < (height / 2.f + target.getHeight() / 2.f);
+		return hitX && hitY;
+
+
+	}
+	
 };
+
