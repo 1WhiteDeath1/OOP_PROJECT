@@ -71,7 +71,7 @@ bool NormalGrenade::texIsLoaded = false;
 void NormalGrenade::update(float frameTime, const World& w) {
 	if (exploded) return;
 
-	fuseTimer - frameTime;
+	fuseTimer -= frameTime;
 	if (fuseTimer <= 0) {
 		explode();
 		return;
