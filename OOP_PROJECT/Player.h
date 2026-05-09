@@ -1,8 +1,8 @@
 #pragma once
 #include "PlayerSoldier.h"
-
+#include "PlayerVehicle.h"
 class World;
-class PlayerVehicle;
+
 class Player
 {
 private:
