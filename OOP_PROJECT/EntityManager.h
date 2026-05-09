@@ -27,7 +27,7 @@ public:
 	~EntityManager();
 	void addProjectile(Projectile* p);
 	void addEnemy(Enemy* e);
-	void setPlayer(Player* p) { player = 0; }
+	void setPlayer(Player* p) { player = p; }
 
 	void update(float frameTime, const World& w);
 	void render(RenderWindow& w, const Camera& cam);

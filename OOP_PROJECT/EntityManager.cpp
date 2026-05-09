@@ -187,15 +187,16 @@ void EntityManager::checkGrenadeBlast() {
 void EntityManager::checkMeleeCollisions() {
 	if (!player) return;
 	PlayerSoldier* currCharacter = player->getActive();
-	if (!currCharacter || !currCharacter->isMeleeActive()) {
-		return;
-		for (int j = 0; j < MAX_ENEMIES;j++) {
-			if (!enemies[j] || !enemies[j]->getActive()) {
-				continue;
-			}
-			if (currCharacter->checkMeleeCollision(*enemies[j])) {
-				enemies[j]->takeDamage(30);
-			}
+	if (!currCharacter || !currCharacter->isMeleeActive())
+		{
+			return;
+		}
+	for (int j = 0; j < MAX_ENEMIES;j++) {
+		if (!enemies[j] || !enemies[j]->getActive()) {
+			continue;
+		}
+		if (currCharacter->checkMeleeCollision(*enemies[j])) {
+			enemies[j]->takeDamage(30);
 		}
 	}
 }

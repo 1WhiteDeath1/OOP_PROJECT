@@ -90,7 +90,7 @@ public:
 	void moveLeft(float frameTime) { accelerate(-walkSpeed * 3 * frameTime); };
 	void moveRight(float frameTime) { accelerate(walkSpeed * 3 * frameTime); };
 	void jump() { Soldier::jump(); };
-	void crouch(bool c) { Soldier:crouch(c); };
+	void crouch(bool c) { Soldier::crouch(c); };
 
 
 	Projectile* throwGrenade() {
