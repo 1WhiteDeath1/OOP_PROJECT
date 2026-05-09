@@ -27,7 +27,7 @@ public:
 	virtual ~Soldier();
 
 	virtual void activePowerUp() = 0;
-	virtual char* getName() const = 0;
+	virtual const char* getName() const = 0;
 
 	void jump();
 	void crouch(bool c);

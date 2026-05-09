@@ -182,6 +182,27 @@ void EntityManager::checkGrenadeBlast() {
 	}
 }
 
+void EntityManager::checkEnemyPlayerCollisions(Player& player) {
+	PlayerSoldier* active = player.getActive();
+
+	for (int i = 0; i < eCount;i++) {
+		if (!enemies[i]0 > getActive()) continue;
+
+		if (active->collision(*enemies[i])) {
+			int type = enemies[i]->getEnemyType;
+
+			if (type == 1) {
+				active->infect(1);
+			}
+			else if (type == 2) {
+				active->infect(2);
+			}
+			else {
+				active->takeDamage(enemies[i]->getDamage());
+			}
+		}
+	}
+}
 
 
 

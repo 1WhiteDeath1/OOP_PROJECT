@@ -1,0 +1,43 @@
+#pragma once
+#include "PlayerSoldier.h"
+#include "PlayerVehicle.h"
+class World;
+
+class Player
+{
+private:
+	PlayerSoldier* characters[4];
+	int activeIndex;
+	PlayerVehicle* vehicle;
+
+public:
+	Player(float spawnX, float spawnY) : activeIndex(0), vehicle(nullptr) {
+		characters[0] = new PlayerSoldier(spawnX, spawnY, 0); // Marco
+		characters[1] = new PlayerSoldier(spawnX, spawnY, 1); // Tarma
+		characters[2] = new PlayerSoldier(spawnX, spawnY, 2); // Eri
+		characters[3] = new PlayerSoldier(spawnX, spawnY, 3); // Fio
+	}
+	~Player() {
+		for (int i = 0; i < 4; i++)
+		{
+			delete characters[i];
+			characters[i] = nullptr;
+		}
+		delete vehicle;
+	}
+
+	void handleInput(float frameTime, const World& w);
+	void update(float frameTime, const World& w);
+	void render(RenderWindow& windowm, Camera& cam);
+
+	void switchCharacter();
+	void mountVehicle(PlayerVehicle* v);
+	void dismountVehicle();
+
+	PlayerSoldier* getActive() const { return characters[activeIndex]; }
+	PlayerSoldier* getSoldier(int i) const { return characters[i]; }
+	PlayerVehicle* getVehicle() const { return vehicle; }
+	bool isPiloting() const { return vehicle != nullptr; }
+	bool allDead() const;
+};
+

@@ -2,12 +2,9 @@
 
 
 Soldier::Soldier(float x, float y, float w, float h, int hp) : DamagableEntity(x, y, w, h, hp) {
-	currState = new NormalState();
-	currentState->enter(this);
 }
 
 Soldier::~Soldier() {
-	delete currState;
 	delete inventory[0];
 	delete inventory[1];
 }
@@ -47,8 +44,6 @@ void Soldier::movement(float frameTime, const World& w) {
 	if (velocityX < -walkSpeed) velocityX = -walkSpeed;
 
 	if (touchingGround) isJumping = false;
-
-	currentState->update(this, frameTime);
 
 }
 
