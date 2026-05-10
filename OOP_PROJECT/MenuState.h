@@ -6,9 +6,14 @@ using namespace sf;
 class MenuState: public GameState
 {
 	GameStateManager& gsManager;
-	Font font;
-	Text title, option1, option2;
-	int choice = 0;  // 0=survival, 1=campaign
+
+	Texture bgTex;
+	Sprite bgSprite;
+
+	Texture survivalTex, exitTex;
+	Sprite survivalSprite, exitSprite;
+	
+	int choice = 0;  // 0=survival, 1=exit
 	bool keyHeld = false;
 public:
 	MenuState(GameStateManager& gsm);

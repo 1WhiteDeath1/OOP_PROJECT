@@ -28,6 +28,7 @@ void Player::handleInput(float frameTime, const World& w, EntityManager& eManage
 	if (isPiloting()) {
 		vehicle->handleInput(frameTime);
 	}
+	else {
 		if (Keyboard::isKeyPressed(Keyboard::A)) {
 			curr->moveLeft(frameTime);
 			curr->setFacing(false);
@@ -45,7 +46,7 @@ void Player::handleInput(float frameTime, const World& w, EntityManager& eManage
 
 		//firing
 		if (Keyboard::isKeyPressed(Keyboard::Space)) {
-			Projectile* p=curr->fire();
+			Projectile* p = curr->fire();
 			if (p) eManager.addProjectile(p);
 		}
 		//gernading
@@ -62,24 +63,30 @@ void Player::handleInput(float frameTime, const World& w, EntityManager& eManage
 		if (Keyboard::isKeyPressed(Keyboard::Q)) {
 			curr->activePowerUp();
 		}
-
 	}
+
+}
 
 void Player::render(RenderWindow& window, const Camera& cam) {
 	if (isPiloting()) {
 		vehicle->render(window, cam);
 	}
+	else {
 
-	characters[activeIndex]->render(window, cam);
+		characters[activeIndex]->render(window, cam);
+	}
 }
 
-void Player::mountVehicle(PlayerVehicle* v) {
+void Player::mountVehicle(Vehicle* v) {
 	vehicle = v;
 	characters[activeIndex]->setPiloting(true);
 }
 
 void Player::dismountVehicle() {
 	if (vehicle) {
+		vehicle->exitVehicle();
+		delete vehicle;
+		vehicle = nullptr;
 		characters[activeIndex]->setPiloting(false);
 	}
 }

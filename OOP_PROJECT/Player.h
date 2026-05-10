@@ -1,6 +1,6 @@
 #pragma once
 #include "PlayerSoldier.h"
-#include "PlayerVehicle.h"
+#include "Vehicle.h"
 class World;
 
 class Player
@@ -8,7 +8,7 @@ class Player
 private:
 	PlayerSoldier* characters[4];
 	int activeIndex;
-	PlayerVehicle* vehicle;
+	Vehicle* vehicle;
 
 public:
 	Player(float spawnX, float spawnY) : activeIndex(0), vehicle(nullptr) {
@@ -31,12 +31,12 @@ public:
 	void render(RenderWindow& windowm, const Camera& cam);
 
 	void switchCharacter();
-	void mountVehicle(PlayerVehicle* v);
+	void mountVehicle(Vehicle* v);
 	void dismountVehicle();
 
 	PlayerSoldier* getActive() const { return characters[activeIndex]; }
 	PlayerSoldier* getSoldier(int i) const { return characters[i]; }
-	PlayerVehicle* getVehicle() const { return vehicle; }
+	Vehicle* getVehicle() const { return vehicle; }
 	bool isPiloting() const { return vehicle != nullptr; }
 	bool allDead() const;
 };

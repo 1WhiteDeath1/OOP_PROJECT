@@ -72,7 +72,29 @@
     <ClCompile Include="AquaticVehicle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+
     <ClCompile Include="WeaponsEach.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSoldier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformativeState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponsEach.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponCollectible.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -141,12 +163,28 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EnemyAiState.h">
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSoldier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformativeState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WeaponsEach.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+
     <ClInclude Include="Enemy.h">
+
+    <ClInclude Include="LevelManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponCollectible.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

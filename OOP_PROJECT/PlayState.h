@@ -18,6 +18,7 @@ public:
 	PlayState(GameStateManager& gsm) : gsManager(gsm), player(100, 600) {
 		entityManager.setPlayer(&player);
 	}
+	void handleInput() override {}
 	void enter()           override {}
 	void exit()            override {}
 	void update(float dt)  override;
