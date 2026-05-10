@@ -51,6 +51,8 @@ public:
 	void checkEnemyPlayerCollisions();
 	void checkMeleeCollisions();
 	void checkCollectiblesCollisions();
+	void checkEnemyProjectilePlayerCollisions();
+	void checkVehicleEntry();
 
 	void checkGrenadeBlast();
 };

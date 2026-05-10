@@ -44,11 +44,12 @@ void MenuState::handleInput() {
 }
 
 void MenuState::render(RenderWindow& w) {
+	bgSprite.setScale(0.6, 0.6);
 	w.draw(bgSprite);
 
 
-	survivalSprite.setScale(choice == 0 ? 0.3 : 0.2, choice == 0 ? 0.3 : 0.2);
-	exitSprite.setScale(choice == 1 ? 0.3 : 0.2, choice == 1 ? 0.3 : 0.2);
+	survivalSprite.setScale(choice == 0 ? 0.2 : 0.1, choice == 0 ? 0.2 : 0.1);
+	exitSprite.setScale(choice == 1 ? 0.2 : 0.1, choice == 1 ? 0.2 : 0.1);
 
 
 	float choicesXPOS = 800;

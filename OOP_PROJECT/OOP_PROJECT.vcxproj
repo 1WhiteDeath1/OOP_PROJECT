@@ -137,11 +137,12 @@
     <ClCompile Include="AquaticVehicle.cpp" />
     <ClCompile Include="BallisticProjectile.cpp" />
     <ClCompile Include="DamagableEntity.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
-    <ClCompile Include="GroundVehiclecpp.cpp" />
+    <ClCompile Include="GroundVehicle.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -167,7 +168,6 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DamagableEntity.h" />
     <ClInclude Include="Enemy.h" />
-    <ClInclude Include="EnemyAiState.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Game.h" />

@@ -17,7 +17,10 @@ class FlyingTara :public AerialVehicle {
 	Soldier* playerToHit;
 
 public:
-	FlyingTara(float x, float y, float wd, float ht, int hp, int fr, int vd,float Y) :AerialVehicle(x, y, wd, ht, hp, fr, vd,Y) {}
+	FlyingTara(float x, float y, float wd, float ht, int hp, int fr, int vd,float Y) :AerialVehicle(x, y, wd, ht, hp, fr, vd,Y), playerToHit(nullptr) {
+		texture.loadFromFile("Sprites/flyingTara.png");
+		sprite.setTexture(texture);
+	}
 	void attack() override;
 	void move(float dt, const World& w)override;
 	void update(float dt, const World& w)override;
@@ -29,7 +32,10 @@ class SlugFlyer :public AerialVehicle {
 int missileCount=4;
 float missileCountDown=1;
 public:
-	SlugFlyer(float x, float y, float wd, float ht, int hp, int vd,float Y) :AerialVehicle(x, y, wd, ht, hp, (MetalSlug::metalSlugFireRate) / 2, vd,Y) {}
+	SlugFlyer(float x, float y, float wd, float ht, int hp, int vd,float Y) :AerialVehicle(x, y, wd, ht, hp, (MetalSlug::metalSlugFireRate) / 2, vd,Y) {
+		texture.loadFromFile("Sprites/slugFlyer.png");
+		sprite.setTexture(texture);
+	}
 	void attack() override;
 	void move(float dt, const World& w)override;
 	void update(float dt, const World& w)override;

@@ -1,11 +1,12 @@
 #include "PlayState.h"
-
-
+#include <iostream>
+using namespace std;
 void PlayState::update(float frameTime) {
 	player.handleInput(frameTime, world, entityManager);
 	entityManager.update(frameTime, world);
 
 	PlayerSoldier* currCharacter = player.getActive();
+	cout << "HP: " << currCharacter->getHp() << "\n";
 	camera.follow(currCharacter->getX(), currCharacter->getY());
 
 	//camera clamping

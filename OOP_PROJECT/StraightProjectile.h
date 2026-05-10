@@ -10,7 +10,7 @@ public:
             dmg, playerOwned,
             dx, dy,
             spd,
-            0.0f)    // weight = 0 → no arc, straight line
+            0.0f)    // weight = 0 so no arc, straight line
     {
     }
 

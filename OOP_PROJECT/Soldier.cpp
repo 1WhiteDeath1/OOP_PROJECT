@@ -55,12 +55,13 @@ void Soldier::changeAngle(float angle) {
 }
 
 Projectile* Soldier::fireWeapon() {
-	if (!inventory[currWeapon]) return nullptr;
+	int slot = (inventory[1] && inventory[1]->hasAmmo()) ? 1 : 0;
+	if (!inventory[slot]) return nullptr;
 
 	float fireX = facingRight ? (x + width) : x;
 	float fireY = y + height / 2;
 
-	return inventory[currWeapon]->fire(fireX, fireY, aimAngle, facingRight);
+	return inventory[slot]->fire(fireX, fireY, aimAngle, facingRight);
 }
 
 void Soldier::respawn(float spawnX, float spawnY) {

@@ -1,11 +1,16 @@
 #include "Player.h"
 #include "EntityManager.h"
 void Player::switchCharacter() {
+
+	float currentX = characters[activeIndex]->getX();
+	float currentY = characters[activeIndex]->getY();
 	int attempts = 0;
 	do {
 		activeIndex = (activeIndex + 1) % 4;
 		attempts += 1;
 	} while (characters[activeIndex]->getIsDead() && attempts < 4);
+
+	characters[activeIndex]->setPosition(currentX, currentY);
 }
 
 void Player::update(float frameTime, const World& w) {
@@ -14,6 +19,8 @@ void Player::update(float frameTime, const World& w) {
 	}
 	else {
 		characters[activeIndex]->update(frameTime, w);
+		if (!characters[activeIndex]->isAlive() && !allDead())
+			switchCharacter();
 	}
 }
 

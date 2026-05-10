@@ -2,15 +2,13 @@
 #include "World.h"
 
 void DamagableEntity::applyGravity(float frameTime) {
-	if (!touchingGround) {
-		velocityY += float(G) * frameTime;
-
-
-		if (velocityY > 800) velocityY = 800;
-	}
-	else {
+	if (touchingGround && velocityY >= 0) {
 		velocityY = 0;
+		return;
 	}
+	touchingGround = false;
+	velocityY += float(G) * frameTime;
+	if (velocityY > 800) velocityY = 800;
 }
 void DamagableEntity::setPosition(float X, float Y) {// its purpose is to fix the char position when in vehicle to vehicle position
 	x = X;
@@ -18,10 +16,20 @@ void DamagableEntity::setPosition(float X, float Y) {// its purpose is to fix th
 
 }
 
-void DamagableEntity::checkGroundCollisions(const World& w) {
-	
+void DamagableEntity::checkXCollisions(const World& w) {
+	if (isTouchingRightWall(w)) {
+		int blockC = (int)((x + width) / World::CELL);
+		x = (float)(blockC * World::CELL) - width;
+		if (velocityX > 0) velocityX = 0;
+	}
+	if (isTouchingLeftWall(w)) {
+		int blockC = (int)(x / World::CELL);
+		x = (float)((blockC + 1) * World::CELL);
+		if (velocityX < 0) velocityX = 0;
+	}
+}
 
-
+void DamagableEntity::checkYCollisions(const World& w) {
 	if (isTouchingGround(w)) {
 		float bottomY = y + height;
 		int blockR = (int)(bottomY / World::CELL);
@@ -32,27 +40,16 @@ void DamagableEntity::checkGroundCollisions(const World& w) {
 	else {
 		touchingGround = false;
 	}
-
-	//right obstacle
-	if (isTouchingRightWall(w))  {
-		int blockC = (int)((x + width) / World::CELL);
-		x = (float)(blockC * World::CELL) - width;
-		if (velocityX > 0) velocityX = 0;
-	}
-
-	//left obstacle
-	if (isTouchingLeftWall(w)) {
-		int blockC = (int)(x / World::CELL);
-		x = (float)((blockC +1) * World::CELL) - width;
-		if (velocityX < 0) velocityX = 0;
-	}
-
-	//top
 	if (isTouchingCeiling(w)) {
 		int blockR = (int)(y / World::CELL);
 		y = (float)((blockR + 1) * World::CELL);
 		velocityY = 0;
 	}
+}
+
+void DamagableEntity::checkGroundCollisions(const World& w) {
+	checkXCollisions(w);
+	checkYCollisions(w);
 }
 
 void DamagableEntity::takeDamage(int amount) {

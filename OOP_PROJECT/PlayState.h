@@ -4,6 +4,7 @@
 #include "World.h"
 #include "Player.h"
 #include "EntityManager.h"
+#include "Level.h"
 #include "Camera.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
@@ -19,7 +20,10 @@ public:
 		entityManager.setPlayer(&player);
 	}
 	void handleInput() override {}
-	void enter()           override {}
+	void enter()           override {
+		Level level(1, world);
+		level.setUP(entityManager);
+	}
 	void exit()            override {}
 	void update(float dt)  override;
 	void render(RenderWindow& w) override;

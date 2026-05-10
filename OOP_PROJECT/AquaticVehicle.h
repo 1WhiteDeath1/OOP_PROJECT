@@ -4,7 +4,10 @@
 class AquaticVehicle :public Vehicle {
 public:
 
-	AquaticVehicle(float x, float y, float wd, float ht, int hp, int fr, int vd) :Vehicle(x, y, wd, ht, hp, fr, vd) {}
+	AquaticVehicle(float x, float y, float wd, float ht, int hp, int fr, int vd) :Vehicle(x, y, wd, ht, hp, fr, vd) {
+		texture.loadFromFile("Sprites/aquaticVehicle.png");
+		sprite.setTexture(texture);
+	}
 	virtual ~AquaticVehicle(){}
 };
 
@@ -19,6 +22,8 @@ int reverseProjectileAmmo;
 public:
 SlugMariner(float x, float y, float wd, float ht, int hp, int fr, int vd) :AquaticVehicle(x, y, wd, ht, hp, fr, vd) {
 maxMissileAmmo=horizontalMissileAmmo=verticalMissileAmmo=reverseProjectileAmmo=3;
+texture.loadFromFile("Sprites/slugMariner.png");
+sprite.setTexture(texture);
 }
 	void attack() override;
 	void move(float dt, const World& w) override;
@@ -29,7 +34,10 @@ maxMissileAmmo=horizontalMissileAmmo=verticalMissileAmmo=reverseProjectileAmmo=3
 class EnemySub :public AquaticVehicle {
 Soldier * playerToHit=nullptr;
 public:
-	EnemySub(float x, float y, float wd, float ht, int fr, int vd) :AquaticVehicle(x, y, wd, ht, 7, fr, vd) {}
+	EnemySub(float x, float y, float wd, float ht, int fr, int vd) :AquaticVehicle(x, y, wd, ht, 7, fr, vd) {
+		texture.loadFromFile("Sprites/enemySub.png");
+		sprite.setTexture(texture);
+	}
 
 	void attack() override;
 	void move(float dt, const World& w) override;

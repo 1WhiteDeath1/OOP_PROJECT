@@ -37,9 +37,9 @@ public:
 		float otherMidY = playerY + playerHEIGHT / 2.f;
 
 		bool touchX = abs(myMidX - otherMidX)
-			< ((WIDTH / 2.f + playerWIDTH / 2.f) - 20.f);
+			< ((WIDTH / 2.f + playerWIDTH / 2.f) );
 		bool touchY = abs(myMidY - otherMidY)
-			< ((HIEGHT / 2.f + playerHEIGHT / 2.f) - 30.f);
+			< ((HIEGHT / 2.f + playerHEIGHT / 2.f));
 		return touchX && touchY;
 	}
 
@@ -58,6 +58,15 @@ public:
 	}
 
 	void render(RenderWindow& w, const Camera& cam) {
+
+		//checking for loss of ammo
+		if (collected && pickUPGUY) {
+			Weapon* slot1 = pickUPGUY->getActiveWeaponSlot(1);
+			if (!slot1 || !slot1->hasAmmo()) return;
+		}
+
+
+
 		sprite.setPosition(cam.toScreenX(x), cam.toScreenY(y));
 		w.draw(sprite);
 	}

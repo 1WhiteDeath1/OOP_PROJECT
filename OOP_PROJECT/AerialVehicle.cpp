@@ -1,6 +1,6 @@
 #include "AerialVehicle.h"
 void FlyingTara::attack() {
-if(playerToHit==nullptr)
+    if (playerToHit == nullptr || playerInside == nullptr)
 return;
 float coordinateX=playerInside->getX();
 if ((x-coordinateX< 0?coordinateX-x:x-coordinateX)<40)
@@ -17,12 +17,12 @@ if (currentTime > normalFireRate) {
 
 move(dt, w);
 }
-void MetalSlug::render(sf::RenderWindow& w, const Camera& cam) {
-	sprite.setPosition(cam.toScreenX(x),cam.toScreenY(y));
-	w.draw(sprite);
-
+void FlyingTara::render(sf::RenderWindow& w, const Camera& cam) {
+    sprite.setPosition(cam.toScreenX(x), cam.toScreenY(y));
+    w.draw(sprite);
 }
 void FlyingTara::move(float dt, const World& w) {
+    if (playerInside == nullptr) return;
 float coordinateX=playerInside->getX();
 if(x>coordinateX)
 velocityX-=100*dt;
@@ -278,5 +278,33 @@ void SlugFlyer::render(sf::RenderWindow& w, const Camera& cam) {
 	sprite.setPosition(cam.toScreenX(x),cam.toScreenY(y));
 	w.draw(sprite);
 
+}
+
+
+
+
+void SlugFlyer::move(float dt,const World& w)
+{
+if(playerInside==nullptr)
+return;
+if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+velocityX+=150*dt;
+playerInside->setFacing(true);
+}
+if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+velocityX-=150*dt;
+playerInside->setFacing(false);
+}
+if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+velocityY-=150*dt;
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+velocityY+=150*dt;
+if(velocityX>200)velocityX=200;
+if(velocityX<-200)velocityX=-200;
+if(velocityY>200)velocityY=200;
+if(velocityY<-200)velocityY=-200;
+x+=velocityX*dt;
+y+=velocityY*dt;
+playerInside->setPosition(x,y);
 }
 

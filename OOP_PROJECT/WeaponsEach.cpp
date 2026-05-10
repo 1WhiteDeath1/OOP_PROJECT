@@ -71,16 +71,17 @@ bool NormalGrenade::texIsLoaded = false;
 void NormalGrenade::update(float frameTime, const World& w) {
 	if (exploded) return;
 
-	fuseTimer - frameTime;
+	fuseTimer -= frameTime;
 	if (fuseTimer <= 0) {
 		explode();
 		return;
 	}
 
-	Dy += G * weight * frameTime;
-	if (Dy > 1) Dy = 1;
 
-	x += Dx* speed * frameTime;
+	Dy += 0.8f * frameTime;
+	if (Dy > 5.f) Dy = 5.f;
+
+	x += Dx * speed * frameTime;
 	y += Dy * speed * frameTime;
 
 	if (isTouchingGround(w)) {
@@ -99,14 +100,6 @@ void NormalGrenade::update(float frameTime, const World& w) {
 		Dy = Dy * 0.3;
 	}
 
-	// World bounds
-	if (x < -100.f ||
-		x > 110 * 64 + 100.f ||
-		y < -100.f ||
-		y > 14 * 64 + 100.f)
-	{
-		isActive = false;
-	}
 }
 
 void NormalGrenade::explode() {
@@ -133,8 +126,8 @@ void FireBombGrenade::update(float frameTime, const World& w) {
 		return;
 	}
 
-	Dy += G * weight * frameTime;
-	if (Dy > 1) Dy = 1;
+	Dy += 0.3f * frameTime;
+	if (Dy > 3.f) Dy = 3.f;
 
 	x += Dx * speed * frameTime;
 	y += Dy * speed * frameTime;
@@ -148,15 +141,7 @@ void FireBombGrenade::update(float frameTime, const World& w) {
 		return;
 	}
 
-
-	// World bounds
-	if (x < -100.f ||
-		x > 110 * 64 + 100.f ||
-		y < -100.f ||
-		y > 14 * 64 + 100.f)
-	{
-		isActive = false;
-	}
+	
 }
 
 

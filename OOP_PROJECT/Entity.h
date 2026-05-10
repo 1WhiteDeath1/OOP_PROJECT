@@ -31,9 +31,9 @@ public:
 		float otherMidY = other.y + other.height / 2.f;
 
 		bool touchX = abs(myMidX - otherMidX)
-			< ((width / 2.f + other.width / 2.f) - 20.f);
+			< ((width / 2.f + other.width / 2.f)-20);
 		bool touchY = abs(myMidY - otherMidY)
-			< ((height / 2.f + other.height / 2.f) - 30.f);
+			< ((height / 2.f + other.height / 2.f)-30);
 		return touchX && touchY;
 	}
 

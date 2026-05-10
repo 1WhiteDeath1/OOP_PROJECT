@@ -20,7 +20,7 @@ protected:
 	bool piloting = false;
 
 	float aimAngle = 0;
-	float walkSpeed = 300;
+	float walkSpeed = 600;
 	float jumpStrength = 700;
 
 	bool meleeActive = false;
@@ -72,6 +72,9 @@ public:
 	}
 	bool isMeleeActive() const {
 		return meleeActive; }
+
+	Weapon* getActiveWeaponSlot(int slot) const { 
+		return (slot >= 0 && slot < 2) ? inventory[slot] : nullptr; }
 
 
 

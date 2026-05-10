@@ -200,5 +200,5 @@ void ProjectileWeapon::getDirection(float a, bool facingRight, float& x, float& 
     float cosVal = cos_values[index];
 
     x = facingRight ? cosVal : -cosVal;
-    y = sinVal;
+    y = -sinVal;
 }

@@ -19,7 +19,7 @@ private:
 	float damageMultiplier;
 	int bonusAmmoPercent; //for fio
 public:
-	PlayerSoldier(float x, float y, int characterType) :Soldier(x, y, 32, 48, 100), // w, h, hp
+	PlayerSoldier(float x, float y, int characterType) :Soldier(x, y, 64.f, 96.f, 100), // w, h, hp
 		characterType(characterType),
 		stateTimer(0),
 		powerUPActive(false),
@@ -45,14 +45,14 @@ public:
 
 			texture.loadFromFile("Sprites/marco.png");
 			sprite.setTexture(texture);
-			sprite.setScale((32 / texture.getSize().x), 48 / texture.getSize().y);
+			sprite.setScale((width / texture.getSize().x), height / texture.getSize().y);
 		}
 		else if (characterType == 1) {//tarma
 			speedMultiplier = 0.8;
 
 			texture.loadFromFile("Sprites/tarma.png");
 			sprite.setTexture(texture);
-			sprite.setScale((32 / texture.getSize().x), 48 / texture.getSize().y);
+			sprite.setScale((width / texture.getSize().x), height / texture.getSize().y);
 
 		}
 		else if (characterType == 2) { //eri
@@ -60,7 +60,7 @@ public:
 			fireRateMultiplier = 0.8;
 			texture.loadFromFile("Sprites/eri.png");
 			sprite.setTexture(texture);
-			sprite.setScale((32 / texture.getSize().x), 48 / texture.getSize().y);
+			sprite.setScale((width / texture.getSize().x), height / texture.getSize().y);
 
 		}
 		else if (characterType == 3) {//fio
@@ -70,7 +70,7 @@ public:
 
 			texture.loadFromFile("Sprites/fio.png");
 			sprite.setTexture(texture);
-			sprite.setScale((32 / texture.getSize().x), 48 / texture.getSize().y);
+			sprite.setScale((width / texture.getSize().x), height / texture.getSize().y);
 
 		}
 
@@ -110,6 +110,7 @@ public:
 	//movement
 	void moveLeft(float frameTime) { accelerate(-walkSpeed * 3 * frameTime); };
 	void moveRight(float frameTime) { accelerate(walkSpeed * 3 * frameTime); };
+	void setSpeedMultiplier(float xAmmount) { speedMultiplier = xAmmount; }
 	void jump() { Soldier::jump(); };
 	void crouch(bool c) { Soldier::crouch(c); };
 

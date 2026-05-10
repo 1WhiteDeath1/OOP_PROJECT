@@ -17,10 +17,12 @@ void Projectile::update(float frameTime, const World& w) {
 		return;
 }
 
+
+	//checking world bounds
 	if (x < -100.f ||
-		x > 110 * 64 + 100.f ||
+		x > World::WIDTH * World::CELL + 100.f ||
 		y < -100.f ||
-		y > 14 * 64 + 100.f)
+		y > World::HEIGHT * World::CELL + 100.f)
 	{
 		isActive = false;
 	}

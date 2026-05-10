@@ -23,11 +23,14 @@ public:
 
 	virtual void takeDamage(int amount);
 	void applyGravity(float frameTime);
+	void checkXCollisions(const World& w);
+	void checkYCollisions(const World& w);
 	void checkGroundCollisions(const World& w);
 
 	virtual void die() { isActive = false; }
 
 	bool isAlive() const { return currentHp > 0;}
+	
 	int getHp() const { return currentHp; }
 	int getMaXHp() const { return maxHp; }
 	void setPosition(float X, float Y);
