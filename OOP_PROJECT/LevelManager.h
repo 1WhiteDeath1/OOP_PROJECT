@@ -22,7 +22,7 @@ public:
 	bool isLevelFinished(const EntityManager& em) const {
 		if (em.getEnemyCount() == 0) {
 			return true;
-	}
+		}
 		return false;
 	}
 	int getCurrLevel() const {

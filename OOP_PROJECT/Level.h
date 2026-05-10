@@ -1,6 +1,9 @@
 #pragma once
 #include "World.h"
 #include "EntityManager.h"
+#include "GroundVehicle.h"
+#include "AerialVehicle.h"
+#include "AquaticVehicle.h"
 
 struct spawn {
 	int type;
@@ -13,7 +16,8 @@ class Level
 
 	spawn enemySpawn[20];
 	spawn vehicleSpawn[20];
-	
+	spawn weaponSpawn[15];
+
 
 	int eCount = 0;
 	int vCount = 0;

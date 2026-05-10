@@ -1,7 +1,8 @@
 #include "EntityManager.h"
 #include "Soldier.h"
+#include "Enemy.h"
 EntityManager::EntityManager() {
-	for (int i = 0; i < MAX_PROJECTILES; i++) 
+	for (int i = 0; i < MAX_PROJECTILES; i++)
 		projectiles[i] = nullptr;
 	for (int i = 0; i < MAX_ENEMIES; i++)
 		enemies[i] = nullptr;
@@ -61,7 +62,7 @@ void EntityManager::addEnemy(Enemy* e) {
 }
 
 void EntityManager::update(float frameTime, const World& w) {
-	
+
 	checkMeleeCollisions();
 	if (player) {
 		player->update(frameTime, w);
@@ -138,8 +139,8 @@ void EntityManager::render(RenderWindow& w, const Camera& cam) {
 		if (enemies[i] && enemies[i]->getActive())
 			enemies[i]->render(w, cam);
 
-	
-	for (int i =0; i < MAX_VEHICLES;i++) {
+
+	for (int i = 0; i < MAX_VEHICLES;i++) {
 		if (vehicles[i] && vehicles[i]->getActive()) {
 			vehicles[i]->render(w, cam);
 		}
@@ -150,10 +151,10 @@ void EntityManager::render(RenderWindow& w, const Camera& cam) {
 			collectibles[i]->render(w, cam);
 		}
 	}
-	
-	
-	
-	
+
+
+
+
 	if (player) {
 		player->render(w, cam);
 
@@ -227,7 +228,7 @@ void EntityManager::checkGrenadeBlast() {
 			float modSquared = (diffX * diffX) + (diffY * diffY);
 
 			if (modSquared < (bradius * bradius)) {
-				enemies[j]->onHitByProjectiles(projectiles[i]);
+				enemies[j]->onHitByProjectile(projectiles[i]);
 			}
 
 		}
@@ -256,9 +257,9 @@ void EntityManager::checkMeleeCollisions() {
 	if (!player) return;
 	PlayerSoldier* currCharacter = player->getActive();
 	if (!currCharacter || !currCharacter->isMeleeActive())
-		{
-			return;
-		}
+	{
+		return;
+	}
 	for (int j = 0; j < MAX_ENEMIES;j++) {
 		if (!enemies[j] || !enemies[j]->getActive()) {
 			continue;
@@ -269,42 +270,42 @@ void EntityManager::checkMeleeCollisions() {
 	}
 }
 
-	void EntityManager::checkEnemyPlayerCollisions() {
+void EntityManager::checkEnemyPlayerCollisions() {
 
-		if (!player) return;
+	if (!player) return;
 
-		PlayerSoldier* currCharacter = player->getActive();
-		if (!currCharacter || !currCharacter->getActive()) return;
+	PlayerSoldier* currCharacter = player->getActive();
+	if (!currCharacter || !currCharacter->getActive()) return;
 
-		for (int j = 0; j < MAX_ENEMIES; j++) {
-			if (!enemies[j] || !enemies[j]->getActive()) continue;
+	for (int j = 0; j < MAX_ENEMIES; j++) {
+		if (!enemies[j] || !enemies[j]->getActive()) continue;
 
-			if (currCharacter->collision(*enemies[j])) {
-				int type = enemies[j]->getEnemyType();
-				if (type == 1)
-					currCharacter->infect(1);
-				else if (type == 2)
-					currCharacter->infect(2);
-				else
-					currCharacter->takeDamage(enemies[j]->getDamage());
-			}
+		if (currCharacter->collision(*enemies[j])) {
+			//int type = enemies[j]->getEnemyType();
+			//if (type == 1)
+			//	currCharacter->infect(1);
+			//else if (type == 2)
+			//	currCharacter->infect(2);
+			//else
+			currCharacter->takeDamage(enemies[j]->getDamage());
 		}
 	}
+}
 
 
-	void EntityManager::checkCollectiblesCollisions() {
-		if (!player) return;
-		PlayerSoldier* currCHARACTER= player->getActive();
-		if (!currCHARACTER) return; //no one alive
+void EntityManager::checkCollectiblesCollisions() {
+	if (!player) return;
+	PlayerSoldier* currCHARACTER = player->getActive();
+	if (!currCHARACTER) return; //no one alive
 
-		for (int i = 0; i < MAX_COLLECTIBLES, i++) {
-			if (!collectibles || collectibles[i]->isCollected()) {
-				continue;
-			}
-			if (collectibles[i]->collision(currCHARACTER->getX(), currCHARACTER->getY(), currCHARACTER->getWidth(), currCHARACTER->getHeight())) {
-				collectibles[i]->collect(currCHARACTER);
-			}
+	for (int i = 0; i < MAX_COLLECTIBLES; i++) {
+		if (!collectibles || collectibles[i]->isCollected()) {
+			continue;
 		}
+		if (collectibles[i]->collision(currCHARACTER->getX(), currCHARACTER->getY(), currCHARACTER->getWidth(), currCHARACTER->getHeight())) {
+			collectibles[i]->collect(currCHARACTER);
+		}
+	}
 
 }
 
@@ -317,13 +318,14 @@ EntityManager::~EntityManager() {
 		projectiles[i] = nullptr;
 	}
 	for (int i = 0; i < MAX_ENEMIES; i++)
-	{ 
-		delete enemies[i]; 
+	{
+		delete enemies[i];
 		enemies[i] = nullptr;
 	}
-	for (int i = 0; i < MAX_VEHICLES; i++) { 
-		delete vehicles[i];  
-		vehicles[i] = nullptr; }
+	for (int i = 0; i < MAX_VEHICLES; i++) {
+		delete vehicles[i];
+		vehicles[i] = nullptr;
+	}
 
 	for (int i = 0; i < MAX_COLLECTIBLES;i++) {
 		collectibles[i] = nullptr;

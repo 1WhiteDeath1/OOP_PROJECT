@@ -25,7 +25,7 @@ void PlayerSoldier::update(float frameTime, const World& w) {
 }
 
 void PlayerSoldier::infect(int type) {
-	if(currState->getType() == type) return;
+	if (currState->getType() == type) return;
 
 	delete currState;
 	stateTimer = 10;
@@ -66,8 +66,8 @@ const char* PlayerSoldier::getName() const
 void PlayerSoldier::render(sf::RenderWindow& window, const Camera& cam)
 {
 	if (facingRight) {
-		sprite.setScale(-(32/texture.getSize().x), 48/texture.getSize().y);
-		sprite.setPosition(cam.toScreenX(x)+width, cam.toScreenY(y));
+		sprite.setScale(-(32 / texture.getSize().x), 48 / texture.getSize().y);
+		sprite.setPosition(cam.toScreenX(x) + width, cam.toScreenY(y));
 	}
 	else {
 		sprite.setScale((32 / texture.getSize().x), 48 / texture.getSize().y);

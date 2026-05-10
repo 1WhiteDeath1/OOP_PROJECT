@@ -25,7 +25,7 @@ void MenuState::handleInput() {
 			keyHeld = true;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Down)) {
-			choice = choice>=1 ? 1 : choice +1;
+			choice = choice >= 1 ? 1 : choice + 1;
 			keyHeld = true;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Return)) {
@@ -45,7 +45,7 @@ void MenuState::handleInput() {
 
 void MenuState::render(RenderWindow& w) {
 	w.draw(bgSprite);
-	
+
 
 	survivalSprite.setScale(choice == 0 ? 0.3 : 0.2, choice == 0 ? 0.3 : 0.2);
 	exitSprite.setScale(choice == 1 ? 0.3 : 0.2, choice == 1 ? 0.3 : 0.2);

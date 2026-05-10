@@ -1,11 +1,8 @@
 #pragma once
 #include "DamagableEntity.h"
 #include "Soldier.h"
-#include"Enemy.h"
 class World;
-class EnemyAiState;
-class runningState;
-class AttackingState;
+class Enemy;
 
 class EnemyAiState {
 
@@ -15,6 +12,12 @@ class EnemyAiState {
 	virtual void exit(){}
 
 };
+
+class RoamingAround;
+class AttackingState;
+class runningState;
+
+
 class RoamingAround:public EnemyAiState {
 protected:
 
@@ -56,6 +59,41 @@ protected:
 	}
 
 };
+
+class AttackingState :public EnemyAiState {
+	float attackingRange;
+	float attackCoolDown;
+	float losingRange;
+
+public:
+	AttackingState(float attackingRange = 50, float losingRange = 100) :attackingRange(attackingRange), attackCoolDown(2), losingRange(losingRange) {}
+
+	EnemyAiState* update(Enemy* enemy, float dt, const World& w) {
+		if (enemy->target == nullptr)
+			return nullptr;
+		float coordinateX = enemy->getX();
+		float coordinateY = enemy->getY();
+		float playerX = enemy->target->getX();
+		float playerY = enemy->target->getY();
+		bool right = playerX > coordinateX;
+		if (((coordinateX - playerX < 0 ? playerX - coordinateX : coordinateX - playerX) > losingRange) && (coordinateY - playerY < 0 ? playerY - coordinateY : coordinateY - playerY) > losingRange)
+			return new runningState();
+
+		attackCoolDown -= dt;
+		if (attackCoolDown <= 0) {
+			attackCoolDown = enemy->getNormalFireRate();
+			enemy->throwProjectile();
+		}
+
+		enemy->setVelocityX(0);
+		enemy->applyGravity(dt);
+		enemy->changeXandY(dt, w);
+		return nullptr;
+	}
+
+
+};
+
 class runningState :public EnemyAiState {
 float runningSpeed;
 float attackingRange;
@@ -86,39 +124,7 @@ public:
 	
 	
 };
-class AttackingState:public EnemyAiState {
-float attackingRange;
-float attackCoolDown;
-float losingRange;
 
-	public:
-	AttackingState(float attackingRange=50, float losingRange=100):attackingRange(attackingRange),attackCoolDown(2),losingRange(losingRange){}
-
-		EnemyAiState* update(Enemy* enemy, float dt, const World& w) {
-		if(enemy->target==nullptr)
-		return nullptr;
-		float coordinateX=enemy->getX();
-	float coordinateY=enemy->getY();
-	float playerX=enemy->target->getX();
-	float playerY=enemy->target->getY();
-	bool right=playerX>coordinateX;
-	if(((coordinateX-playerX<0?playerX-coordinateX:coordinateX-playerX)>losingRange)&&(coordinateY-playerY<0?playerY-coordinateY:coordinateY-playerY)>losingRange)
-	return new runningState();
-
-	attackCoolDown-=dt;
-	if(attackCoolDown<=0){
-	attackCoolDown=enemy->getNormalFireRate();
-	enemy->throwProjectile();
-	}
-
-	enemy->setVelocityX(0);
-	enemy->applyGravity(dt);
-	enemy->changeXandY(dt, w);
-	return nullptr;
-	}
-	
-
-};
 class Descending :public EnemyAiState {
 	float descendingSpeed;
 	public:

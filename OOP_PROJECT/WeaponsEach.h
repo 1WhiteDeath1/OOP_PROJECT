@@ -131,7 +131,7 @@ private:
 
 	void explode();
 public:
-	NormalGrenade(float x, float y, float dx, float dy, float fromPlayer) : BallisticProjectile(x, y, 10, 5, 60, fromPlayer, dx, dy, 400, 3) {
+	NormalGrenade(float x, float y, float dx, float dy, bool fromPlayer, int damage=3) : BallisticProjectile(x, y, 10, 5, 60, fromPlayer, dx, dy, 400, 3) {
 		blastRadius = 100;
 
 		if (!texIsLoaded)
@@ -165,7 +165,7 @@ private:
 	void explode();
 public:
 
-	FireBombGrenade(float x, float y, float dx, float dy, float fromPlayer) : BallisticProjectile(x, y, 10, 5, 40, fromPlayer, dx, dy, 360, 2.5) {
+	FireBombGrenade(float x, float y, float dx, float dy, bool fromPlayer) : BallisticProjectile(x, y, 10, 5, 40, fromPlayer, dx, dy, 360, 2.5) {
 		blastRadius = 100;
 
 		if (!texIsLoaded)

@@ -32,14 +32,14 @@ public:
 
 	bool collision(float playerX, float playerY, float playerWIDTH, float playerHEIGHT) const {
 		float myMidX = x + WIDTH / 2.f;
-		float myMidY = y + HEIGHT / 2.f;
+		float myMidY = y + HIEGHT / 2.f;
 		float otherMidX = playerX + playerWIDTH / 2.f;
 		float otherMidY = playerY + playerHEIGHT / 2.f;
 
 		bool touchX = abs(myMidX - otherMidX)
 			< ((WIDTH / 2.f + playerWIDTH / 2.f) - 20.f);
 		bool touchY = abs(myMidY - otherMidY)
-			< ((HEIGHT / 2.f + playerHEIGHT / 2.f) - 30.f);
+			< ((HIEGHT / 2.f + playerHEIGHT / 2.f) - 30.f);
 		return touchX && touchY;
 	}
 

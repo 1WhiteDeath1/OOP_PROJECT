@@ -1,6 +1,7 @@
 #pragma once
 #include "PlayerSoldier.h"
 #include "Vehicle.h"
+class EntityManager;
 class World;
 
 class Player

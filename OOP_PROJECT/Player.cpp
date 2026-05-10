@@ -26,7 +26,7 @@ void Player::handleInput(float frameTime, const World& w, EntityManager& eManage
 	PlayerSoldier* curr = characters[activeIndex];
 
 	if (isPiloting()) {
-		vehicle->handleInput(frameTime);
+		//vehicle->handleInput(frameTime);
 	}
 	else {
 		if (Keyboard::isKeyPressed(Keyboard::A)) {

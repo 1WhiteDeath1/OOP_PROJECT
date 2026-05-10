@@ -7,6 +7,8 @@
 #include "Player.h"
 #include "WeaponCollectible.h"
 #include "Vehicle.h"
+#include "Enemy.h"
+
 using namespace sf;
 
 

@@ -36,6 +36,7 @@ public:
 	bool didExplode() const {
 		return exploded;
 	}
+	virtual bool diesOnHit() const { return true; }
 
 	virtual ~Projectile() = default;
 };
