@@ -15,6 +15,7 @@ int maxMissileAmmo;
 int horizontalMissileAmmo;
 int verticalMissileAmmo;
 int reverseProjectileAmmo;
+
 public:
 SlugMariner(float x, float y, float wd, float ht, int hp, int fr, int vd) :AquaticVehicle(x, y, wd, ht, hp, fr, vd) {
 maxMissileAmmo=horizontalMissileAmmo=verticalMissileAmmo=reverseProjectileAmmo=3;
@@ -26,7 +27,7 @@ maxMissileAmmo=horizontalMissileAmmo=verticalMissileAmmo=reverseProjectileAmmo=3
 };
 
 class EnemySub :public AquaticVehicle {
-
+Soldier * playerToHit=nullptr;
 public:
 	EnemySub(float x, float y, float wd, float ht, int fr, int vd) :AquaticVehicle(x, y, wd, ht, 7, fr, vd) {}
 
@@ -34,5 +35,6 @@ public:
 	void move(float dt, const World& w) override;
 	void update(float dt, const World& w) override;
 	void render(sf::RenderWindow& w, const Camera& cam) override;
+	void setPlayerToHit(Soldier* s){playerToHit=s;}
 
 };

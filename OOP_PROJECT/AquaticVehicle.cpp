@@ -224,6 +224,8 @@ return;
 reverseProjectileAmmo--;
 }
 }
+
+
 void SlugMariner::move(float dt, const World& w) {
     if(playerInside==nullptr)
     return;
@@ -263,3 +265,115 @@ y+=velocityY*dt;
 checkGroundCollisions(w);
 
 }
+void SlugMariner::update(float dt,const World& w) {
+currentTime+=0.0167;
+if (currentTime > normalFireRate) {
+	currentTime=0;
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+attack();
+}
+
+
+move(dt, w);
+}
+void SlugMariner::render(sf::RenderWindow& w, const Camera& cam) {
+	sprite.setPosition(cam.toScreenX(x),cam.toScreenY(y));
+	w.draw(sprite);
+}
+void EnemySub::move(float dt, const World& w) {
+if(playerToHit==nullptr)
+return;
+float speedInWater=100;
+float xCoordinate=playerInside->getX();
+float yCoordinate=playerInside->getY();
+if(x>xCoordinate)
+	velocityX-=speedInWater*dt;
+
+	else
+velocityX+=speedInWater*dt;
+
+if(y>yCoordinate)
+	velocityY-=speedInWater*dt;
+
+	else
+velocityY+=speedInWater*dt;
+if(velocityX>=speedInWater)
+velocityX=speedInWater;
+if(velocityX<-speedInWater)
+velocityX=-speedInWater;
+if(velocityY>=speedInWater)
+velocityY=speedInWater;
+if(velocityY<-speedInWater)
+velocityY=-speedInWater;
+
+x+=velocityX*dt;
+y+=velocityY*dt;
+checkGroundCollisions(w);
+
+
+}
+void EnemySub::update(float dt,const World& w) {
+currentTime+=0.0167;
+if (currentTime > normalFireRate) {
+	currentTime=0;
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+attack();
+}
+}
+void EnemySub::render(sf::RenderWindow& w, const Camera& cam) {
+	sprite.setPosition(cam.toScreenX(x),cam.toScreenY(y));
+	w.draw(sprite);
+}
+void EnemySub::attack() {
+    if(playerToHit==nullptr)
+    return;
+    float xCoordinate=playerToHit->getX();
+	float yCoordinate=playerToHit->getY();
+	if( ( (x-xCoordinate)<0?-(x-xCoordinate):x-xCoordinate )>70.0||( (y-yCoordinate)<0?-(y-yCoordinate):y-yCoordinate )>70.0 )
+	return;
+	int angle=0;
+	if( (yCoordinate-y<0?y-yCoordinate:yCoordinate-y)<15)
+	angle=0;
+	else if( ( (x-xCoordinate)<0?-(x-xCoordinate):x-xCoordinate )>30.0||( (y-yCoordinate)<0?-(y-yCoordinate):y-yCoordinate )>30.0 )
+	angle=45;
+	else
+	angle=30;
+
+	bool right=playerToHit->getX()>x;
+	float dx,dy;
+	if(angle ==45)
+	{ 
+	dx=right?0.707:-0.707;
+	dy=0.707;
+	}
+	else if (angle == 30) {
+		dx=right?0.866:-0.866;
+		dy=0.866;
+
+	}
+	else
+	{
+		dx=right?1:-1;
+		dy=0;
+	}
+	//projectile=new Rocket(x+(right?+5:-5),y+5,dx,dy,false);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -133,6 +133,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AerialVehicle.cpp" />
+    <ClCompile Include="AquaticVehicle.cpp" />
     <ClCompile Include="BallisticProjectile.cpp" />
     <ClCompile Include="DamagableEntity.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -149,6 +151,7 @@
     <ClCompile Include="Soldier.cpp" />
     <ClCompile Include="StraightProjectile.cpp" />
     <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="WeaponsEach.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +160,8 @@
     <ClInclude Include="BallisticProjectile.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DamagableEntity.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyAiState.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Game.h" />
@@ -172,6 +177,7 @@
     <ClInclude Include="Vehicle.h" />
     <ClInclude Include="Voxel.h" />
     <ClInclude Include="Weapon.h" />
+    <ClInclude Include="WeaponsEach.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
