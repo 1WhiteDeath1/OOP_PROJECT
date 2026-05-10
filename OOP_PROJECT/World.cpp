@@ -10,7 +10,6 @@ int World::clamp(int val, int min, int max) {
 
 World::World() {
     stoneTex.loadFromFile("Sprites/stone.png");
-    snowTex.loadFromFile("Sprites/snow.png");
     grassTex.loadFromFile("Sprites/grass.png");
     dirtTex.loadFromFile("Sprites/dirt.png");
     sandTex.loadFromFile("Sprites/sand.png");
@@ -46,9 +45,7 @@ void World::setTile(int row, int col, int type, bool solid, bool water) {
     case 5:
         v.sprite.setTexture(waterTex);
         break;
-    case 6:
-        v.sprite.setTexture(snowTex);
-        break;
+
 
    }
 

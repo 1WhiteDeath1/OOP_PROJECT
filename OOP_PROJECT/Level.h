@@ -1,0 +1,31 @@
+#pragma once
+#include "World.h"
+#include "EntityManager.h"
+
+struct spawn {
+	int type;
+	float x, y;
+};
+
+class Level
+{
+	int level;
+
+	spawn enemySpawn[20];
+	spawn vehicleSpawn[20];
+	
+
+	int eCount = 0;
+	int vCount = 0;
+	int wCount = 0;
+
+	void level1(const World& w);
+
+	float isOnGround(const World& w, int col) const;
+public:
+	Level(int level, const World& w);
+
+	void setUP(EntityManager& eManager) const;
+
+};
+
