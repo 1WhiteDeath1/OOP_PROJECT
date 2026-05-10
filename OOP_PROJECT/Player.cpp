@@ -42,7 +42,12 @@ void Player::handleInput(float frameTime, const World& w, EntityManager& eManage
 		}
 
 		curr->crouch(Keyboard::isKeyPressed(Keyboard::S));
+		//chaning the angle brother afsd fa
+		if (Keyboard::isKeyPressed(Keyboard::Up))
+			curr->changeAngle(20.f * frameTime); 
 
+		if (Keyboard::isKeyPressed(Keyboard::Down))
+			curr->changeAngle(-20.f * frameTime);
 
 		//firing
 		if (Keyboard::isKeyPressed(Keyboard::Space)) {
@@ -50,7 +55,7 @@ void Player::handleInput(float frameTime, const World& w, EntityManager& eManage
 			if (p) eManager.addProjectile(p);
 		}
 		//gernading
-		if (Keyboard::isKeyPressed(Keyboard::E)) {
+		if (Keyboard::isKeyPressed(Keyboard::T)) {
 			Projectile* g = curr->throwGrenade();
 			if (g) eManager.addProjectile(g);
 		}
