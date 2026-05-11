@@ -17,7 +17,7 @@ class M15Bradley :public GroundVehicle {
 public:
 	M15Bradley(float x, float y, float wd, float ht,int fr, int vd) :GroundVehicle(x, y, wd, ht, 7, fr, vd) {
 	playerToHit=nullptr;
-	texture.loadFromFile("Sprites/M15Bradley.png");
+	texture.loadFromFile("i250504_i250644_Assets/M15Bradley.png");
 	sprite.setTexture(texture);
 	}
 	void attack() override;
@@ -35,7 +35,7 @@ class MetalSlug :public GroundVehicle {
 public:
 static int metalSlugFireRate;
 	MetalSlug(float x, float y, float wd, float ht, int hp, int fr, int vd) :GroundVehicle(x, y, wd, ht, hp, fr, vd) {
-		texture.loadFromFile("Sprites/metalslug.png");
+		texture.loadFromFile("i250504_i250644_Assets/metalslug.png");
 		sprite.setTexture(texture);                      
 	metalSlugFireRate=fr;}
 	void attack()override;
@@ -54,7 +54,7 @@ float speedInAir;
 int currentForm;
 public:
 AmphibiousSlug(float x, float y, float wd, float ht, int hp, int fr, int vd):GroundVehicle(x,y,wd,ht,hp,fr,vd){
-	texture.loadFromFile("Sprites/amphibiouSlug.png");
+	texture.loadFromFile("i250504_i250644_Assets/amphibiouSlug.png");
 	sprite.setTexture(texture);
 speedInWater=100.0f;
 speedOnLand=120.0f;

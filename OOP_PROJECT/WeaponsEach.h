@@ -19,7 +19,7 @@ public:
 	Bullet(float x, float y, float dx, float dy, bool fromPlayer, int damage = 20) : StraightProjectile(x, y, 10, 5, damage, fromPlayer, dx, dy, 900) {
 		if (!texIsLoaded)
 		{
-			tex.loadFromFile("Sprites/bullet.png");
+			tex.loadFromFile("i250504_i250644_Assets/bullet.png");
 			texIsLoaded = true;
 		}
 		sprite.setTexture(tex);

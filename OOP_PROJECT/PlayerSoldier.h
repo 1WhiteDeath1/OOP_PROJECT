@@ -44,7 +44,7 @@ public:
 			fireRateMultiplier = 1.25;
 			grenadeCount = 8;
 
-			texture.loadFromFile("Sprites/marco.png");
+			texture.loadFromFile("i250504_i250644_Assets/marco.png");
 			sprite.setTexture(texture);
 			sprite.setScale((width / 45), height / 45);
 			textureWidth=textureHeight=45;
@@ -52,7 +52,7 @@ public:
 		else if (characterType == 1) {//tarma
 			speedMultiplier = 0.8;
 
-			texture.loadFromFile("Sprites/tarma.png");
+			texture.loadFromFile("i250504_i250644_Assets/tarma.png");
 			sprite.setTexture(texture);
 			sprite.setScale((width / 155), height / 155);
 			textureWidth=textureHeight=155;
@@ -60,7 +60,7 @@ public:
 		else if (characterType == 2) { //eri
 			grenadeCount = 20;
 			fireRateMultiplier = 0.8;
-			texture.loadFromFile("Sprites/eri.png");
+			texture.loadFromFile("i250504_i250644_Assets/eri.png");
 			sprite.setTexture(texture);
 			sprite.setScale((width / 40), height / 40);
 			textureWidth=textureHeight=40;
@@ -71,7 +71,7 @@ public:
 			bonusAmmoPercent = 50;
 			grenadeCount = 8;
 
-			texture.loadFromFile("Sprites/fio.png");
+			texture.loadFromFile("i250504_i250644_Assets/fio.png");
 			sprite.setTexture(texture);
 			sprite.setScale((width / 162), height / 186);
 			textureWidth=162;
