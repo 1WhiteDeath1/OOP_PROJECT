@@ -12,7 +12,7 @@ private:
 	bool powerUPActive;
 	float powerUPTimer;
 	bool isDead;
-	
+	float textureWidth, textureHeight;
 
 	float fireRateMultiplier;
 	float speedMultiplier;
@@ -35,7 +35,8 @@ public:
 		currLives = 2;
 		totalLives = 2;
 		grenadeCount = 10;
-		inventory[0] = new Pistol();;
+		inventory[0] = new Pistol();
+
 
 		//each character stats
 
@@ -45,22 +46,24 @@ public:
 
 			texture.loadFromFile("Sprites/marco.png");
 			sprite.setTexture(texture);
-			sprite.setScale((width / texture.getSize().x), height / texture.getSize().y);
+			sprite.setScale((width / 45), height / 45);
+			textureWidth=textureHeight=45;
 		}
 		else if (characterType == 1) {//tarma
 			speedMultiplier = 0.8;
 
 			texture.loadFromFile("Sprites/tarma.png");
 			sprite.setTexture(texture);
-			sprite.setScale((width / texture.getSize().x), height / texture.getSize().y);
-
+			sprite.setScale((width / 155), height / 155);
+			textureWidth=textureHeight=155;
 		}
 		else if (characterType == 2) { //eri
 			grenadeCount = 20;
 			fireRateMultiplier = 0.8;
 			texture.loadFromFile("Sprites/eri.png");
 			sprite.setTexture(texture);
-			sprite.setScale((width / texture.getSize().x), height / texture.getSize().y);
+			sprite.setScale((width / 40), height / 40);
+			textureWidth=textureHeight=40;
 
 		}
 		else if (characterType == 3) {//fio
@@ -70,7 +73,9 @@ public:
 
 			texture.loadFromFile("Sprites/fio.png");
 			sprite.setTexture(texture);
-			sprite.setScale((width / texture.getSize().x), height / texture.getSize().y);
+			sprite.setScale((width / 162), height / 186);
+			textureWidth=162;
+			textureHeight=186;
 
 		}
 

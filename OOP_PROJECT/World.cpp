@@ -52,8 +52,8 @@ void World::setTile(int row, int col, int type, bool solid, bool water) {
 
 
     v.sprite.setScale(
-        (float)CELL / v.sprite.getTexture()->getSize().x,
-        (float)CELL / v.sprite.getTexture()->getSize().y
+        (float)CELL / 64,
+        (float)CELL / 64
     );
 }
 

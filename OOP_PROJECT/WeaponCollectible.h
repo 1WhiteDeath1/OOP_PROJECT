@@ -21,7 +21,7 @@ public:
 	WeaponCollectible(float x, float y, Weapon* w, const char* texture) : x(x), y(y), weapon(w) {
 		tex.loadFromFile(texture);
 		sprite.setTexture(tex);
-		sprite.setScale(WIDTH / tex.getSize().x, HIEGHT / tex.getSize().y);
+		sprite.setScale(1,1);
 	}
 
 	~WeaponCollectible() {

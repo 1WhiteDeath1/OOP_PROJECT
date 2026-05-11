@@ -7,7 +7,7 @@ void MenuState::enter() {
 	bgTex.loadFromFile("Sprites/menu_bg.png");
 	bgSprite.setTexture(bgTex);
 	bgSprite.setPosition(0, 0);
-	bgSprite.setScale(1600 / bgTex.getSize().x, 900 / bgTex.getSize().y);
+	bgSprite.setScale(1600 / 2816, 900 / 1536);
 
 	survivalTex.loadFromFile("Sprites/menu_survival.png");
 	survivalSprite.setTexture(survivalTex);

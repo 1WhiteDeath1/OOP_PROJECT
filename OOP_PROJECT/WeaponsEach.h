@@ -24,8 +24,8 @@ public:
 		}
 		sprite.setTexture(tex);
 		sprite.setScale(
-			20.f / tex.getSize().x,
-			10.f / tex.getSize().y
+			20.f / 2816,
+			10.f / 1536
 		);
 
 	}

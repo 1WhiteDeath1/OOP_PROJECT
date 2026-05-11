@@ -121,7 +121,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 1, new RoamingAround()) {
 		texture.loadFromFile("Sprites/rebel.png");
 		sprite.setTexture(texture);
-		sprite.setScale(64.f / texture.getSize().x, 96.f / texture.getSize().y);
+		sprite.setScale(64.f / 155, 96.f / 194);
 	}
 	void throwProjectile() override;
 	void render(sf::RenderWindow& w, const Camera& cam)override;
@@ -134,7 +134,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 1, new RoamingAround()) {
 		texture.loadFromFile("Sprites/shielded.png");
 		sprite.setTexture(texture);
-		sprite.setScale(64.f / texture.getSize().x, 96.f / texture.getSize().y);
+		sprite.setScale(64.f / 1088, 96.f / 1190);
 	}
 	void throwProjectile() override;
 	void TakeNormalDamage(Projectile* p)override;
@@ -150,7 +150,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 3, new RoamingAround()) {
 		texture.loadFromFile("Sprites/bazooka.png");
 		sprite.setTexture(texture);
-		sprite.setScale(64.f / texture.getSize().x, 96.f / texture.getSize().y);
+		sprite.setScale(64.f / 48, 96.f / 43);
 	}
 	void throwProjectile() override;
 	void render(sf::RenderWindow& w, const Camera& cam)override;
@@ -163,7 +163,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 2.5f, new RoamingAround()) {
 		texture.loadFromFile("Sprites/grenade_soldier.png");
 		sprite.setTexture(texture);
-		sprite.setScale(64.f / texture.getSize().x, 96.f / texture.getSize().y);
+		sprite.setScale(64.f / 36, 96.f / 50);
 	}
 	void throwProjectile() override;
 	void render(sf::RenderWindow& w, const Camera& cam)override;
