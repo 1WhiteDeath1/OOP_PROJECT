@@ -22,7 +22,7 @@ int reverseProjectileAmmo;
 public:
 SlugMariner(float x, float y, float wd, float ht, int hp, int fr, int vd) :AquaticVehicle(x, y, wd, ht, hp, fr, vd) {
 maxMissileAmmo=horizontalMissileAmmo=verticalMissileAmmo=reverseProjectileAmmo=3;
-texture.loadFromFile("i250504_i250644_Assets/slugMariner.png");
+texture.loadFromFile("25I-0504_25I-0644_Assets/slugMariner.png");
 sprite.setTexture(texture);
 }
 	void attack() override;
@@ -35,7 +35,7 @@ class EnemySub :public AquaticVehicle {
 Soldier * playerToHit=nullptr;
 public:
 	EnemySub(float x, float y, float wd, float ht, int fr, int vd) :AquaticVehicle(x, y, wd, ht, 7, fr, vd) {
-		texture.loadFromFile("i250504_i250644_Assets/enemySub.png");
+		texture.loadFromFile("25I-0504_25I-0644_Assets/enemySub.png");
 		sprite.setTexture(texture);
 	}
 

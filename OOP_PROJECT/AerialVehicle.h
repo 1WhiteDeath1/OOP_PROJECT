@@ -18,7 +18,7 @@ class FlyingTara :public AerialVehicle {
 
 public:
 	FlyingTara(float x, float y, float wd, float ht, int hp, int fr, int vd,float Y) :AerialVehicle(x, y, wd, ht, hp, fr, vd,Y), playerToHit(nullptr) {
-		texture.loadFromFile("i250504_i250644_Assets/flyingTara.png");
+		texture.loadFromFile("25I-0504_25I-0644_Assets/flyingTara.png");
 		sprite.setTexture(texture);
 	}
 	void attack() override;
@@ -33,7 +33,7 @@ int missileCount=4;
 float missileCountDown=1;
 public:
 	SlugFlyer(float x, float y, float wd, float ht, int hp, int vd,float Y) :AerialVehicle(x, y, wd, ht, hp, (MetalSlug::metalSlugFireRate) / 2, vd,Y) {
-		texture.loadFromFile("i250504_i250644_Assets/slugFlyer.png");
+		texture.loadFromFile("25I-0504_25I-0644_Assets/slugFlyer.png");
 		sprite.setTexture(texture);
 	}
 	void attack() override;

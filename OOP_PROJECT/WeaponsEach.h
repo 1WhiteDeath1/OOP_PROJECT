@@ -19,7 +19,7 @@ public:
 	Bullet(float x, float y, float dx, float dy, bool fromPlayer, int damage = 20) : StraightProjectile(x, y, 10, 5, damage, fromPlayer, dx, dy, 900) {
 		if (!texIsLoaded)
 		{
-			tex.loadFromFile("i250504_i250644_Assets/bullet.png");
+			tex.loadFromFile("25I-0504_25I-0644_Assets/bullet.png");
 			texIsLoaded = true;
 		}
 		sprite.setTexture(tex);
@@ -46,7 +46,7 @@ public:
 	Rocket(float x, float y, float dx, float dy, bool fromPlayer, int damage = 80) : StraightProjectile(x, y, 20, 10, damage, fromPlayer, dx, dy, 700) {
 		if (!texIsLoaded)
 		{
-			tex.loadFromFile("Sprites/rocket.png");
+			tex.loadFromFile("25I-0504_25I-0644_Assets/rocket.png");
 			texIsLoaded = true;
 		}
 		sprite.setTexture(tex);
@@ -76,7 +76,7 @@ public:
 	{
 		if (!texIsLoaded)
 		{
-			tex.loadFromFile("Sprites/fire.png");
+			tex.loadFromFile("25I-0504_25I-0644_Assets/fire.png");
 			texIsLoaded = true;
 		}
 		sprite.setTexture(tex);
@@ -107,7 +107,7 @@ public:
 	{
 		if (!texIsLoaded)
 		{
-			tex.loadFromFile("Sprites/laser.png");
+			tex.loadFromFile("25I-0504_25I-0644_Assets/laser.png");
 			texIsLoaded = true;
 		}
 		sprite.setTexture(tex);
@@ -136,7 +136,7 @@ public:
 
 		if (!texIsLoaded)
 		{
-			tex.loadFromFile("Sprites/grenade.png");
+			tex.loadFromFile("25I-0504_25I-0644_Assets/grenade.png");
 			texIsLoaded = true;
 		}
 		sprite.setTexture(tex);
@@ -170,7 +170,7 @@ public:
 
 		if (!texIsLoaded)
 		{
-			tex.loadFromFile("Sprites/grenade.png");
+			tex.loadFromFile("25I-0504_25I-0644_Assets/grenade.png");
 			texIsLoaded = true;
 		}
 		sprite.setTexture(tex);

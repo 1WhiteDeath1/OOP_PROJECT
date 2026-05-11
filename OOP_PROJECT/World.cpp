@@ -9,11 +9,11 @@ int World::clamp(int val, int min, int max) {
 
 
 World::World() {
-    stoneTex.loadFromFile("i250504_i250644_Assets/stone.png");
-    grassTex.loadFromFile("i250504_i250644_Assets/grass.png");
-    dirtTex.loadFromFile("i250504_i250644_Assets/dirt.png");
-    sandTex.loadFromFile("i250504_i250644_Assets/sand.png");
-    waterTex.loadFromFile("i250504_i250644_Assets/water.png");
+    stoneTex.loadFromFile("25I-0504_25I-0644_Assets/stone.png");
+    grassTex.loadFromFile("25I-0504_25I-0644_Assets/grass.png");
+    dirtTex.loadFromFile("25I-0504_25I-0644_Assets/dirt.png");
+    sandTex.loadFromFile("25I-0504_25I-0644_Assets/sand.png");
+    waterTex.loadFromFile("25I-0504_25I-0644_Assets/water.png");
 
     generateAerial();
     generatePlains();

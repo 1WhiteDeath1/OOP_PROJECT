@@ -119,7 +119,7 @@ class RebelSoldier :public Enemy {
 public:
 	RebelSoldier(float x, float y, float wd, float ht, float hp)
 		: Enemy(x, y, wd, ht, hp, 0, 5, 1, new RoamingAround()) {
-		texture.loadFromFile("i250504_i250644_Assets/rebel.png");
+		texture.loadFromFile("25I-0504_25I-0644_Assets/rebel.png");
 		sprite.setTexture(texture);
 		sprite.setScale(64.f / 155, 96.f / 194);
 	}
@@ -132,7 +132,7 @@ class ShieldedSoldier :public Enemy {
 public:
 	ShieldedSoldier(float x, float y, float wd, float ht, float hp)
 		: Enemy(x, y, wd, ht, hp, 0, 5, 1, new RoamingAround()) {
-		texture.loadFromFile("i250504_i250644_Assets/shielded.png");
+		texture.loadFromFile("25I-0504_25I-0644_Assets/shielded.png");
 		sprite.setTexture(texture);
 		sprite.setScale(64.f / 1088, 96.f / 1190);
 	}
@@ -148,7 +148,7 @@ class BazookaSoldier :public Enemy {
 public:
 	BazookaSoldier(float x, float y, float wd, float ht, float hp)
 		: Enemy(x, y, wd, ht, hp, 0, 5, 3, new RoamingAround()) {
-		texture.loadFromFile("i250504_i250644_Assets/bazooka.png");
+		texture.loadFromFile("25I-0504_25I-0644_Assets/bazooka.png");
 		sprite.setTexture(texture);
 		sprite.setScale(64.f / 48, 96.f / 43);
 	}
@@ -161,7 +161,7 @@ class GrenadeSoldier :public Enemy {
 public:
 	GrenadeSoldier(float x, float y, float wd, float ht, float hp)
 		: Enemy(x, y, wd, ht, hp, 0, 5, 2.5f, new RoamingAround()) {
-		texture.loadFromFile("i250504_i250644_Assets/grenade_soldier.png");
+		texture.loadFromFile("25I-0504_25I-0644_Assets/grenade_soldier.png");
 		sprite.setTexture(texture);
 		sprite.setScale(64.f / 36, 96.f / 50);
 	}
