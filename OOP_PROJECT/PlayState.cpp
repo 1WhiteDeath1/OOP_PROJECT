@@ -62,6 +62,7 @@ void PlayState::update(float frameTime) {
 	if (currCharacter->getPowerUpActive()) hud += "   POWER UP!";
 	if (player.isPiloting()) hud += "   Vehicle HP " + to_string(player.getVehicle()->getHp());
 	hud += "   Enemies " + to_string(entityManager.getEnemyCount());
+	hud += "   " + string(dayNight.getTimeName());
 	hud += "\nA/D move  W jump  Space fire  Up/Down aim  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit";
 	hudText.setString(hud);
 }
@@ -74,6 +75,12 @@ void PlayState::render(RenderWindow& w) {
 
 	world.render(w, camera);
 	entityManager.render(w, camera);
+
+	// darken everything at night (drawn before the hud so the text stays readable)
+	RectangleShape night(Vector2f((float)Camera::screenW, (float)Camera::screenH));
+	night.setFillColor(dayNight.getNightOverlay());
+	w.draw(night);
+
 	w.draw(hudText);
 
 	if (endTimer > 0) {

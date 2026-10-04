@@ -23,3 +23,16 @@ Color DayNightCycle::getSkyColor() const {
 		(Uint8)(night.b + (day.b - night.b) * b)
 	);
 }
+
+
+Color DayNightCycle::getNightOverlay() const {
+	// alpha 0 = fully see-through (day), 140 = dark blue tint at night (still playable)
+	return Color(10, 10, 40, (Uint8)(140 * (1 - getBrightness())));
+}
+
+const char* DayNightCycle::getTimeName() const {
+	if (timeOfDay < 50) return "Day";
+	if (timeOfDay < 60) return "Sunset";
+	if (timeOfDay < 110) return "Night";
+	return "Sunrise";
+}

@@ -19,4 +19,8 @@ public:
 	// 1 = full daylight, 0 = middle of the night
 	float getBrightness() const;
 	Color getSkyColor() const;
+
+	// see-through dark layer drawn over the level, invisible in the day
+	Color getNightOverlay() const;
+	const char* getTimeName() const;
 };
