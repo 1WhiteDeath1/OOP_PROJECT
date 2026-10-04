@@ -1,0 +1,56 @@
+#pragma once
+#include <SFML/Graphics.hpp>
+using namespace sf;
+
+// base class for every kind of weather. the particles (rain drops, snow flakes) live in
+// screen coordinates, so they always cover the screen wherever the camera is
+class Weather
+{
+protected:
+	static const int COUNT = 400;   // number of particles
+	float px[COUNT], py[COUNT];     // particle positions on the screen
+
+	void scatter();                 // place all particles at random spots on the screen
+public:
+	virtual ~Weather() = default;
+	virtual void update(float dt) = 0;
+	virtual void render(RenderWindow& window) = 0;
+	virtual const char* getName() const = 0;
+};
+
+
+class ClearWeather : public Weather {
+public:
+	void update(float dt) override {}
+	void render(RenderWindow& window) override {}
+	const char* getName() const override { return "Clear"; }
+};
+
+
+class Rain : public Weather {
+public:
+	Rain() { scatter(); }
+	void update(float dt) override;
+	void render(RenderWindow& window) override;
+	const char* getName() const override { return "Rain"; }
+};
+
+
+// changes the weather on a fixed, hardcoded schedule
+class WeatherSystem
+{
+	Weather* current = nullptr;
+	int step = 0;           // where we are in the schedule
+	float timeLeft = 0;     // seconds until the next change
+
+	void startStep();       // create the weather for the current step
+public:
+	WeatherSystem() { startStep(); }
+	~WeatherSystem() { delete current; }
+	WeatherSystem(const WeatherSystem&) = delete;            // owns a pointer, so no copies
+	WeatherSystem& operator=(const WeatherSystem&) = delete;
+
+	void update(float dt);
+	void render(RenderWindow& window) { current->render(window); }
+	const Weather& getWeather() const { return *current; }
+};

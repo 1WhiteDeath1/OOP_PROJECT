@@ -163,6 +163,7 @@
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="WeaponCollectible.cpp" />
     <ClCompile Include="WeaponsEach.cpp" />
+    <ClCompile Include="Weather.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +196,7 @@
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WeaponCollectible.h" />
     <ClInclude Include="WeaponsEach.h" />
+    <ClInclude Include="Weather.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

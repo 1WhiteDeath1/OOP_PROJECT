@@ -7,6 +7,7 @@
 #include "LevelManager.h"
 #include "Camera.h"
 #include "DayNightCycle.h"
+#include "Weather.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
@@ -18,6 +19,7 @@ class PlayState : public GameState {
 	LevelManager levelManager;
 	Camera camera;
 	DayNightCycle dayNight;
+	WeatherSystem weather;
 
 	Font font;
 	Text hudText;

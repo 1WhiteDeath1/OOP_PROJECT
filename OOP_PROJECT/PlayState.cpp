@@ -29,6 +29,7 @@ void PlayState::update(float frameTime) {
 	}
 
 	dayNight.update(frameTime);
+	weather.update(frameTime);
 	player.handleInput(frameTime, world, entityManager);
 	entityManager.update(frameTime, world);
 
@@ -76,6 +77,7 @@ void PlayState::render(RenderWindow& w) {
 
 	world.render(w, camera);
 	entityManager.render(w, camera);
+	weather.render(w); // rain in front of the level, the night layer below darkens it too
 
 	// darken everything at night (drawn before the hud so the text stays readable)
 	RectangleShape night(Vector2f((float)Camera::screenW, (float)Camera::screenH));
