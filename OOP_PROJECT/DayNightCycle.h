@@ -23,4 +23,7 @@ public:
 	// see-through dark layer drawn over the level, invisible in the day
 	Color getNightOverlay() const;
 	const char* getTimeName() const;
+
+	// sun during the day half, moon during the night half, both move left to right in an arc
+	void drawSunAndMoon(RenderWindow& window) const;
 };

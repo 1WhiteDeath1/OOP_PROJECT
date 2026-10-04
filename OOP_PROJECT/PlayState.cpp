@@ -72,6 +72,7 @@ void PlayState::render(RenderWindow& w) {
 	RectangleShape sky(Vector2f((float)Camera::screenW, (float)Camera::screenH));
 	sky.setFillColor(dayNight.getSkyColor());
 	w.draw(sky);
+	dayNight.drawSunAndMoon(w); // drawn before the level so hills cover it
 
 	world.render(w, camera);
 	entityManager.render(w, camera);

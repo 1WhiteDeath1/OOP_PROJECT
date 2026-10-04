@@ -1,4 +1,5 @@
 #include "DayNightCycle.h"
+#include <cmath>
 
 void DayNightCycle::update(float dt) {
 	timeOfDay += dt;
@@ -35,4 +36,20 @@ const char* DayNightCycle::getTimeName() const {
 	if (timeOfDay < 60) return "Sunset";
 	if (timeOfDay < 110) return "Night";
 	return "Sunrise";
+}
+
+void DayNightCycle::drawSunAndMoon(RenderWindow& window) const {
+	// first half of the day (0-60) belongs to the sun, second half (60-120) to the moon
+	float half = DAY_LENGTH / 2.f;
+	bool isSun = timeOfDay < half;
+	float progress = isSun ? timeOfDay / half : (timeOfDay - half) / half; // 0 = rises on the left, 1 = sets on the right
+
+	float x = 100 + progress * 1400;
+	float y = 420 - std::sin(progress * 3.14159f) * 300; // highest in the middle of the screen
+
+	CircleShape body(isSun ? 45.f : 32.f);
+	body.setOrigin(body.getRadius(), body.getRadius());
+	body.setPosition(x, y);
+	body.setFillColor(isSun ? Color(255, 225, 90) : Color(235, 235, 210));
+	window.draw(body);
 }
