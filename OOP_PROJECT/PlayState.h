@@ -6,6 +6,7 @@
 #include "EntityManager.h"
 #include "LevelManager.h"
 #include "Camera.h"
+#include "DayNightCycle.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
@@ -16,6 +17,7 @@ class PlayState : public GameState {
 	EntityManager entityManager;
 	LevelManager levelManager;
 	Camera camera;
+	DayNightCycle dayNight;
 
 	Font font;
 	Text hudText;

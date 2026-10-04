@@ -138,6 +138,7 @@
     <ClCompile Include="BallisticProjectile.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DamagableEntity.cpp" />
+    <ClCompile Include="DayNightCycle.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="BallisticProjectile.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DamagableEntity.h" />
+    <ClInclude Include="DayNightCycle.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />

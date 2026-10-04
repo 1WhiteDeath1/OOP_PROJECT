@@ -28,6 +28,7 @@ void PlayState::update(float frameTime) {
 		return;
 	}
 
+	dayNight.update(frameTime);
 	player.handleInput(frameTime, world, entityManager);
 	entityManager.update(frameTime, world);
 
@@ -68,7 +69,7 @@ void PlayState::update(float frameTime) {
 
 void PlayState::render(RenderWindow& w) {
 	RectangleShape sky(Vector2f((float)Camera::screenW, (float)Camera::screenH));
-	sky.setFillColor(Color(120, 190, 235));
+	sky.setFillColor(dayNight.getSkyColor());
 	w.draw(sky);
 
 	world.render(w, camera);
