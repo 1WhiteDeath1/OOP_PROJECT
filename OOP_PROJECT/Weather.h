@@ -16,6 +16,8 @@ public:
 	virtual void update(float dt) = 0;
 	virtual void render(RenderWindow& window) = 0;
 	virtual const char* getName() const = 0;
+	// how grey the sky gets: 0 = clear sky, 1 = completely grey
+	virtual float getCloudiness() const { return 0; }
 };
 
 
@@ -33,6 +35,7 @@ public:
 	void update(float dt) override;
 	void render(RenderWindow& window) override;
 	const char* getName() const override { return "Rain"; }
+	float getCloudiness() const override { return 0.7f; }
 };
 
 
@@ -43,6 +46,7 @@ public:
 	void update(float dt) override;
 	void render(RenderWindow& window) override;
 	const char* getName() const override { return "Snow"; }
+	float getCloudiness() const override { return 0.5f; }
 };
 
 

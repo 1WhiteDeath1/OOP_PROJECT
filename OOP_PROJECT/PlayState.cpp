@@ -63,7 +63,7 @@ void PlayState::update(float frameTime) {
 	if (currCharacter->getPowerUpActive()) hud += "   POWER UP!";
 	if (player.isPiloting()) hud += "   Vehicle HP " + to_string(player.getVehicle()->getHp());
 	hud += "   Enemies " + to_string(entityManager.getEnemyCount());
-	hud += "   " + string(dayNight.getTimeName());
+	hud += "   " + string(dayNight.getTimeName()) + ", " + weather.getWeather().getName();
 	hud += "\nA/D move  W jump  Space fire  Up/Down aim  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit";
 	hudText.setString(hud);
 }
@@ -71,9 +71,16 @@ void PlayState::update(float frameTime) {
 
 void PlayState::render(RenderWindow& w) {
 	RectangleShape sky(Vector2f((float)Camera::screenW, (float)Camera::screenH));
-	sky.setFillColor(dayNight.getSkyColor());
+	// clouds: pull the sky colour towards grey (its own average), works for both day and night
+	Color skyColor = dayNight.getSkyColor();
+	float cloudiness = weather.getWeather().getCloudiness();
+	float grey = (skyColor.r + skyColor.g + skyColor.b) / 3.f;
+	skyColor.r = (Uint8)(skyColor.r + (grey - skyColor.r) * cloudiness);
+	skyColor.g = (Uint8)(skyColor.g + (grey - skyColor.g) * cloudiness);
+	skyColor.b = (Uint8)(skyColor.b + (grey - skyColor.b) * cloudiness);
+	sky.setFillColor(skyColor);
 	w.draw(sky);
-	dayNight.drawSunAndMoon(w); // drawn before the level so hills cover it
+	if (cloudiness == 0) dayNight.drawSunAndMoon(w); // hidden behind the clouds when it rains or snows, drawn before the level so hills cover it
 
 	world.render(w, camera);
 	entityManager.render(w, camera);
