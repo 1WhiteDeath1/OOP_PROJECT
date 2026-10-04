@@ -1,13 +1,16 @@
 #include "Level.h"
 #include "Enemy.h"
 
-float Level::isOnGround(const World& w,int col, int eHeight) const {
-	float x = col * World::CELL;
+float Level::isOnGround(const World& w,int col, int eHeight, int eWidth) const {
+	// wide things (vehicles) cover several columns, so stand them on the highest one
+	int lastCol = col + (eWidth - 1) / World::CELL;
 	for (int row = 0; row < World::HEIGHT;row++) {
 		float y = row * World::CELL;
-		if (w.isSolid(x, y)) {
-			y = y - eHeight;
-			return y;
+		for (int c = col; c <= lastCol; c++) {
+			if (w.isSolid(c * World::CELL, y)) {
+				y = y - eHeight;
+				return y;
+			}
 		}
 	}
 	return 0;
@@ -22,8 +25,10 @@ int EnemyWidth = 64;
 int weaponHeight = 32;
 
 // hitbox size of each vehicle type (0=MetalSlug 1=SlugFlyer 2=SlugMariner 3=FlyingTara 4=EnemySub 5=M15Bradley 6=AmphibiousSlug)
-float vehicleWidth[7]  = { 96, 128, 112, 120, 112, 96, 96 };
-float vehicleHeight[7] = { 88,  84,  59,  57,  59, 94, 88 };
+// = picture size x 2.4 (Entity::PIXEL_SCALE) so vehicles keep the right size next to the 96px tall soldiers
+// (the slug flyer picture was already 4x so it gets 0.6, the slug mariner uses the sub picture made a bit smaller)
+float vehicleWidth[7]  = { 146, 190, 149, 192, 223, 192, 146 };
+float vehicleHeight[7] = { 134, 125,  78,  91, 118, 187, 134 };
 
 void Level::level1(const World& w) {
 	//enemies
@@ -38,12 +43,12 @@ void Level::level1(const World& w) {
 
 	//vehicles
 
-	vehicleSpawn[vCount++] = { 1, 6 * World::CELL, isOnGround(w, 6, vehicleHeight[1]) };  // SlugFlyer
-	vehicleSpawn[vCount++] = { 0,  60 * World::CELL, isOnGround(w, 60, vehicleHeight[0]) };  // MetalSlug
-	vehicleSpawn[vCount++] = { 3, 70 * World::CELL, isOnGround(w,70, vehicleHeight[3]) - 300 };  // FlyingTara, hovers above the ground
-	vehicleSpawn[vCount++] = { 5, 110 * World::CELL, isOnGround(w, 110, vehicleHeight[5]) };  // M15Bradley
-	vehicleSpawn[vCount++] = { 6, 128 * World::CELL, isOnGround(w, 128, vehicleHeight[6]) };  // AmphibiousSlug
-	vehicleSpawn[vCount++] = { 2, 140 * World::CELL, isOnGround(w, 140, vehicleHeight[2]) };  // SlugMariner, resting on the sea bed
+	vehicleSpawn[vCount++] = { 1, 6 * World::CELL, isOnGround(w, 6, vehicleHeight[1], vehicleWidth[1]) };  // SlugFlyer
+	vehicleSpawn[vCount++] = { 0,  60 * World::CELL, isOnGround(w, 60, vehicleHeight[0], vehicleWidth[0]) };  // MetalSlug
+	vehicleSpawn[vCount++] = { 3, 70 * World::CELL, isOnGround(w,70, vehicleHeight[3], vehicleWidth[3]) - 300 };  // FlyingTara, hovers above the ground
+	vehicleSpawn[vCount++] = { 5, 110 * World::CELL, isOnGround(w, 110, vehicleHeight[5], vehicleWidth[5]) };  // M15Bradley
+	vehicleSpawn[vCount++] = { 6, 128 * World::CELL, isOnGround(w, 128, vehicleHeight[6], vehicleWidth[6]) };  // AmphibiousSlug
+	vehicleSpawn[vCount++] = { 2, 140 * World::CELL, isOnGround(w, 140, vehicleHeight[2], vehicleWidth[2]) };  // SlugMariner, resting on the sea bed
 	vehicleSpawn[vCount++] = { 4, 175 * World::CELL, (World::seaLEVEL + 2) * World::CELL };  // EnemySub
 
 	//weapons collectibles

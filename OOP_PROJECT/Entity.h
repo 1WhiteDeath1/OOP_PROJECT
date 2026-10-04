@@ -38,6 +38,20 @@ public:
 		return touchX && touchY;
 	}
 
+	// the Metal Slug sprites are drawn 2.4x their original pixels, so a 40px tall soldier is 96px (1.5 blocks)
+	// and every sprite keeps the same size relative to the others
+	static constexpr float PIXEL_SCALE = 2.4f;
+
+	// draws the sprite with the same scale on x and y (no stretching), standing on the bottom of the
+	// hitbox and centred on it; mirrored flips it to face the other way
+	void drawSprite(RenderWindow& window, const Camera& cam, float scale, bool mirrored) {
+		FloatRect r = sprite.getLocalBounds();
+		sprite.setOrigin(r.width / 2.f, r.height);
+		sprite.setScale(mirrored ? -scale : scale, scale);
+		sprite.setPosition(cam.toScreenX(x + width / 2.f), cam.toScreenY(y + height));
+		window.draw(sprite);
+	}
+
 	bool isTouchingBlock(const World& w) const;
 
 	// More specific tile checks — subclasses use whichever they need

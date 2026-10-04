@@ -25,7 +25,7 @@ class Level
 
 	void level1(const World& w);
 
-	float isOnGround(const World& w, int col, int eHeight) const;
+	float isOnGround(const World& w, int col, int eHeight, int eWidth = World::CELL) const;
 public:
 	Level(int level, const World& w);
 

@@ -127,8 +127,8 @@ void RebelSoldier::throwProjectile() {
 	projectile = new Bullet(getX(), getY() + 5, right ? 1 : -1, 0, false, 3);
 }
 void RebelSoldier::render(sf::RenderWindow& w, const Camera& cam) {
-	sprite.setPosition(cam.toScreenX(getX()), cam.toScreenY(getY()));
-	w.draw(sprite);
+	// the rebels face left, turn them around when the player is on the right
+	drawSprite(w, cam, drawScale, target != nullptr && target->getX() > getX());
 }
 
 void ShieldedSoldier::throwProjectile() {
@@ -143,8 +143,8 @@ void ShieldedSoldier::TakeNormalDamage(Projectile* p) {
 }
 void ShieldedSoldier::takeExplosionDamage(Projectile* p) { p->applyDamage(this); }
 void ShieldedSoldier::render(sf::RenderWindow& w, const Camera& cam) {
-	sprite.setPosition(cam.toScreenX(getX()), cam.toScreenY(getY()));
-	w.draw(sprite);
+	// the knight faces right (shield in front), turn him around when the player is on the left
+	drawSprite(w, cam, drawScale, target != nullptr && target->getX() < getX());
 }
 
 void BazookaSoldier::throwProjectile() {
@@ -152,8 +152,8 @@ void BazookaSoldier::throwProjectile() {
 	projectile = new Rocket(getX(), getY() + 5, right ? 1.f : -1.f, 0.f, false, 5);
 }
 void BazookaSoldier::render(sf::RenderWindow& w, const Camera& cam) {
-	sprite.setPosition(cam.toScreenX(getX()), cam.toScreenY(getY()));
-	w.draw(sprite);
+	// the rebels face left, turn them around when the player is on the right
+	drawSprite(w, cam, drawScale, target != nullptr && target->getX() > getX());
 }
 
 void GrenadeSoldier::throwProjectile() {
@@ -161,9 +161,6 @@ void GrenadeSoldier::throwProjectile() {
 	projectile = new NormalGrenade(getX(), getY() + 5, right ? 0.7f : -0.7f, -0.7f, false);
 }
 void GrenadeSoldier::render(sf::RenderWindow& w, const Camera& cam) {
-	sprite.setPosition(cam.toScreenX(getX()), cam.toScreenY(getY()));
-	w.draw(sprite);
-
-
-	
+	// the rebels face left, turn them around when the player is on the right
+	drawSprite(w, cam, drawScale, target != nullptr && target->getX() > getX());
 }

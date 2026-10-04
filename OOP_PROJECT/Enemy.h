@@ -68,6 +68,7 @@ protected:
 	Projectile* projectile;
 public:
 	Soldier* target;
+	float drawScale = PIXEL_SCALE; // how much the picture is enlarged when drawn
 	Enemy(float x, float y, float wd, float ht, int hp,
 		int typeOfEnemy, int damageDeals, float normalFireRate,
 		EnemyAiState* currentState)
@@ -122,7 +123,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 1, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/rebel.png");
 		sprite.setTexture(texture);
-		sprite.setScale(wd / texture.getSize().x, ht / texture.getSize().y);
+		drawScale = PIXEL_SCALE / 4; // this picture was already enlarged 4x
 	}
 	void throwProjectile() override;
 	void render(sf::RenderWindow& w, const Camera& cam)override;
@@ -135,7 +136,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 1, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/shielded.png");
 		sprite.setTexture(texture);
-		sprite.setScale(wd / texture.getSize().x, ht / texture.getSize().y);
+		drawScale = 100.f / texture.getSize().y; // not a Metal Slug picture, so just make it soldier height
 	}
 	void throwProjectile() override;
 	void TakeNormalDamage(Projectile* p)override;
@@ -151,7 +152,6 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 3, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/bazooka.png");
 		sprite.setTexture(texture);
-		sprite.setScale(wd / texture.getSize().x, ht / texture.getSize().y);
 	}
 	void throwProjectile() override;
 	void render(sf::RenderWindow& w, const Camera& cam)override;
@@ -164,7 +164,6 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 2.5f, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/grenade_soldier.png");
 		sprite.setTexture(texture);
-		sprite.setScale(wd / texture.getSize().x, ht / texture.getSize().y);
 	}
 	void throwProjectile() override;
 	void render(sf::RenderWindow& w, const Camera& cam)override;

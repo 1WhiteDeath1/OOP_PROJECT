@@ -12,7 +12,7 @@ private:
 	bool powerUPActive;
 	float powerUPTimer;
 	bool isDead;
-	float textureWidth, textureHeight;
+	float drawScale; // how much the picture is enlarged when drawn
 
 	float fireRateMultiplier;
 	float speedMultiplier;
@@ -72,9 +72,8 @@ public:
 
 		}
 
-		textureWidth = (float)texture.getSize().x;
-		textureHeight = (float)texture.getSize().y;
-		sprite.setScale(width / textureWidth, height / textureHeight);
+		// marco and eri are original size pictures, tarma and fio were already enlarged 4x
+		drawScale = (characterType == 1 || characterType == 3) ? PIXEL_SCALE / 4 : PIXEL_SCALE;
 
 	}
 	~PlayerSoldier() {

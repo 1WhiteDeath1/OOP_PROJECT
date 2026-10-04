@@ -80,15 +80,6 @@ const char* PlayerSoldier::getName() const
 
 void PlayerSoldier::render(sf::RenderWindow& window, const Camera& cam)
 {
-	if (facingRight) {
-		sprite.setScale(( width/ textureWidth), height / textureHeight);
-		sprite.setPosition(cam.toScreenX(x), cam.toScreenY(y));
-	}
-	else {
-		
-		sprite.setScale((-width / textureWidth), height / textureHeight);
-		sprite.setPosition(cam.toScreenX(x) + width, cam.toScreenY(y));
-	}
-	window.draw(sprite);
-	
+	// the pictures face right, so flip them when walking left
+	drawSprite(window, cam, drawScale, !facingRight);
 }

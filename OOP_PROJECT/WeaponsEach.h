@@ -23,9 +23,10 @@ public:
 			texIsLoaded = true;
 		}
 		sprite.setTexture(tex);
+		// same scale on both sides (20px long)
 		sprite.setScale(
 			20.f / tex.getSize().x,
-			6.f / tex.getSize().y
+			20.f / tex.getSize().x
 		);
 
 	}
@@ -50,9 +51,10 @@ public:
 			texIsLoaded = true;
 		}
 		sprite.setTexture(tex);
+		// same scale on both sides so the rocket isn't squashed (40px long)
 		sprite.setScale(
-			30.f / tex.getSize().x,
-			20.f / tex.getSize().y
+			40.f / tex.getSize().x,
+			40.f / tex.getSize().x
 		);
 	}
 
@@ -139,8 +141,9 @@ public:
 			texIsLoaded = true;
 		}
 		sprite.setTexture(tex);
+		// same scale on both sides so the grenade isn't squashed (16px tall)
 		sprite.setScale(
-			16.f / tex.getSize().x,
+			16.f / tex.getSize().y,
 			16.f / tex.getSize().y
 		);
 	}
@@ -170,8 +173,9 @@ public:
 			texIsLoaded = true;
 		}
 		sprite.setTexture(tex);
+		// same scale on both sides so the grenade isn't squashed (16px tall)
 		sprite.setScale(
-			16.f / tex.getSize().x,
+			16.f / tex.getSize().y,
 			16.f / tex.getSize().y
 		);
 	}
