@@ -65,11 +65,22 @@ void World::setTile(int row, int col, int type, bool solid, bool water) {
 
 
 void World::generateAerial() {
-    int surfaceHeight = 8;
+    int surfaceHeight = 14;
+    int flatLeft = 4; // columns left before the ground is allowed to step
+
     for (int i = 0; i < aerialEND;i++) {
-        int rigidness = (rand() % 5) - 2; // at most 2 blocks up, anything taller can't be jumped
-        surfaceHeight += rigidness;
-        surfaceHeight = clamp(surfaceHeight, 3, 18);
+        // keep the ground flat for a few columns so every step is a ledge you can stand on,
+        // then step 1 block (sometimes 2, still under the ~2.5 block jump height)
+        if (flatLeft == 0) {
+            int rigidness = (rand() % 2 == 0) ? 1 : -1;
+            if (rand() % 4 == 0) rigidness *= 2;
+            // near the end, stair down towards the plains so the two biomes meet with a normal step
+            if (i > aerialEND - 20) rigidness = (surfaceHeight < 16) ? 2 : 1;
+            surfaceHeight += rigidness;
+            surfaceHeight = clamp(surfaceHeight, 9, 18);
+            flatLeft = 3 + rand() % 3; // 3 to 5 columns wide
+        }
+        flatLeft--;
 
         for (int j = surfaceHeight; j< HEIGHT;j++) {
             setTile(j, i, 1, true, false);
@@ -79,11 +90,17 @@ void World::generateAerial() {
 
 void World::generatePlains() {
     int surfaceHeight = 20;
+    int flatLeft = 5;
 
     for (int i = aerialEND; i < plainsEND;i++) {
-        int rigidness = (rand() % 3) - 1;
-        surfaceHeight += rigidness;
-        surfaceHeight = clamp(surfaceHeight, 17, 25);
+        // plains are gentler: long flat stretches with 1 block steps
+        if (flatLeft == 0) {
+            int rigidness = (rand() % 2 == 0) ? 1 : -1;
+            surfaceHeight += rigidness;
+            surfaceHeight = clamp(surfaceHeight, 18, 23);
+            flatLeft = 4 + rand() % 4; // 4 to 7 columns wide
+        }
+        flatLeft--;
 
         //grass on the surface, and beneath it dirt, smarty ants
 
@@ -97,10 +114,17 @@ void World::generatePlains() {
 
 
 void World::generateAquatic() {
+    int bed = 34;
+    int flatLeft = 4;
+
     for (int i = plainsEND; i < WIDTH;i++) {
-       
-        int bed = 33 + (rand() % 4);
-        bed = clamp(bed, 33, HEIGHT - 2);
+        // sea bed rises and falls in wide 1 block steps instead of a new random depth every column
+        if (flatLeft == 0) {
+            bed += (rand() % 2 == 0) ? 1 : -1;
+            bed = clamp(bed, 33, HEIGHT - 3);
+            flatLeft = 3 + rand() % 4; // 3 to 6 columns wide
+        }
+        flatLeft--;
 
         for (int j = bed; j < HEIGHT;j++) {
             setTile(j, i, 4, true, false);
