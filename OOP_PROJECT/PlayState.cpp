@@ -25,9 +25,19 @@ void PlayState::handleInput() {
 	// escape leaves the game and goes back to the main menu
 	if (Keyboard::isKeyPressed(Keyboard::Escape))
 		gsManager.changeState(new MenuState(gsManager));
+
+	// P pauses / unpauses (only once per press, and not on the game over screen)
+	bool pauseKey = Keyboard::isKeyPressed(Keyboard::P);
+	if (pauseKey && !pauseHeld && endTimer <= 0) {
+		paused = !paused;
+		bannerText.setString(paused ? "PAUSED" : "");
+	}
+	pauseHeld = pauseKey;
 }
 
 void PlayState::update(float frameTime) {
+	if (paused) return; // nothing moves while paused
+
 	if (endTimer > 0) {
 		endTimer -= frameTime;
 		if (endTimer <= 0) gsManager.changeState(new MenuState(gsManager));
@@ -70,7 +80,7 @@ void PlayState::update(float frameTime) {
 	if (player.isPiloting()) hud += "   Vehicle HP " + to_string(player.getVehicle()->getHp());
 	hud += "   Enemies " + to_string(entityManager.getEnemyCount());
 	hud += "   " + string(dayNight.getTimeName()) + ", " + weather.getWeather().getName();
-	hud += "\nA/D move  W jump  Space fire  Up/Down aim  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit  Esc menu";
+	hud += "\nA/D move  W jump  Space fire  Up/Down aim  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit  P pause  Esc menu";
 	hudText.setString(hud);
 }
 
@@ -99,7 +109,7 @@ void PlayState::render(RenderWindow& w) {
 
 	w.draw(hudText);
 
-	if (endTimer > 0) {
+	if (endTimer > 0 || paused) {
 		FloatRect b = bannerText.getLocalBounds();
 		bannerText.setOrigin(b.left + b.width / 2.f, b.top + b.height / 2.f);
 		bannerText.setPosition(Camera::screenW / 2.f, Camera::screenH / 2.f);

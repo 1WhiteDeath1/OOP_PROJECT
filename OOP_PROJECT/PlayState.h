@@ -25,6 +25,8 @@ class PlayState : public GameState {
 	Text hudText;
 	Text bannerText;
 	float endTimer = 0; // counts down after game over / mission complete before going back to the menu
+	bool paused = false;
+	bool pauseHeld = false; // so holding P doesn't flip pause on and off every frame
 public:
 	PlayState(GameStateManager& gsm) : gsManager(gsm), player(2 * World::CELL, world.surfaceY(2) - 96) {
 		entityManager.setPlayer(&player);
