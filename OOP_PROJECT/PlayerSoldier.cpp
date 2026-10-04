@@ -80,6 +80,8 @@ const char* PlayerSoldier::getName() const
 
 void PlayerSoldier::render(sf::RenderWindow& window, const Camera& cam)
 {
-	// the pictures face right, so flip them when walking left
-	drawSprite(window, cam, drawScale, !facingRight);
+	// the pictures face right, so flip them when walking left; bounce while running
+	float lift, lean;
+	walkBounce(touchingGround, lift, lean);
+	drawSprite(window, cam, drawScale, !facingRight, lift, lean);
 }

@@ -43,13 +43,24 @@ public:
 	static constexpr float PIXEL_SCALE = 2.4f;
 
 	// draws the sprite with the same scale on x and y (no stretching), standing on the bottom of the
-	// hitbox and centred on it; mirrored flips it to face the other way
-	void drawSprite(RenderWindow& window, const Camera& cam, float scale, bool mirrored) {
+	// hitbox and centred on it; mirrored flips it to face the other way.
+	// lift raises it by some pixels and lean tilts it by some degrees (used for the walking bounce)
+	void drawSprite(RenderWindow& window, const Camera& cam, float scale, bool mirrored, float lift = 0, float lean = 0) {
 		FloatRect r = sprite.getLocalBounds();
 		sprite.setOrigin(r.width / 2.f, r.height);
 		sprite.setScale(mirrored ? -scale : scale, scale);
-		sprite.setPosition(cam.toScreenX(x + width / 2.f), cam.toScreenY(y + height));
+		sprite.setRotation(lean);
+		sprite.setPosition(cam.toScreenX(x + width / 2.f), cam.toScreenY(y + height - lift));
 		window.draw(sprite);
+	}
+
+	// walking bounce worked out from how far the entity has walked (x), so it stops when it stands still:
+	// a small hop every ~50px and a slight lean forward. returns false when not walking
+	bool walkBounce(bool onGround, float& lift, float& lean) const {
+		if (!onGround || std::abs(velocityX) < 30) { lift = 0; lean = 0; return false; }
+		lift = std::abs(std::sin(x * 0.06f)) * 6;   // |sin| gives two hops per wave
+		lean = velocityX > 0 ? 4.f : -4.f;          // tilt the top of the sprite the way it is walking
+		return true;
 	}
 
 	bool isTouchingBlock(const World& w) const;
