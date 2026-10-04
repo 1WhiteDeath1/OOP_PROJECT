@@ -7,13 +7,15 @@ void MenuState::enter() {
 	bgTex.loadFromFile("25I-0504_25I-0644_Assets/menu_bg.png");
 	bgSprite.setTexture(bgTex);
 	bgSprite.setPosition(0, 0);
-	bgSprite.setScale(1600 / 2816, 900 / 1536);
+	bgSprite.setScale(1600.f / bgTex.getSize().x, 900.f / bgTex.getSize().y);
 
 	survivalTex.loadFromFile("25I-0504_25I-0644_Assets/menu_survival.png");
 	survivalSprite.setTexture(survivalTex);
+	survivalSprite.setOrigin(survivalTex.getSize().x / 2.f, survivalTex.getSize().y / 2.f);
 
 	exitTex.loadFromFile("25I-0504_25I-0644_Assets/menu_exit.png");
 	exitSprite.setTexture(exitTex);
+	exitSprite.setOrigin(exitTex.getSize().x / 2.f, exitTex.getSize().y / 2.f);
 
 
 }
@@ -31,8 +33,7 @@ void MenuState::handleInput() {
 		if (Keyboard::isKeyPressed(Keyboard::Return)) {
 			keyHeld = true;
 			if (choice == 0) gsManager.changeState(new PlayState(gsManager));
-			else {
-			}
+			else gsManager.requestQuit();
 		}
 	}
 
@@ -44,7 +45,6 @@ void MenuState::handleInput() {
 }
 
 void MenuState::render(RenderWindow& w) {
-	bgSprite.setScale(0.6, 0.6);
 	w.draw(bgSprite);
 
 
@@ -53,8 +53,8 @@ void MenuState::render(RenderWindow& w) {
 
 
 	float choicesXPOS = 800;
-	survivalSprite.setPosition(choicesXPOS - 500 / 2, 300);
-	exitSprite.setPosition(choicesXPOS - 500 / 2, 550);
+	survivalSprite.setPosition(choicesXPOS, 380);
+	exitSprite.setPosition(choicesXPOS, 620);
 
 	w.draw(survivalSprite);
 	w.draw(exitSprite);

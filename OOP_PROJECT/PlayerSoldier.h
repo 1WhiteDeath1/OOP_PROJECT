@@ -46,24 +46,20 @@ public:
 
 			texture.loadFromFile("25I-0504_25I-0644_Assets/marco.png");
 			sprite.setTexture(texture);
-			sprite.setScale((width / 45), height / 45);
-			textureWidth=textureHeight=45;
+
 		}
 		else if (characterType == 1) {//tarma
 			speedMultiplier = 0.8;
 
 			texture.loadFromFile("25I-0504_25I-0644_Assets/tarma.png");
 			sprite.setTexture(texture);
-			sprite.setScale((width / 155), height / 155);
-			textureWidth=textureHeight=155;
+
 		}
 		else if (characterType == 2) { //eri
 			grenadeCount = 20;
 			fireRateMultiplier = 0.8;
 			texture.loadFromFile("25I-0504_25I-0644_Assets/eri.png");
 			sprite.setTexture(texture);
-			sprite.setScale((width / 40), height / 40);
-			textureWidth=textureHeight=40;
 
 		}
 		else if (characterType == 3) {//fio
@@ -73,14 +69,12 @@ public:
 
 			texture.loadFromFile("25I-0504_25I-0644_Assets/fio.png");
 			sprite.setTexture(texture);
-			sprite.setScale((width / 162), height / 186);
-			textureWidth=162;
-			textureHeight=186;
 
 		}
 
-
-	
+		textureWidth = (float)texture.getSize().x;
+		textureHeight = (float)texture.getSize().y;
+		sprite.setScale(width / textureWidth, height / textureHeight);
 
 	}
 	~PlayerSoldier() {
@@ -88,6 +82,7 @@ public:
 	}
 
 	void activePowerUp() override;
+	void die() override;
 	const char* getName() const override;
 	
 
@@ -100,6 +95,7 @@ public:
 	int  getCharacterType() const { return characterType; }
 	bool getIsDead()        const { return isDead; }
 	bool getPowerUpActive() const { return powerUPActive; }
+	int  getGrenadeCount()  const { return grenadeCount; }
 	float getFireRateMultiplier() const { return fireRateMultiplier; }
 	float getSpeedMultiplier()    const { return speedMultiplier; }
 
@@ -113,8 +109,8 @@ public:
 
 
 	//movement
-	void moveLeft(float frameTime) { accelerate(-walkSpeed * 3 * frameTime); };
-	void moveRight(float frameTime) { accelerate(walkSpeed * 3 * frameTime); };
+	void moveLeft(float frameTime) { accelerate(-walkSpeed * 10 * frameTime); };
+	void moveRight(float frameTime) { accelerate(walkSpeed * 10 * frameTime); };
 	void setSpeedMultiplier(float xAmmount) { speedMultiplier = xAmmount; }
 	void jump() { Soldier::jump(); };
 	void crouch(bool c) { Soldier::crouch(c); };

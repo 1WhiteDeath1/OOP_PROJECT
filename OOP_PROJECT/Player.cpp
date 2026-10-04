@@ -14,26 +14,28 @@ void Player::switchCharacter() {
 }
 
 void Player::update(float frameTime, const World& w) {
-	if (isPiloting()) {
-		vehicle->update(frameTime, w);
-	}
-	else {
+	// vehicles are updated by the EntityManager
+	if (!isPiloting()) {
 		characters[activeIndex]->update(frameTime, w);
-		if (!characters[activeIndex]->isAlive() && !allDead())
+		if (characters[activeIndex]->getIsDead() && !allDead())
 			switchCharacter();
 	}
 }
 
 
 void Player::handleInput(float frameTime, const World& w, EntityManager& eManager) {
-	if (Keyboard::isKeyPressed(Keyboard::Z)) {
+	bool switchKey = Keyboard::isKeyPressed(Keyboard::Z);
+	if (switchKey && !switchHeld && !isPiloting()) {
 		switchCharacter();
 	}
+	switchHeld = switchKey;
 
 	PlayerSoldier* curr = characters[activeIndex];
 
 	if (isPiloting()) {
-		//vehicle->handleInput(frameTime);
+		// vehicles read their own controls in their update, U gets out of any of them
+		if (Keyboard::isKeyPressed(Keyboard::U))
+			vehicle->exitVehicle();
 	}
 	else {
 		if (Keyboard::isKeyPressed(Keyboard::A)) {
@@ -62,29 +64,32 @@ void Player::handleInput(float frameTime, const World& w, EntityManager& eManage
 			if (p) eManager.addProjectile(p);
 		}
 		//gernading
-		if (Keyboard::isKeyPressed(Keyboard::T)) {
+		bool grenadeKey = Keyboard::isKeyPressed(Keyboard::T);
+		if (grenadeKey && !grenadeHeld) {
 			Projectile* g = curr->throwGrenade();
 			if (g) eManager.addProjectile(g);
 		}
+		grenadeHeld = grenadeKey;
 		//meleeing
-		if (Keyboard::isKeyPressed(Keyboard::R)) {
+		bool meleeKey = Keyboard::isKeyPressed(Keyboard::R);
+		if (meleeKey && !meleeHeld) {
 			curr->meleeAttack();
 		}
+		meleeHeld = meleeKey;
 
 		//power up
-		if (Keyboard::isKeyPressed(Keyboard::Q)) {
+		bool powerKey = Keyboard::isKeyPressed(Keyboard::Q);
+		if (powerKey && !powerHeld) {
 			curr->activePowerUp();
 		}
+		powerHeld = powerKey;
 	}
 
 }
 
 void Player::render(RenderWindow& window, const Camera& cam) {
-	if (isPiloting()) {
-		vehicle->render(window, cam);
-	}
-	else {
-
+	// while piloting, the vehicle is drawn by the EntityManager
+	if (!isPiloting()) {
 		characters[activeIndex]->render(window, cam);
 	}
 }
@@ -97,8 +102,7 @@ void Player::mountVehicle(Vehicle* v) {
 void Player::dismountVehicle() {
 	if (vehicle) {
 		vehicle->exitVehicle();
-		delete vehicle;
-		vehicle = nullptr;
+		vehicle = nullptr; // still owned by the EntityManager, so it is not deleted here
 		characters[activeIndex]->setPiloting(false);
 	}
 }

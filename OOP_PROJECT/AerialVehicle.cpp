@@ -1,15 +1,16 @@
 #include "AerialVehicle.h"
+#include "WeaponsEach.h"
 void FlyingTara::attack() {
-    if (playerToHit == nullptr || playerInside == nullptr)
+    if (playerToHit == nullptr)
 return;
-float coordinateX=playerInside->getX();
-if ((x-coordinateX< 0?coordinateX-x:x-coordinateX)<40)
+float coordinateX=playerToHit->getX();
+if ((x-coordinateX< 0?coordinateX-x:x-coordinateX)<60)
 {
-	//projectile=new NormalGrenade(x+(right?+5:-5),y+5,0,1,false);
+	projectile=new NormalGrenade(x+width/2,y+height,0,1,false);
 }
 }
 void FlyingTara::update(float dt, const World& w) {
-currentTime+=0.0167;
+currentTime+=dt;
 if (currentTime > normalFireRate) {
 	currentTime=0;
 	attack();
@@ -22,8 +23,11 @@ void FlyingTara::render(sf::RenderWindow& w, const Camera& cam) {
     w.draw(sprite);
 }
 void FlyingTara::move(float dt, const World& w) {
-    if (playerInside == nullptr) return;
-float coordinateX=playerInside->getX();
+    if (playerToHit == nullptr) return;
+float coordinateX=playerToHit->getX();
+// only chase once the player is close enough to notice
+if((x-coordinateX<0?coordinateX-x:x-coordinateX)>800)
+return;
 if(x>coordinateX)
 velocityX-=100*dt;
 else
@@ -34,6 +38,7 @@ velocityX=100;
 if(velocityX<-100)
 velocityX=-100;
 x+=velocityX*dt;
+y=hoveringY;
 
 
 
@@ -42,8 +47,8 @@ void FlyingTara::playerInSight(Soldier* s) {
 	playerToHit=s;
 }
 void SlugFlyer::update(float dt, const World& w) {
-currentTime+=0.0167;
-missileCountDown-=0.0167;
+currentTime+=dt;
+missileCountDown-=dt;
 if (currentTime>normalFireRate) {
 	currentTime=0;
 	attack();
@@ -56,9 +61,6 @@ playerInside->setPosition(x,y);
 }
 
 void SlugFlyer::attack() {
-if (!(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)))
-return;
-
 if(playerInside==nullptr)
 return;
 bool right=playerInside->isFacingRight();
@@ -255,20 +257,20 @@ const float cos_values[91] = {
 int index=angle+45;
 
 float dx=right?cos_values[index]:( - cos_values[index]);
-float dy=sin_values[index];
+float dy=-sin_values[index];
+float fireX=x+(right?width:-20);
+float fireY=y+height/2;
 
-if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)))
+if ((sf::Keyboard::isKeyPressed(sf::Keyboard::R)) && missileCountDown<=0 && missileCount>0)
 {
-//projectile=new Bullet(x+(right?+5:-5),y+5,dx,dy,true);
-}
-if ((sf::Keyboard::isKeyPressed(sf::Keyboard::R)))
-{
-if(missileCountDown>0)
-return;
-//projectile=new Rocket(x+(right?+5:-5),y+5,dx,dy,true);
+projectile=new Rocket(fireX,fireY,dx,dy,true,15);
 missileCount--;
 missileCountDown=1;
 
+}
+else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)))
+{
+projectile=new Bullet(fireX,fireY,dx,dy,true,5);
 }
 
 
@@ -305,6 +307,8 @@ if(velocityY>200)velocityY=200;
 if(velocityY<-200)velocityY=-200;
 x+=velocityX*dt;
 y+=velocityY*dt;
+checkGroundCollisions(w);
+if(y<0)y=0;
 playerInside->setPosition(x,y);
 }
 

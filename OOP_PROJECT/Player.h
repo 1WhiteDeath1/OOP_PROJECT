@@ -11,6 +11,9 @@ private:
 	int activeIndex;
 	Vehicle* vehicle;
 
+	// keys that should only act once per press, not every frame they are held
+	bool switchHeld = false, grenadeHeld = false, meleeHeld = false, powerHeld = false;
+
 public:
 	Player(float spawnX, float spawnY) : activeIndex(0), vehicle(nullptr) {
 		characters[0] = new PlayerSoldier(spawnX, spawnY, 0); // Marco
@@ -24,7 +27,7 @@ public:
 			delete characters[i];
 			characters[i] = nullptr;
 		}
-		delete vehicle;
+		// the vehicle belongs to the EntityManager, it deletes it
 	}
 
 	void handleInput(float frameTime, const World& w, EntityManager& eManager);

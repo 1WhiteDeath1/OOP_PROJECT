@@ -8,20 +8,26 @@
 class WeaponCollectible
 {
 	float x, y;
-	const float WIDTH = 32;
+	const float WIDTH = 48;
 	const float HIEGHT = 32;
 
 	Texture tex;
 	Sprite sprite;
 
 	Weapon* weapon = nullptr;
+	Weapon* given = nullptr; // the weapon handed to the soldier, used to know when it was replaced
 	Soldier* pickUPGUY = nullptr;
 	bool collected = false;
 public:
 	WeaponCollectible(float x, float y, Weapon* w, const char* texture) : x(x), y(y), weapon(w) {
 		tex.loadFromFile(texture);
 		sprite.setTexture(tex);
-		sprite.setScale(1,1);
+		if (tex.getSize().x > 0) {
+			// fit the picture inside the pickup box
+			float sx = WIDTH / tex.getSize().x, sy = HIEGHT / tex.getSize().y;
+			float s = sx < sy ? sx : sy;
+			sprite.setScale(s, s);
+		}
 	}
 
 	~WeaponCollectible() {
@@ -36,15 +42,16 @@ public:
 		float otherMidX = playerX + playerWIDTH / 2.f;
 		float otherMidY = playerY + playerHEIGHT / 2.f;
 
-		bool touchX = abs(myMidX - otherMidX)
+		bool touchX = std::abs(myMidX - otherMidX)
 			< ((WIDTH / 2.f + playerWIDTH / 2.f) );
-		bool touchY = abs(myMidY - otherMidY)
+		bool touchY = std::abs(myMidY - otherMidY)
 			< ((HIEGHT / 2.f + playerHEIGHT / 2.f));
 		return touchX && touchY;
 	}
 
 	void collect(Soldier* s) {
 		s->setWeapon(1, weapon);
+		given = weapon;
 		weapon = nullptr;
 		pickUPGUY = s;
 		collected = true;
@@ -53,7 +60,7 @@ public:
 	void update() {
 		if (collected && pickUPGUY) {
 			x = pickUPGUY->getX() + pickUPGUY->getWidth();
-			y = pickUPGUY->getY();
+			y = pickUPGUY->getY() + pickUPGUY->getHeight() / 2.f - HIEGHT / 2.f;
 		}
 	}
 
@@ -62,7 +69,7 @@ public:
 		//checking for loss of ammo
 		if (collected && pickUPGUY) {
 			Weapon* slot1 = pickUPGUY->getActiveWeaponSlot(1);
-			if (!slot1 || !slot1->hasAmmo()) return;
+			if (!slot1 || slot1 != given || !slot1->hasAmmo() || !pickUPGUY->getActive()) return;
 		}
 
 

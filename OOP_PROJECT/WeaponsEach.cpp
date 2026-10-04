@@ -9,7 +9,10 @@ void Bullet::applyDamage(DamagableEntity* target) {
 	target->takeDamage(damage);
 }
 void Bullet::render(RenderWindow& w, const Camera& cam) {
-	sprite.setPosition(cam.toScreenX(x), cam.toScreenY(y));
+	// point the sprite the way the bullet is flying
+	sprite.setOrigin(tex.getSize().x / 2.f, tex.getSize().y / 2.f);
+	sprite.setRotation(std::atan2(Dy, Dx) * 180.f / 3.14159f);
+	sprite.setPosition(cam.toScreenX(x + width / 2.f), cam.toScreenY(y + height / 2.f));
 	w.draw(sprite);
 }
 
@@ -22,7 +25,9 @@ void Rocket::applyDamage(DamagableEntity* target) {
 }
 
 void Rocket::render(RenderWindow& w, const Camera& cam) {
-	sprite.setPosition(cam.toScreenX(x), cam.toScreenY(y));
+	sprite.setOrigin(tex.getSize().x / 2.f, tex.getSize().y / 2.f);
+	sprite.setRotation(std::atan2(Dy, Dx) * 180.f / 3.14159f);
+	sprite.setPosition(cam.toScreenX(x + width / 2.f), cam.toScreenY(y + height / 2.f));
 	w.draw(sprite);
 }
 

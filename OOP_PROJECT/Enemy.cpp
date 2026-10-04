@@ -104,7 +104,11 @@ void Enemy::update(float dt, const World& w) {
 }
 
 void Enemy::onHitByProjectile(Projectile* p) {
-	p->applyDamage(this);
+	// explosives and normal shots go through different functions so the shielded soldier can block bullets
+	if (p->getBlastRadius() > 0)
+		takeExplosionDamage(p);
+	else
+		TakeNormalDamage(p);
 	if (p->diesOnHit())
 		p->setActive(false);
 }
@@ -135,9 +139,9 @@ void ShieldedSoldier::TakeNormalDamage(Projectile* p) {
 	bool bulletIsRight = p->getX() > getX();
 	bool enemyIsRight = (target != nullptr) && (target->getX() > getX());
 	if (bulletIsRight != enemyIsRight)
-		takeDamage(p->getDamage());
+		p->applyDamage(this);
 }
-void ShieldedSoldier::takeExplosionDamage(Projectile* p) { takeDamage(p->getDamage()); }
+void ShieldedSoldier::takeExplosionDamage(Projectile* p) { p->applyDamage(this); }
 void ShieldedSoldier::render(sf::RenderWindow& w, const Camera& cam) {
 	sprite.setPosition(cam.toScreenX(getX()), cam.toScreenY(getY()));
 	w.draw(sprite);
@@ -145,7 +149,7 @@ void ShieldedSoldier::render(sf::RenderWindow& w, const Camera& cam) {
 
 void BazookaSoldier::throwProjectile() {
 	bool right = target->getX() > getX();
-	projectile = new Rocket(getX(), getY() + 5, right ? 0.8f : -0.8f, -0.6f, false, 5);
+	projectile = new Rocket(getX(), getY() + 5, right ? 1.f : -1.f, 0.f, false, 5);
 }
 void BazookaSoldier::render(sf::RenderWindow& w, const Camera& cam) {
 	sprite.setPosition(cam.toScreenX(getX()), cam.toScreenY(getY()));

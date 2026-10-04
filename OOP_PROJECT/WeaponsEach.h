@@ -24,8 +24,8 @@ public:
 		}
 		sprite.setTexture(tex);
 		sprite.setScale(
-			20.f / 2816,
-			10.f / 1536
+			20.f / tex.getSize().x,
+			6.f / tex.getSize().y
 		);
 
 	}
@@ -41,9 +41,9 @@ private:
 	static Texture tex;
 	static bool texIsLoaded;
 
-	float blastRadius = 100;
 public:
 	Rocket(float x, float y, float dx, float dy, bool fromPlayer, int damage = 80) : StraightProjectile(x, y, 20, 10, damage, fromPlayer, dx, dy, 700) {
+		blastRadius = 100;
 		if (!texIsLoaded)
 		{
 			tex.loadFromFile("25I-0504_25I-0644_Assets/rocket.png");
@@ -127,7 +127,6 @@ private:
 	static Texture tex;
 	static bool texIsLoaded;
 	float fuseTimer = 2.5;
-	bool exploded = false;
 
 	void explode();
 public:
@@ -151,8 +150,6 @@ public:
 	void applyDamage(DamagableEntity* target) override;
 	void render(sf::RenderWindow& w, const Camera& cam) override;
 
-	float getBlastRadiud() const { return blastRadius; }
-	bool didExplode() const { return exploded; }
 };
 
 class FireBombGrenade : public BallisticProjectile {
@@ -160,7 +157,6 @@ private:
 	static Texture tex;
 	static bool texIsLoaded;
 	float fuseTimer = 3;
-	bool exploded = false;
 
 	void explode();
 public:
@@ -185,8 +181,6 @@ public:
 	void applyDamage(DamagableEntity* target) override;
 	void render(sf::RenderWindow& w, const Camera& cam) override;
 
-	float getBlastRadiud() const { return blastRadius; }
-	bool didExplode() const { return exploded; }
 };
 
 

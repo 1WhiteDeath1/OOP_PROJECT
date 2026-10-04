@@ -10,6 +10,7 @@ public:
 	virtual void enterState(Enemy* enemy) {}
 	virtual EnemyAiState* update(Enemy* enemy, float dt, const World& w) = 0;
 	virtual void exit() {}
+	virtual ~EnemyAiState() = default;
 
 };
 
@@ -86,10 +87,10 @@ public:
 		return damageDeals;
 	}
 	virtual void TakeNormalDamage(Projectile* p) {
-		takeDamage(p->getDamage());
+		p->applyDamage(this);
 	}
 	virtual void takeExplosionDamage(Projectile* p) {
-		takeDamage(p->getDamage());
+		p->applyDamage(this);
 	}
 	void setVelocityX(float v) {
 		velocityX = v;
@@ -121,7 +122,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 1, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/rebel.png");
 		sprite.setTexture(texture);
-		sprite.setScale(64.f / 155, 96.f / 194);
+		sprite.setScale(wd / texture.getSize().x, ht / texture.getSize().y);
 	}
 	void throwProjectile() override;
 	void render(sf::RenderWindow& w, const Camera& cam)override;
@@ -134,7 +135,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 1, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/shielded.png");
 		sprite.setTexture(texture);
-		sprite.setScale(64.f / 1088, 96.f / 1190);
+		sprite.setScale(wd / texture.getSize().x, ht / texture.getSize().y);
 	}
 	void throwProjectile() override;
 	void TakeNormalDamage(Projectile* p)override;
@@ -150,7 +151,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 3, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/bazooka.png");
 		sprite.setTexture(texture);
-		sprite.setScale(64.f / 48, 96.f / 43);
+		sprite.setScale(wd / texture.getSize().x, ht / texture.getSize().y);
 	}
 	void throwProjectile() override;
 	void render(sf::RenderWindow& w, const Camera& cam)override;
@@ -163,7 +164,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 2.5f, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/grenade_soldier.png");
 		sprite.setTexture(texture);
-		sprite.setScale(64.f / 36, 96.f / 50);
+		sprite.setScale(wd / texture.getSize().x, ht / texture.getSize().y);
 	}
 	void throwProjectile() override;
 	void render(sf::RenderWindow& w, const Camera& cam)override;

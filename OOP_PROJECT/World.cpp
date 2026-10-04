@@ -67,7 +67,7 @@ void World::setTile(int row, int col, int type, bool solid, bool water) {
 void World::generateAerial() {
     int surfaceHeight = 8;
     for (int i = 0; i < aerialEND;i++) {
-        int rigidness = (rand() % 7) - 3;
+        int rigidness = (rand() % 5) - 2; // at most 2 blocks up, anything taller can't be jumped
         surfaceHeight += rigidness;
         surfaceHeight = clamp(surfaceHeight, 3, 18);
 
@@ -133,6 +133,13 @@ void World::render(RenderWindow& w, const Camera& cam) {
             }
         }
     }
+}
+
+float World::surfaceY(int col) const {
+    for (int row = 0; row < HEIGHT; row++) {
+        if (grid[row][col].isSolid) return (float)(row * CELL);
+    }
+    return (float)(HEIGHT * CELL);
 }
 
 //check

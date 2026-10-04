@@ -1,4 +1,5 @@
 #include"AquaticVehicle.h"
+#include "WeaponsEach.h"
 
 void SlugMariner::attack() {
 if(playerInside==nullptr)
@@ -197,31 +198,29 @@ const float cos_values[91] = {
 int index=angle+45;
 
 float dx=right?cos_values[index]:( - cos_values[index]);
-float dy=sin_values[index];
-if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)))
+float dy=-sin_values[index];
+float fireX=x+(right?width:-20);
+float fireY=y+height/2;
+
+// one shot per call: the missiles take priority over the gun
+if ((sf::Keyboard::isKeyPressed(sf::Keyboard::D)) && horizontalMissileAmmo>0)
 {
-//projectile=new Bullet(x+(right?+5:-5),y+5,dx,dy,true);
-}
-
-if ((sf::Keyboard::isKeyPressed(sf::Keyboard::D)))
-{if(horizontalMissileAmmo<1)
-return;
-//projectile=new Rocket(x+(right?+5:-5),y+5,right?1:-1,0,true);
+projectile=new Rocket(fireX,fireY,right?1:-1,0,true,15);
 horizontalMissileAmmo--;
-
 }
-if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W)))
-{ if(verticalMissileAmmo<1)
-return;
-//projectile=new Bullet(x+(right?+5:-5),y+5,0,-1,true);
+else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W)) && verticalMissileAmmo>0)
+{
+projectile=new Rocket(x+width/2,y-20,0,-1,true,15);
 verticalMissileAmmo--;
 }
-if ((sf::Keyboard::isKeyPressed(sf::Keyboard::A)))
-{if(reverseProjectileAmmo<1)
-return;
-
-//projectile=new Bullet(x+(right?+5:-5),y+5,right?-1:1,0,true);
+else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::A)) && reverseProjectileAmmo>0)
+{
+projectile=new Rocket(right?x-20:x+width,fireY,right?-1:1,0,true,15);
 reverseProjectileAmmo--;
+}
+else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)))
+{
+projectile=new Bullet(fireX,fireY,dx,dy,true,5);
 }
 }
 
@@ -263,18 +262,21 @@ velocityY=-speedInWater;
 x+=velocityX*dt;
 y+=velocityY*dt;
 checkGroundCollisions(w);
+// a submarine stays under the water line
+if(y<World::seaLEVEL*World::CELL)
+y=World::seaLEVEL*World::CELL;
 
 }
 void SlugMariner::update(float dt,const World& w) {
-currentTime+=0.0167;
+currentTime+=dt;
 if (currentTime > normalFireRate) {
 	currentTime=0;
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 attack();
 }
 
 
 move(dt, w);
+carryPilot();
 }
 void SlugMariner::render(sf::RenderWindow& w, const Camera& cam) {
 	sprite.setPosition(cam.toScreenX(x),cam.toScreenY(y));
@@ -284,8 +286,11 @@ void EnemySub::move(float dt, const World& w) {
 if(playerToHit==nullptr)
 return;
 float speedInWater=100;
-float xCoordinate=playerInside->getX();
-float yCoordinate=playerInside->getY();
+float xCoordinate=playerToHit->getX();
+float yCoordinate=playerToHit->getY();
+// only chase once the player is close enough to notice
+if((x-xCoordinate<0?xCoordinate-x:x-xCoordinate)>800)
+return;
 if(x>xCoordinate)
 	velocityX-=speedInWater*dt;
 
@@ -309,16 +314,18 @@ velocityY=-speedInWater;
 x+=velocityX*dt;
 y+=velocityY*dt;
 checkGroundCollisions(w);
+if(y<World::seaLEVEL*World::CELL)
+y=World::seaLEVEL*World::CELL;
 
 
 }
 void EnemySub::update(float dt,const World& w) {
-currentTime+=0.0167;
+currentTime+=dt;
 if (currentTime > normalFireRate) {
 	currentTime=0;
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 attack();
 }
+move(dt, w);
 }
 void EnemySub::render(sf::RenderWindow& w, const Camera& cam) {
 	sprite.setPosition(cam.toScreenX(x),cam.toScreenY(y));
@@ -329,7 +336,7 @@ void EnemySub::attack() {
     return;
     float xCoordinate=playerToHit->getX();
 	float yCoordinate=playerToHit->getY();
-	if( ( (x-xCoordinate)<0?-(x-xCoordinate):x-xCoordinate )>70.0||( (y-yCoordinate)<0?-(y-yCoordinate):y-yCoordinate )>70.0 )
+	if( ( (x-xCoordinate)<0?-(x-xCoordinate):x-xCoordinate )>400.0||( (y-yCoordinate)<0?-(y-yCoordinate):y-yCoordinate )>300.0 )
 	return;
 	int angle=0;
 	if( (yCoordinate-y<0?y-yCoordinate:yCoordinate-y)<15)
@@ -340,15 +347,16 @@ void EnemySub::attack() {
 	angle=30;
 
 	bool right=playerToHit->getX()>x;
+	bool up=yCoordinate<y;
 	float dx,dy;
 	if(angle ==45)
 	{ 
 	dx=right?0.707:-0.707;
-	dy=0.707;
+	dy=up?-0.707:0.707;
 	}
 	else if (angle == 30) {
 		dx=right?0.866:-0.866;
-		dy=0.866;
+		dy=up?-0.5:0.5;
 
 	}
 	else
@@ -356,7 +364,7 @@ void EnemySub::attack() {
 		dx=right?1:-1;
 		dy=0;
 	}
-	//projectile=new Rocket(x+(right?+5:-5),y+5,dx,dy,false);
+	projectile=new Rocket(x+(right?width:-20),y+height/2,dx,dy,false,10);
 }
 
 

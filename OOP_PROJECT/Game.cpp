@@ -10,13 +10,18 @@ Game::Game() : window(VideoMode(1600, 900), "Metal Slug", Style::Close) {
 void Game::run() {
 	while (window.isOpen()) {
 		float frameTime = clock.restart().asSeconds();
+		// a long frame (e.g. while a level loads) would make things fall through the ground
+		if (frameTime > 1.f / 30.f) frameTime = 1.f / 30.f;
 
 		Event ev;
 		while (window.pollEvent(ev)) {
 			if (ev.type == Event::Closed) window.close();
 		}
 
-		if (Keyboard::isKeyPressed(Keyboard::Escape)) window.close();
+		if (Keyboard::isKeyPressed(Keyboard::Escape) || stateManager.shouldQuit()) {
+			window.close();
+			break;
+		}
 
 		stateManager.handleInput();
 		stateManager.update(frameTime);

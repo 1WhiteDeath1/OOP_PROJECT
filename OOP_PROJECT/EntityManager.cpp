@@ -2,7 +2,7 @@
 #include "Soldier.h"
 #include "Enemy.h"
 
-#define DEBUG_HITBOXES
+//#define DEBUG_HITBOXES
 
 
 EntityManager::EntityManager() {
@@ -43,7 +43,7 @@ void EntityManager::addWeapon(WeaponCollectible* wC) {
 
 
 void EntityManager::addProjectile(Projectile* p) {
-	if (pCount >= MAX_PROJECTILES) return;
+	if (pCount >= MAX_PROJECTILES) { delete p; return; }
 	for (int i = 0; i < MAX_PROJECTILES;i++) {
 		if (!projectiles[i]) {
 			projectiles[i] = p;
@@ -76,6 +76,9 @@ void EntityManager::update(float frameTime, const World& w) {
 		for (int i = 0; i < MAX_ENEMIES; i++) {
 			if (enemies[i]) enemies[i]->target = active;
 		}
+		for (int i = 0; i < MAX_VEHICLES; i++) {
+			if (vehicles[i] && vehicles[i]->isEnemy()) vehicles[i]->setTarget(active);
+		}
 	}
 
 
@@ -97,6 +100,9 @@ void EntityManager::update(float frameTime, const World& w) {
 	for (int i = 0; i < MAX_VEHICLES;i++) {
 		if (vehicles[i] && vehicles[i]->getActive()) {
 			vehicles[i]->update(frameTime, w);
+
+			Projectile* vp = vehicles[i]->getProjectile();
+			if (vp) addProjectile(vp);
 		}
 	}
 
@@ -136,6 +142,9 @@ void EntityManager::update(float frameTime, const World& w) {
 	//vehicels
 	for (int i = 0; i < MAX_VEHICLES;i++) {
 		if (vehicles[i] && !vehicles[i]->getActive()) {
+			// a destroyed vehicle throws the pilot out before it is deleted
+			if (player && player->getVehicle() == vehicles[i])
+				player->dismountVehicle();
 			delete vehicles[i];
 			vehicles[i] = nullptr;
 			vCount -= 1;
@@ -215,8 +224,6 @@ void EntityManager::checkProjectileWorldCollisions(World& w) {
 }
 
 void EntityManager::checkProjectileCollisions() {
-	if (coolDown > 0) return;
-
 	for (int i = 0; i < MAX_PROJECTILES;i++) {
 		if (!projectiles[i] || !projectiles[i]->getActive() || !projectiles[i]->isFromPlayer()) continue;
 
@@ -232,6 +239,15 @@ void EntityManager::checkProjectileCollisions() {
 
 		}
 
+		for (int j = 0; j < MAX_VEHICLES && projectiles[i]->getActive(); j++) {
+			if (!vehicles[j] || !vehicles[j]->getActive() || !vehicles[j]->isEnemy()) continue;
+
+			if (overlaps(*projectiles[i], *vehicles[j])) {
+				projectiles[i]->applyDamage(vehicles[j]);
+				if (projectiles[i]->diesOnHit()) projectiles[i]->setActive(false);
+			}
+		}
+
 
 	}
 }
@@ -239,32 +255,23 @@ void EntityManager::checkProjectileCollisions() {
 
 void EntityManager::checkEnemyProjectilePlayerCollisions() {
 	if (!player) return;
-	PlayerSoldier* curr = player->getActive();
+	// while piloting, the vehicle takes the hits instead of the soldier
+	DamagableEntity* curr = player->isPiloting() ? (DamagableEntity*)player->getVehicle() : (DamagableEntity*)player->getActive();
 	if (!curr || !curr->getActive()) return;
-
-	float currx = curr->getX(), curry = curr->getY();
-	float currw = curr->getWidth(), currh = curr->getHeight();
 
 	for (int i = 0; i < MAX_PROJECTILES; i++) {
 		if (!projectiles[i] || !projectiles[i]->getActive() || projectiles[i]->isFromPlayer()) continue;
 
-		float px = projectiles[i]->getX(), py = projectiles[i]->getY();
-		float pw = projectiles[i]->getWidth(), ph = projectiles[i]->getHeight();
-
-
-		bool touchX = abs(px - currx)
-			< ((pw / 2.f + currw / 2.f));
-		bool touchY = abs(py - curry)
-			< ((ph / 2.f + currh / 2.f));
-
-		bool collision=touchX && touchY;
-
-
-		if (collision) {
+		if (overlaps(*projectiles[i], *curr)) {
 			projectiles[i]->applyDamage(curr);
 			if (projectiles[i]->diesOnHit()) projectiles[i]->setActive(false);
 		}
 	}
+}
+
+bool EntityManager::overlaps(const Entity& a, const Entity& b) {
+	return a.getX() < b.getX() + b.getWidth() && b.getX() < a.getX() + a.getWidth() &&
+		a.getY() < b.getY() + b.getHeight() && b.getY() < a.getY() + a.getHeight();
 }
 
 
@@ -275,7 +282,7 @@ void EntityManager::checkVehicleEntry() {
 	if (!curr) return;
 
 	for (int i = 0; i < MAX_VEHICLES; i++) {
-		if (!vehicles[i] || !vehicles[i]->getActive() || vehicles[i]->isVehicleOccupied()) continue;
+		if (!vehicles[i] || !vehicles[i]->getActive() || vehicles[i]->isVehicleOccupied() || vehicles[i]->isEnemy()) continue;
 
 		if (curr->collision(*vehicles[i]) && Keyboard::isKeyPressed(Keyboard::E)) {
 			vehicles[i]->enterVehicle(curr);
@@ -299,6 +306,33 @@ void EntityManager::checkGrenadeBlast() {
 		float bradius = projectiles[i]->getBlastRadius();
 		int   dmg = projectiles[i]->getDamage();
 
+		// a grenade only hurts the other side
+		if (!projectiles[i]->isFromPlayer()) {
+			if (player && !player->isPiloting()) {
+				PlayerSoldier* currCharacter = player->getActive();
+				float sx = currCharacter->getX() + currCharacter->getWidth() / 2.f;
+				float sy = currCharacter->getY() + currCharacter->getHeight() / 2.f;
+				if ((bx - sx) * (bx - sx) + (by - sy) * (by - sy) < bradius * bradius)
+					currCharacter->takeDamage(dmg / 2);
+			}
+			else if (player && player->getVehicle()) {
+				Vehicle* v = player->getVehicle();
+				float sx = v->getX() + v->getWidth() / 2.f;
+				float sy = v->getY() + v->getHeight() / 2.f;
+				if ((bx - sx) * (bx - sx) + (by - sy) * (by - sy) < bradius * bradius)
+					v->takeDamage(dmg / 2);
+			}
+			continue;
+		}
+
+		for (int j = 0; j < MAX_VEHICLES; j++) {
+			if (!vehicles[j] || !vehicles[j]->getActive() || !vehicles[j]->isEnemy()) continue;
+			float vx = vehicles[j]->getX() + vehicles[j]->getWidth() / 2.f;
+			float vy = vehicles[j]->getY() + vehicles[j]->getHeight() / 2.f;
+			if ((bx - vx) * (bx - vx) + (by - vy) * (by - vy) < bradius * bradius)
+				vehicles[j]->takeDamage(dmg);
+		}
+
 		for (int j = 0; j < MAX_ENEMIES;j++) {
 			if (!enemies[j] || !enemies[j]->getActive() || !enemies[j]->isAlive()) {
 				continue;
@@ -317,24 +351,6 @@ void EntityManager::checkGrenadeBlast() {
 				enemies[j]->onHitByProjectile(projectiles[i]);
 			}
 
-		}
-
-		//check for the soldiers too
-		if (player) {
-			PlayerSoldier* currCharacter = player->getActive();
-
-			//finding the distance from the bomb
-			float sx = currCharacter->getX() + currCharacter->getWidth() / 2.f;
-			float sy = currCharacter->getY() + currCharacter->getHeight() / 2.f;
-
-			float diffX = bx - sx;
-			float diffY = by - sy;
-
-			float modSquared = (diffX * diffX) + (diffY * diffY);
-
-			if (modSquared < (bradius * bradius)) {
-				currCharacter->takeDamage(dmg / 2);
-			}
 		}
 	}
 }
@@ -416,6 +432,7 @@ EntityManager::~EntityManager() {
 	}
 
 	for (int i = 0; i < MAX_COLLECTIBLES;i++) {
+		delete collectibles[i];
 		collectibles[i] = nullptr;
 	}
 }

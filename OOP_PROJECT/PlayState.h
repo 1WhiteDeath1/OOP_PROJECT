@@ -4,7 +4,7 @@
 #include "World.h"
 #include "Player.h"
 #include "EntityManager.h"
-#include "Level.h"
+#include "LevelManager.h"
 #include "Camera.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
@@ -14,16 +14,19 @@ class PlayState : public GameState {
 	World world;
 	Player player;
 	EntityManager entityManager;
+	LevelManager levelManager;
 	Camera camera;
+
+	Font font;
+	Text hudText;
+	Text bannerText;
+	float endTimer = 0; // counts down after game over / mission complete before going back to the menu
 public:
-	PlayState(GameStateManager& gsm) : gsManager(gsm), player(100, 600) {
+	PlayState(GameStateManager& gsm) : gsManager(gsm), player(2 * World::CELL, world.surfaceY(2) - 96) {
 		entityManager.setPlayer(&player);
 	}
 	void handleInput() override {}
-	void enter()           override {
-		Level level(1, world);
-		level.setUP(entityManager);
-	}
+	void enter()           override;
 	void exit()            override {}
 	void update(float dt)  override;
 	void render(RenderWindow& w) override;

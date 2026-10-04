@@ -23,9 +23,10 @@ void PlayerSoldier::update(float frameTime, const World& w) {
 
 	movement(frameTime, w);
 
-	//for weapon to cooldown, and keep updateing
+	//for weapon to cooldown, and keep updateing (faster cooldown = higher fire rate, power up doubles it)
+	float fireRate = fireRateMultiplier * (powerUPActive ? 2.f : 1.f);
 	for (int i = 0; i < 2; i++)
-		if (inventory[i]) inventory[i]->update(frameTime);
+		if (inventory[i]) inventory[i]->update(frameTime * fireRate);
 }
 
 void PlayerSoldier::infect(int type) {
@@ -51,6 +52,16 @@ void PlayerSoldier::activePowerUp() {
 	else if (characterType == 1) powerUPTimer = 20.f;
 	else if (characterType == 2) powerUPTimer = 10.f;
 	else if (characterType == 3) powerUPTimer = 10.f;
+}
+
+void PlayerSoldier::die() {
+	// use up a life and get back up, the character is only out once all lives are gone
+	if (currLives > 0) {
+		respawn(x, y);
+		return;
+	}
+	isDead = true;
+	isActive = false;
 }
 
 Projectile* PlayerSoldier::fire() {

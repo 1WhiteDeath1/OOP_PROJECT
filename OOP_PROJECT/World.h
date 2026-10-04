@@ -39,6 +39,7 @@ public:
 	void render(RenderWindow& w, const Camera& c);
 	bool isSolid(float wX, float wY) const;
 	bool isWater(float wX, float wY) const;
+	float surfaceY(int col) const; // y of the top of the first solid block in a column
 
 };
 

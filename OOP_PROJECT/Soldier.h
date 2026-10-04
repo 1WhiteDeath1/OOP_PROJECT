@@ -87,8 +87,8 @@ public:
 		float tMidX = target.getX() + target.getWidth() / 2.f;
 		float tMidY = target.getY() + target.getHeight() / 2.f;
 
-		bool hitX = abs(mMidX - tMidX) < (25.f + target.getWidth() / 2.f);
-		bool hitY = abs(mMidY - tMidY) < (height / 2.f + target.getHeight() / 2.f);
+		bool hitX = std::abs(mMidX - tMidX) < (25.f + target.getWidth() / 2.f);
+		bool hitY = std::abs(mMidY - tMidY) < (height / 2.f + target.getHeight() / 2.f);
 		return hitX && hitY;
 
 

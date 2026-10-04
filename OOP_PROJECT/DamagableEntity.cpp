@@ -17,8 +17,12 @@ void DamagableEntity::setPosition(float X, float Y) {// its purpose is to fix th
 }
 
 void DamagableEntity::checkXCollisions(const World& w) {
+	// keep everything inside the map, outside of it there is no ground to land on
+	if (x < 0) x = 0;
+	if (x > World::WIDTH * World::CELL - width) x = World::WIDTH * World::CELL - width;
+
 	if (isTouchingRightWall(w)) {
-		int blockC = (int)((x + width) / World::CELL);
+		int blockC = (int)((x + width - 1) / World::CELL);
 		x = (float)(blockC * World::CELL) - width;
 		if (velocityX > 0) velocityX = 0;
 	}

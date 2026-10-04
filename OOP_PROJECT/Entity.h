@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <cmath>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
@@ -30,9 +31,9 @@ public:
 		float otherMidX = other.x + other.width / 2.f;
 		float otherMidY = other.y + other.height / 2.f;
 
-		bool touchX = abs(myMidX - otherMidX)
+		bool touchX = std::abs(myMidX - otherMidX)
 			< ((width / 2.f + other.width / 2.f)-20);
-		bool touchY = abs(myMidY - otherMidY)
+		bool touchY = std::abs(myMidY - otherMidY)
 			< ((height / 2.f + other.height / 2.f)-30);
 		return touchX && touchY;
 	}

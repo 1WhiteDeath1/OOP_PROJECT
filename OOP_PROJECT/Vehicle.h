@@ -5,7 +5,7 @@ class Soldier;
 
 class Vehicle :public DamagableEntity {
 protected:
-int normalFireRate;
+float normalFireRate; // seconds between shots
 float currentTime=0;
 
 int vehicleDurability;
@@ -14,10 +14,20 @@ Soldier* playerInside=nullptr;
 Projectile* projectile=nullptr;
 
 public:
-Vehicle(float x, float y, float wd, float ht, int hp,int Fr, int vd):DamagableEntity(x,y,wd,ht,hp),normalFireRate(Fr),vehicleDurability(vd),playerInVehicle(false){
+Vehicle(float x, float y, float wd, float ht, int hp,float Fr, int vd):DamagableEntity(x,y,wd,ht,hp),normalFireRate(Fr),vehicleDurability(vd),playerInVehicle(false){
 playerInside=nullptr;
 }
 
+// stretch the loaded picture over the vehicle's hitbox
+void fitSprite() {
+	if (texture.getSize().x > 0)
+		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
+}
+// keeps the pilot (and so the camera) on the vehicle
+void carryPilot() {
+	if (playerInside)
+		playerInside->setPosition(x, y);
+}
 
 
 virtual void attack()=0;
@@ -57,7 +67,18 @@ return true;
 Soldier* getPlayer()const {
 	return playerInside;
 }
-virtual ~Vehicle(){}
+
+// enemy vehicles cannot be entered, they chase the target instead
+virtual bool isEnemy() const { return false; }
+virtual void setTarget(Soldier* s) {}
+
+// hands the projectile fired this frame (if any) to the EntityManager
+Projectile* getProjectile() {
+	Projectile* p = projectile;
+	projectile = nullptr;
+	return p;
+}
+virtual ~Vehicle(){ delete projectile; }
 
 };
 

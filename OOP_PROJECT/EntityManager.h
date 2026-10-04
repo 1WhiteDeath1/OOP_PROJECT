@@ -55,5 +55,7 @@ public:
 	void checkVehicleEntry();
 
 	void checkGrenadeBlast();
+
+	static bool overlaps(const Entity& a, const Entity& b);
 };
 

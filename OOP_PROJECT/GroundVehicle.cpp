@@ -4,14 +4,18 @@
 #include "World.h"
 #include "Camera.h"
 #include "Soldier.h"
-//#include "Rocket.h"
-//#include "NormalGrenade.h"
+#include "WeaponsEach.h"
 
-int MetalSlug::metalSlugFireRate=2;
+float MetalSlug::metalSlugFireRate=1;
 void M15Bradley::move(float dt, const World& w) {
-if(playerToHit==nullptr)
-return;
 applyGravity(dt);
+if(playerToHit==nullptr)
+{
+x+=velocityX*dt;
+y+=velocityY*dt;
+checkGroundCollisions(w);
+return;
+}
 
 	float xCoordinate=playerToHit->getX();
 	if(x>xCoordinate)
@@ -24,7 +28,8 @@ velocityX=120.0f;
 if(velocityX<-120.0f)
 velocityX=-120.0f;
 
-if(xCoordinate-x<20)
+// only chase once the player is close enough to notice
+if((xCoordinate-x<0?x-xCoordinate:xCoordinate-x)<20 || (xCoordinate-x<0?x-xCoordinate:xCoordinate-x)>800)
 velocityX=0;
 x+=velocityX*dt;
 y+=velocityY*dt;
@@ -33,9 +38,11 @@ checkGroundCollisions(w);
 }
 
 void M15Bradley::attack() {
+	if(playerToHit==nullptr)
+	return;
 	float xCoordinate=playerToHit->getX();
 	float yCoordinate=playerToHit->getY();
-	if( ( (x-xCoordinate)<0?-(x-xCoordinate):x-xCoordinate )>70.0||( (y-yCoordinate)<0?-(y-yCoordinate):y-yCoordinate )>70.0 )
+	if( ( (x-xCoordinate)<0?-(x-xCoordinate):x-xCoordinate )>500.0||( (y-yCoordinate)<0?-(y-yCoordinate):y-yCoordinate )>300.0 )
 	return;
 	int angle=0;
 	if( (yCoordinate-y<0?y-yCoordinate:yCoordinate-y)<15)
@@ -46,15 +53,16 @@ void M15Bradley::attack() {
 	angle=30;
 
 	bool right=playerToHit->getX()>x;
+	bool up=yCoordinate<y;
 	float dx,dy;
 	if(angle ==45)
 	{ 
 	dx=right?0.707:-0.707;
-	dy=0.707;
+	dy=up?-0.707:0.707;
 	}
 	else if (angle == 30) {
 		dx=right?0.866:-0.866;
-		dy=0.866;
+		dy=up?-0.5:0.5;
 
 	}
 	else
@@ -62,14 +70,14 @@ void M15Bradley::attack() {
 		dx=right?1:-1;
 		dy=0;
 	}
-	//projectile=new Rocket(x+(right?+5:-5),y+5,dx,dy,false);
+	projectile=new Rocket(x+(right?width:-20),y+20,dx,dy,false,10);
 
 
 
 
 }
 void M15Bradley::update(float dt, const World& w) {
-currentTime+=0.0167;
+currentTime+=dt;
 if (currentTime > normalFireRate) {
 	currentTime=0;
 	attack();
@@ -84,10 +92,22 @@ void M15Bradley::render(sf::RenderWindow& w, const Camera& cam) {
 }
 
 void MetalSlug::move(float dt, const World& w) {
-if(!playerInside)
-return;
-else
+applyGravity(dt);
+if(playerInside)
 {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+	velocityX=-250;
+	playerInside->setFacing(false);
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+	velocityX=250;
+	playerInside->setFacing(true);
+	}
+	else
+	velocityX=0;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && touchingGround)
+	velocityY=-600;
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 	playerInside->changeAngle(2);
 
@@ -97,6 +117,11 @@ else
 
 	}
 }
+else
+velocityX=0;
+x+=velocityX*dt;
+y+=velocityY*dt;
+checkGroundCollisions(w);
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::U))
 exitVehicle();
 
@@ -105,15 +130,15 @@ exitVehicle();
 
 }
 void MetalSlug::update(float dt,const World& w) {
-currentTime+=0.0167;
-if (currentTime > normalFireRate) {
+currentTime+=dt;
+if (currentTime > normalFireRate && playerInside && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 	currentTime=0;
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 attack();
 }
 
 
 move(dt, w);
+carryPilot();
 }
 void MetalSlug::attack() {
 if(!playerInside)
@@ -313,8 +338,8 @@ const float cos_values[91] = {
 int index=angle+45;
 
 float dx=right?cos_values[index]:( - cos_values[index]);
-float dy=sin_values[index];
-//projectile=new Rocket(x+(right?+5:-5),y+5,dx,dy,false);
+float dy=-sin_values[index]; // screen y grows downwards, so aiming up is a negative dy
+projectile=new Rocket(x+(right?width:-20),y+20,dx,dy,true,15);
 
 
 }
@@ -343,15 +368,14 @@ void AmphibiousSlug::changeForm(const World& w) {
     return;
 }
 void AmphibiousSlug::update(float dt, const World& w) {
-currentTime+=0.0167;
-if (currentTime > normalFireRate) {
+currentTime+=dt;
+if (currentTime > normalFireRate && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 	currentTime=0;
-	
+	attack();
 }
-if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-attack();
 
 move(dt, w);
+carryPilot();
 }
 void AmphibiousSlug::attack() {
 if(playerInside==nullptr)
@@ -553,8 +577,8 @@ const float cos_values[91] = {
 int index=angle+45;
 
 float dx=right?cos_values[index]:( - cos_values[index]);
-float dy=sin_values[index];
-//projectile=new Rocket(x+(right?+5:-5),y+5,dx,dy,false);
+float dy=-sin_values[index];
+projectile=new Rocket(x+(right?width:-20),y+20,dx,dy,true,15);
 
 }
 void AmphibiousSlug::render(sf::RenderWindow& w, const Camera& cam) {
@@ -564,7 +588,19 @@ void AmphibiousSlug::render(sf::RenderWindow& w, const Camera& cam) {
 }
 void AmphibiousSlug::move(float dt, const World& w) {
 if(playerInside==nullptr)
+{
+// parked: just sit on the ground
+applyGravity(dt);
+velocityX=0;
+x+=velocityX*dt;
+y+=velocityY*dt;
+checkGroundCollisions(w);
 return;
+}
+if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+playerInside->setFacing(true);
+else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+playerInside->setFacing(false);
 changeForm(w);
 if(currentForm==0)
 { 
@@ -595,9 +631,9 @@ velocityX-=speedInWater*dt;
 
 
 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-velocityY+=speedInWater*dt;
+velocityY-=speedInWater*dt;
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-velocityX-=speedInWater*dt;
+velocityY+=speedInWater*dt;
 
 
 if(velocityX>speedInWater)
@@ -633,9 +669,9 @@ velocityX-=speedInAir*dt;
 
 
 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-velocityY+=speedInAir*dt;
+velocityY-=speedInAir*dt;
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-velocityX-=speedInAir*dt;
+velocityY+=speedInAir*dt;
 
 if(velocityX>speedInAir)
 velocityX=speedInAir;
