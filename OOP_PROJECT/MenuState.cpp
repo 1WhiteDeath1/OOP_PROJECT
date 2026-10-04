@@ -30,6 +30,10 @@ void MenuState::handleInput() {
 			choice = choice >= 1 ? 1 : choice + 1;
 			keyHeld = true;
 		}
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+			keyHeld = true;
+			gsManager.requestQuit();
+		}
 		if (Keyboard::isKeyPressed(Keyboard::Return)) {
 			keyHeld = true;
 			if (choice == 0) gsManager.changeState(new PlayState(gsManager));
@@ -39,7 +43,8 @@ void MenuState::handleInput() {
 
 	if (!Keyboard::isKeyPressed(Keyboard::Up) &&
 		!Keyboard::isKeyPressed(Keyboard::Down) &&
-		!Keyboard::isKeyPressed(Keyboard::Return)) {
+		!Keyboard::isKeyPressed(Keyboard::Return) &&
+		!Keyboard::isKeyPressed(Keyboard::Escape)) {   // so the escape that left a game doesn't also quit
 		keyHeld = false;
 	}
 }

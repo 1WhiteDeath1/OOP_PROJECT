@@ -21,6 +21,12 @@ void PlayState::enter() {
 	bannerText.setOutlineThickness(4);
 }
 
+void PlayState::handleInput() {
+	// escape leaves the game and goes back to the main menu
+	if (Keyboard::isKeyPressed(Keyboard::Escape))
+		gsManager.changeState(new MenuState(gsManager));
+}
+
 void PlayState::update(float frameTime) {
 	if (endTimer > 0) {
 		endTimer -= frameTime;
@@ -64,7 +70,7 @@ void PlayState::update(float frameTime) {
 	if (player.isPiloting()) hud += "   Vehicle HP " + to_string(player.getVehicle()->getHp());
 	hud += "   Enemies " + to_string(entityManager.getEnemyCount());
 	hud += "   " + string(dayNight.getTimeName()) + ", " + weather.getWeather().getName();
-	hud += "\nA/D move  W jump  Space fire  Up/Down aim  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit";
+	hud += "\nA/D move  W jump  Space fire  Up/Down aim  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit  Esc menu";
 	hudText.setString(hud);
 }
 

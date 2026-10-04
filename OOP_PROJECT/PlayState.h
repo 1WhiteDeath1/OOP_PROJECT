@@ -29,7 +29,7 @@ public:
 	PlayState(GameStateManager& gsm) : gsManager(gsm), player(2 * World::CELL, world.surfaceY(2) - 96) {
 		entityManager.setPlayer(&player);
 	}
-	void handleInput() override {}
+	void handleInput() override;
 	void enter()           override;
 	void exit()            override {}
 	void update(float dt)  override;

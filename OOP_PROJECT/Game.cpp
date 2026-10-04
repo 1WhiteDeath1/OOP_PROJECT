@@ -18,7 +18,8 @@ void Game::run() {
 			if (ev.type == Event::Closed) window.close();
 		}
 
-		if (Keyboard::isKeyPressed(Keyboard::Escape) || stateManager.shouldQuit()) {
+		// escape is handled by the states now (back to menu while playing, quit from the menu)
+		if (stateManager.shouldQuit()) {
 			window.close();
 			break;
 		}
