@@ -36,6 +36,16 @@ public:
 };
 
 
+class Snow : public Weather {
+	float time = 0; // used to sway the flakes from side to side
+public:
+	Snow() { scatter(); }
+	void update(float dt) override;
+	void render(RenderWindow& window) override;
+	const char* getName() const override { return "Snow"; }
+};
+
+
 // changes the weather on a fixed, hardcoded schedule
 class WeatherSystem
 {
