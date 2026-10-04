@@ -112,6 +112,34 @@ void Enemy::onHitByProjectile(Projectile* p) {
 	if (p->diesOnHit())
 		p->setActive(false);
 }
+void Enemy::setPictures(const Texture& stand, const char* walkFile, int frames) {
+	standTex = &stand;
+	if (walkFile && walkTex.loadFromFile(walkFile)) walkFrames = frames;
+}
+
+void Enemy::drawEnemy(RenderWindow& w, const Camera& cam, bool pictureFacesLeft) {
+	bool walking = touchingGround && std::abs(velocityX) > 10;
+
+	// face the way it walks, or the player when standing still; flip the picture if it faces the other way
+	bool faceRight = walking ? velocityX > 0 : (target != nullptr && target->getX() > getX());
+	bool mirrored = pictureFacesLeft ? faceRight : !faceRight;
+
+	if (walking && walkFrames > 0) {
+		// pick the walking picture from how far it has walked: next frame every 8px
+		sprite.setTexture(walkTex, true);
+		int frameW = walkTex.getSize().x / walkFrames;
+		int frame = (int)(std::abs(x) / 8) % walkFrames;
+		sprite.setTextureRect(IntRect(frame * frameW, 0, frameW, walkTex.getSize().y));
+		drawSprite(w, cam, PIXEL_SCALE, mirrored); // the strips are original size pictures
+	}
+	else {
+		sprite.setTexture(*standTex, true);
+		float lift = 0, lean = 0;
+		if (walkFrames == 0) walkBounce(touchingGround, lift, lean); // no strip: bounce instead
+		drawSprite(w, cam, drawScale, mirrored, lift, lean);
+	}
+}
+
 void Enemy::changeXandY(float dt, const World& w) {
 	x += velocityX * dt;
 	y += velocityY * dt;
@@ -127,8 +155,7 @@ void RebelSoldier::throwProjectile() {
 	projectile = new Bullet(getX(), getY() + 5, right ? 1 : -1, 0, false, 3);
 }
 void RebelSoldier::render(sf::RenderWindow& w, const Camera& cam) {
-	// the rebels face left, turn them around when the player is on the right
-	drawSprite(w, cam, drawScale, target != nullptr && target->getX() > getX());
+	drawEnemy(w, cam, true); // the rebel pictures face left
 }
 
 void ShieldedSoldier::throwProjectile() {
@@ -143,8 +170,7 @@ void ShieldedSoldier::TakeNormalDamage(Projectile* p) {
 }
 void ShieldedSoldier::takeExplosionDamage(Projectile* p) { p->applyDamage(this); }
 void ShieldedSoldier::render(sf::RenderWindow& w, const Camera& cam) {
-	// the knight faces right (shield in front), turn him around when the player is on the left
-	drawSprite(w, cam, drawScale, target != nullptr && target->getX() < getX());
+	drawEnemy(w, cam, false); // the knight picture faces right (shield in front)
 }
 
 void BazookaSoldier::throwProjectile() {
@@ -152,8 +178,7 @@ void BazookaSoldier::throwProjectile() {
 	projectile = new Rocket(getX(), getY() + 5, right ? 1.f : -1.f, 0.f, false, 5);
 }
 void BazookaSoldier::render(sf::RenderWindow& w, const Camera& cam) {
-	// the rebels face left, turn them around when the player is on the right
-	drawSprite(w, cam, drawScale, target != nullptr && target->getX() > getX());
+	drawEnemy(w, cam, true); // the rebel pictures face left
 }
 
 void GrenadeSoldier::throwProjectile() {
@@ -161,6 +186,5 @@ void GrenadeSoldier::throwProjectile() {
 	projectile = new NormalGrenade(getX(), getY() + 5, right ? 0.7f : -0.7f, -0.7f, false);
 }
 void GrenadeSoldier::render(sf::RenderWindow& w, const Camera& cam) {
-	// the rebels face left, turn them around when the player is on the right
-	drawSprite(w, cam, drawScale, target != nullptr && target->getX() > getX());
+	drawEnemy(w, cam, true); // the rebel pictures face left
 }

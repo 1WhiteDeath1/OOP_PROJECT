@@ -66,6 +66,14 @@ protected:
 	float normalFireRate;
 	EnemyAiState* currentAiState;
 	Projectile* projectile;
+
+	// pictures: the standing picture (each soldier type has its own texture) and an optional
+	// walking strip of frames side by side. no strip = the standing picture just bounces
+	const Texture* standTex = nullptr;
+	Texture walkTex;
+	int walkFrames = 0;
+	void setPictures(const Texture& stand, const char* walkFile, int frames);
+	void drawEnemy(RenderWindow& w, const Camera& cam, bool pictureFacesLeft);
 public:
 	Soldier* target;
 	float drawScale = PIXEL_SCALE; // how much the picture is enlarged when drawn
@@ -123,6 +131,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 1, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/rebel.png");
 		sprite.setTexture(texture);
+		setPictures(texture, "25I-0504_25I-0644_Assets/bazooka_walk.png", 11);
 		drawScale = PIXEL_SCALE / 4; // this picture was already enlarged 4x
 	}
 	void throwProjectile() override;
@@ -136,6 +145,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 1, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/shielded.png");
 		sprite.setTexture(texture);
+		setPictures(texture, nullptr, 0);
 		drawScale = 100.f / texture.getSize().y; // not a Metal Slug picture, so just make it soldier height
 	}
 	void throwProjectile() override;
@@ -152,6 +162,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 3, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/bazooka.png");
 		sprite.setTexture(texture);
+		setPictures(texture, "25I-0504_25I-0644_Assets/bazooka_walk.png", 11);
 	}
 	void throwProjectile() override;
 	void render(sf::RenderWindow& w, const Camera& cam)override;
@@ -164,6 +175,7 @@ public:
 		: Enemy(x, y, wd, ht, hp, 0, 5, 2.5f, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/grenade_soldier.png");
 		sprite.setTexture(texture);
+		setPictures(texture, "25I-0504_25I-0644_Assets/rebel_run.png", 12);
 	}
 	void throwProjectile() override;
 	void render(sf::RenderWindow& w, const Camera& cam)override;
