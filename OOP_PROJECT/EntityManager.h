@@ -8,6 +8,7 @@
 #include "WeaponCollectible.h"
 #include "Vehicle.h"
 #include "Enemy.h"
+#include "Explosion.h"
 
 using namespace sf;
 
@@ -18,6 +19,7 @@ class EntityManager
 	static const int MAX_ENEMIES = 100;
 	static const int MAX_VEHICLES = 10;
 	static const int MAX_COLLECTIBLES = 15;
+	static const int MAX_EXPLOSIONS = 20;
 
 
 	Projectile* projectiles[MAX_PROJECTILES];
@@ -25,6 +27,7 @@ class EntityManager
 	Player* player = nullptr;
 	WeaponCollectible* collectibles[MAX_COLLECTIBLES];
 	Vehicle* vehicles[MAX_VEHICLES];
+	Explosion explosions[MAX_EXPLOSIONS]; // plain objects, reused when they finish
 
 	int pCount = 0;
 	int eCount = 0;
@@ -39,6 +42,7 @@ public:
 	void addEnemy(Enemy* e);
 	void addVehicle(Vehicle* v);
 	void addWeapon(WeaponCollectible* wC);
+	void addExplosion(float x, float y, float height);
 	void setPlayer(Player* p) { player = p; }
 
 	void update(float frameTime, const World& w);

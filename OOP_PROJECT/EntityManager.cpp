@@ -42,6 +42,16 @@ void EntityManager::addWeapon(WeaponCollectible* wC) {
 }
 
 
+void EntityManager::addExplosion(float x, float y, float height) {
+	// use the first explosion that isn't playing; if all 20 are busy this one is just skipped
+	for (int i = 0; i < MAX_EXPLOSIONS; i++) {
+		if (!explosions[i].isActive()) {
+			explosions[i].start(x, y, height);
+			return;
+		}
+	}
+}
+
 void EntityManager::addProjectile(Projectile* p) {
 	if (pCount >= MAX_PROJECTILES) { delete p; return; }
 	for (int i = 0; i < MAX_PROJECTILES;i++) {
@@ -145,6 +155,8 @@ void EntityManager::update(float frameTime, const World& w) {
 			// a destroyed vehicle throws the pilot out before it is deleted
 			if (player && player->getVehicle() == vehicles[i])
 				player->dismountVehicle();
+			// big explosion where the vehicle was
+			addExplosion(vehicles[i]->getX() + vehicles[i]->getWidth() / 2.f, vehicles[i]->getY() + vehicles[i]->getHeight(), 250);
 			delete vehicles[i];
 			vehicles[i] = nullptr;
 			vCount -= 1;
@@ -154,11 +166,17 @@ void EntityManager::update(float frameTime, const World& w) {
 	//projectiles
 	for (int i = 0; i < MAX_PROJECTILES;i++) {
 		if (projectiles[i] && !projectiles[i]->getActive()) {
+			// grenades and rockets (anything with a blast radius) explode when they are used up
+			if (projectiles[i]->getBlastRadius() > 0)
+				addExplosion(projectiles[i]->getX() + projectiles[i]->getWidth() / 2.f, projectiles[i]->getY() + projectiles[i]->getHeight(), 150);
 			delete projectiles[i];
 			projectiles[i] = nullptr;
 			pCount -= 1;
 		}
 	}
+
+	for (int i = 0; i < MAX_EXPLOSIONS; i++)
+		explosions[i].update(frameTime);
 
 	if (coolDown > 0) {
 		coolDown -= frameTime;
@@ -207,6 +225,10 @@ void EntityManager::render(RenderWindow& w, const Camera& cam) {
 				projectiles[i]->render(w, cam);
 		}
 	}
+
+	// explosions last so they are on top of everything
+	for (int i = 0; i < MAX_EXPLOSIONS; i++)
+		explosions[i].render(w, cam);
 }
 
 void EntityManager::checkProjectileWorldCollisions(World& w) {
