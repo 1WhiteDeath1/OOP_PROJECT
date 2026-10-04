@@ -28,7 +28,7 @@ protected:
 	float timerToSwitchDirection = 4;
 	int directionSign;
 public:
-	RoamingAround(float speed = 50, float range = 250) :roamingAroundSpeed(speed), detectionRange(range), isAlive(true), directionSign(1) {}
+	RoamingAround(float speed = 50, float range = 450) :roamingAroundSpeed(speed), detectionRange(range), isAlive(true), directionSign(1) {}
 	EnemyAiState* update(Enemy* enemy, float dt, const World& w);
 
 };
@@ -39,7 +39,7 @@ class AttackingState :public EnemyAiState {
 	float losingRange;
 
 public:
-	AttackingState(float attackingRange = 50, float losingRange = 100) :attackingRange(attackingRange), attackCoolDown(2), losingRange(losingRange) {}
+	AttackingState(float attackingRange = 300, float losingRange = 400) :attackingRange(attackingRange), attackCoolDown(2), losingRange(losingRange) {}
 	EnemyAiState* update(Enemy* enemy, float dt, const World& w);
 };
 
@@ -48,7 +48,7 @@ class runningState :public EnemyAiState {
 	float attackingRange;
 	float losingRange;
 public:
-	runningState(float runningSpeed = 100, float attackingRange = 50, float losingRange = 200) :runningSpeed(runningSpeed), attackingRange(attackingRange), losingRange(losingRange) {}
+	runningState(float runningSpeed = 100, float attackingRange = 300, float losingRange = 550) :runningSpeed(runningSpeed), attackingRange(attackingRange), losingRange(losingRange) {}
 	EnemyAiState* update(Enemy* enemy, float dt, const World& w)override;
 
 
@@ -74,6 +74,7 @@ protected:
 	int walkFrames = 0;
 	void setPictures(const Texture& stand, const char* walkFile, int frames);
 	void drawEnemy(RenderWindow& w, const Camera& cam, bool pictureFacesLeft);
+	void aimAtTarget(float& dx, float& dy) const; // unit direction from the enemy's gun to the target
 public:
 	Soldier* target;
 	float drawScale = PIXEL_SCALE; // how much the picture is enlarged when drawn

@@ -35,7 +35,8 @@ EnemyAiState* AttackingState::update(Enemy* enemy, float dt, const World& w) {
 	float playerX = enemy->target->getX();
 	float playerY = enemy->target->getY();
 	bool right = playerX > coordinateX;
-	if (((coordinateX - playerX < 0 ? playerX - coordinateX : coordinateX - playerX) > losingRange) && (coordinateY - playerY < 0 ? playerY - coordinateY : coordinateY - playerY) > losingRange)
+	// too far away on either axis (|| not &&): stop shooting and chase again
+	if (((coordinateX - playerX < 0 ? playerX - coordinateX : coordinateX - playerX) > losingRange) || (coordinateY - playerY < 0 ? playerY - coordinateY : coordinateY - playerY) > losingRange)
 		return new runningState();
 
 	attackCoolDown -= dt;
@@ -62,7 +63,7 @@ EnemyAiState* runningState::update(Enemy* enemy, float dt, const World& w) {
 	if (((coordinateX - playerX < 0 ? playerX - coordinateX : coordinateX - playerX) < attackingRange) && (coordinateY - playerY < 0 ? playerY - coordinateY : coordinateY - playerY) < attackingRange)
 		return new AttackingState();
 	else
-		if (((coordinateX - playerX < 0 ? playerX - coordinateX : coordinateX - playerX) > losingRange) && (coordinateY - playerY < 0 ? playerY - coordinateY : coordinateY - playerY) > losingRange)
+		if (((coordinateX - playerX < 0 ? playerX - coordinateX : coordinateX - playerX) > losingRange) || (coordinateY - playerY < 0 ? playerY - coordinateY : coordinateY - playerY) > losingRange)
 			return new RoamingAround();
 
 	enemy->setVelocityX(right ? runningSpeed : -runningSpeed);
@@ -112,6 +113,17 @@ void Enemy::onHitByProjectile(Projectile* p) {
 	if (p->diesOnHit())
 		p->setActive(false);
 }
+void Enemy::aimAtTarget(float& dx, float& dy) const {
+	// direction from the gun (30px below the top of the enemy) to the middle of the target,
+	// divided by its length so it is 1 long (the projectile speed does the rest)
+	dx = (target->getX() + target->getWidth() / 2) - (x + width / 2);
+	dy = (target->getY() + target->getHeight() / 2) - (y + 30);
+	float length = std::sqrt(dx * dx + dy * dy);
+	if (length < 1) { dx = 1; dy = 0; return; }
+	dx /= length;
+	dy /= length;
+}
+
 void Enemy::setPictures(const Texture& stand, const char* walkFile, int frames) {
 	standTex = &stand;
 	if (walkFile && walkTex.loadFromFile(walkFile)) walkFrames = frames;
@@ -151,16 +163,18 @@ Projectile* Enemy::getProjectile() {
 	return p;
 }
 void RebelSoldier::throwProjectile() {
-	bool right = target->getX() > getX();
-	projectile = new Bullet(getX(), getY() + 5, right ? 1 : -1, 0, false, 3);
+	float dx, dy;
+	aimAtTarget(dx, dy);
+	projectile = new Bullet(getX() + width / 2, getY() + 30, dx, dy, false, 3);
 }
 void RebelSoldier::render(sf::RenderWindow& w, const Camera& cam) {
 	drawEnemy(w, cam, true); // the rebel pictures face left
 }
 
 void ShieldedSoldier::throwProjectile() {
-	bool right = target->getX() > getX();
-	projectile = new Bullet(getX(), getY() + 5, right ? 1 : -1, 0, false, 3);
+	float dx, dy;
+	aimAtTarget(dx, dy);
+	projectile = new Bullet(getX() + width / 2, getY() + 30, dx, dy, false, 3);
 }
 void ShieldedSoldier::TakeNormalDamage(Projectile* p) {
 	bool bulletIsRight = p->getX() > getX();
@@ -174,8 +188,9 @@ void ShieldedSoldier::render(sf::RenderWindow& w, const Camera& cam) {
 }
 
 void BazookaSoldier::throwProjectile() {
-	bool right = target->getX() > getX();
-	projectile = new Rocket(getX(), getY() + 5, right ? 1.f : -1.f, 0.f, false, 5);
+	float dx, dy;
+	aimAtTarget(dx, dy);
+	projectile = new Rocket(getX() + width / 2, getY() + 30, dx, dy, false, 5);
 }
 void BazookaSoldier::render(sf::RenderWindow& w, const Camera& cam) {
 	drawEnemy(w, cam, true); // the rebel pictures face left
@@ -183,7 +198,7 @@ void BazookaSoldier::render(sf::RenderWindow& w, const Camera& cam) {
 
 void GrenadeSoldier::throwProjectile() {
 	bool right = target->getX() > getX();
-	projectile = new NormalGrenade(getX(), getY() + 5, right ? 0.7f : -0.7f, -0.7f, false);
+	projectile = new NormalGrenade(getX(), getY() + 5, right ? 0.45f : -0.45f, -0.7f, false); // lob lands about 300px away, the attack range
 }
 void GrenadeSoldier::render(sf::RenderWindow& w, const Camera& cam) {
 	drawEnemy(w, cam, true); // the rebel pictures face left
