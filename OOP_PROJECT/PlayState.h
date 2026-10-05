@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "DayNightCycle.h"
 #include "Weather.h"
+#include "Score.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
@@ -20,10 +21,13 @@ class PlayState : public GameState {
 	Camera camera;
 	DayNightCycle dayNight;
 	WeatherSystem weather;
+	Score score;
 
 	Font font;
 	Text hudText;
 	Text bannerText;
+	Text scoreText;    // big score in the top right
+	Text popupText;    // the floating "+100"s
 	float endTimer = 0; // counts down after game over / mission complete before going back to the menu
 	bool paused = false;
 	int lastHp = -1; // to notice when the player gets hit
@@ -32,6 +36,7 @@ class PlayState : public GameState {
 public:
 	PlayState(GameStateManager& gsm) : gsManager(gsm), player(2 * World::CELL, world.surfaceY(2) - 96) {
 		entityManager.setPlayer(&player);
+		entityManager.setScore(&score);
 	}
 	void handleInput() override;
 	void enter()           override;

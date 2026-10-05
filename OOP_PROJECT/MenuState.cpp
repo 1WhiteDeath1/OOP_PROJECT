@@ -1,5 +1,7 @@
 #include "MenuState.h"
 #include "PlayState.h"
+#include "Score.h"
+#include <string>
 
 MenuState::MenuState(GameStateManager& gsm) : gsManager(gsm) {}
 
@@ -16,6 +18,18 @@ void MenuState::enter() {
 	exitTex.loadFromFile("25I-0504_25I-0644_Assets/menu_exit.png");
 	exitSprite.setTexture(exitTex);
 	exitSprite.setOrigin(exitTex.getSize().x / 2.f, exitTex.getSize().y / 2.f);
+
+	// best score so far, from highscore.txt
+	font.loadFromFile("TEXT/font1.ttf");
+	highScoreText.setFont(font);
+	highScoreText.setCharacterSize(36);
+	highScoreText.setFillColor(Color(255, 230, 80));
+	highScoreText.setOutlineColor(Color::Black);
+	highScoreText.setOutlineThickness(3);
+	highScoreText.setString("HIGH SCORE  " + std::to_string(Score::loadHighScore()));
+	FloatRect b = highScoreText.getLocalBounds();
+	highScoreText.setOrigin(b.width / 2, 0);
+	highScoreText.setPosition(800, 790);
 
 
 }
@@ -63,5 +77,6 @@ void MenuState::render(RenderWindow& w) {
 
 	w.draw(survivalSprite);
 	w.draw(exitSprite);
+	w.draw(highScoreText);
 
 }

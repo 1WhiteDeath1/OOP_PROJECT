@@ -16,6 +16,16 @@ void PlayState::enter() {
 	hudText.setOutlineThickness(2);
 	hudText.setPosition(16, 12);
 
+	scoreText.setFont(font);
+	scoreText.setCharacterSize(40);
+	scoreText.setFillColor(Color(255, 230, 80));
+	scoreText.setOutlineColor(Color::Black);
+	scoreText.setOutlineThickness(3);
+
+	popupText.setFont(font);
+	popupText.setCharacterSize(24);
+	popupText.setOutlineThickness(2);
+
 	bannerText.setFont(font);
 	bannerText.setCharacterSize(72);
 	bannerText.setFillColor(Color(255, 210, 40));
@@ -28,9 +38,11 @@ void PlayState::exit() {
 }
 
 void PlayState::handleInput() {
-	// escape leaves the game and goes back to the main menu
-	if (Keyboard::isKeyPressed(Keyboard::Escape))
+	// escape leaves the game and goes back to the main menu (the score still counts for the high score)
+	if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+		Score::saveHighScore(score.getPoints());
 		gsManager.changeState(new MenuState(gsManager));
+	}
 
 	// P pauses / unpauses (only once per press, and not on the game over screen)
 	bool pauseKey = Keyboard::isKeyPressed(Keyboard::P);
@@ -56,6 +68,7 @@ void PlayState::update(float frameTime) {
 	}
 
 	dayNight.update(frameTime);
+	score.update(frameTime);
 	weather.update(frameTime);
 	player.handleInput(frameTime, world, entityManager);
 	entityManager.update(frameTime, world);
@@ -82,12 +95,14 @@ void PlayState::update(float frameTime) {
 	if (player.allDead()) {
 		bannerText.setString("GAME OVER");
 		endTimer = 3;
+		Score::saveHighScore(score.getPoints());
 		SoundManager::stopMusic();
 		SoundManager::play(SoundManager::GAME_OVER);
 	}
 	else if (levelManager.isLevelFinished(entityManager)) {
 		bannerText.setString("MISSION COMPLETE");
 		endTimer = 3;
+		Score::saveHighScore(score.getPoints());
 		SoundManager::stopMusic();
 		SoundManager::play(SoundManager::MISSION_COMPLETE);
 	}
@@ -103,6 +118,13 @@ void PlayState::update(float frameTime) {
 	if (player.isPiloting()) hud += "   Vehicle HP " + to_string(player.getVehicle()->getHp());
 	hud += "   Enemies " + to_string(entityManager.getEnemyCount());
 	hud += "   " + string(dayNight.getTimeName()) + ", " + weather.getWeather().getName();
+	// score in the top right, with the combo multiplier while a combo is going
+	std::string scoreLine = "SCORE " + to_string(score.getPoints());
+	if (score.comboActive()) scoreLine += "   x" + to_string(score.getMultiplier()) + " COMBO!";
+	scoreText.setString(scoreLine);
+	FloatRect sb = scoreText.getLocalBounds();
+	scoreText.setPosition(Camera::screenW - sb.width - 30, 60);
+
 	hud += "\nA/D move  W jump  Space fire  Up/Down aim  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit  P pause  M mute  Esc menu";
 	hudText.setString(hud);
 }
@@ -130,7 +152,9 @@ void PlayState::render(RenderWindow& w) {
 	night.setFillColor(dayNight.getNightOverlay());
 	w.draw(night);
 
+	score.renderPopups(w, camera, popupText);
 	w.draw(hudText);
+	w.draw(scoreText);
 
 	if (endTimer > 0 || paused) {
 		FloatRect b = bannerText.getLocalBounds();

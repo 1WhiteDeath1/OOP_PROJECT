@@ -150,6 +150,15 @@ void EntityManager::update(float frameTime, const World& w) {
 	checkCollectiblesCollisions();
 	checkEnemyProjectilePlayerCollisions();
 
+	// score: every enemy that died this frame, once
+	if (score) {
+		for (int i = 0; i < MAX_ENEMIES; i++) {
+			if (!enemies[i]) continue;
+			int pts = enemies[i]->takeKillPoints();
+			if (pts > 0) score->add(pts, enemies[i]->getX() + enemies[i]->getWidth() / 2, enemies[i]->getY());
+		}
+	}
+
 	//updating enemies
 	for (int i = 0; i < MAX_ENEMIES;i++) {
 		if (enemies[i] && !enemies[i]->getActive()) {
@@ -165,6 +174,9 @@ void EntityManager::update(float frameTime, const World& w) {
 			// a destroyed vehicle throws the pilot out before it is deleted
 			if (player && player->getVehicle() == vehicles[i])
 				player->dismountVehicle();
+			// destroyed enemy vehicles are worth 500 points
+			if (score && vehicles[i]->isEnemy())
+				score->add(500, vehicles[i]->getX() + vehicles[i]->getWidth() / 2, vehicles[i]->getY());
 			// big explosion where the vehicle was
 			addExplosion(vehicles[i]->getX() + vehicles[i]->getWidth() / 2.f, vehicles[i]->getY() + vehicles[i]->getHeight(), 250);
 			delete vehicles[i];

@@ -22,6 +22,7 @@
     <ClCompile Include="PlayState.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ProjectileWeapon.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="Soldier.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="StraightProjectile.cpp" />
@@ -56,6 +57,7 @@
     <ClInclude Include="PlayState.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="ProjectileWeapon.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="Soldier.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="StraightProjectile.h" />

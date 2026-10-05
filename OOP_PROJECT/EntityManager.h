@@ -9,6 +9,7 @@
 #include "Vehicle.h"
 #include "Enemy.h"
 #include "Explosion.h"
+#include "Score.h"
 
 using namespace sf;
 
@@ -25,6 +26,7 @@ class EntityManager
 	Projectile* projectiles[MAX_PROJECTILES];
 	Enemy* enemies[MAX_ENEMIES];
 	Player* player = nullptr;
+	Score* score = nullptr; // where kills are added (owned by PlayState)
 	WeaponCollectible* collectibles[MAX_COLLECTIBLES];
 	Vehicle* vehicles[MAX_VEHICLES];
 	Explosion explosions[MAX_EXPLOSIONS]; // plain objects, reused when they finish
@@ -45,6 +47,7 @@ public:
 	void addWeapon(WeaponCollectible* wC);
 	void addExplosion(float x, float y, float height);
 	void setPlayer(Player* p) { player = p; }
+	void setScore(Score* s) { score = s; }
 
 	void update(float frameTime, const World& w);
 	void render(RenderWindow& w, const Camera& cam);

@@ -11,6 +11,8 @@ class MenuState: public GameState
 	Sprite bgSprite;
 
 	Texture survivalTex, exitTex;
+	Font font;
+	Text highScoreText;
 	Sprite survivalSprite, exitSprite;
 	
 	int choice = 0;  // 0=survival, 1=exit

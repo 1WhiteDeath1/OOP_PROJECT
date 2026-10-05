@@ -69,6 +69,7 @@ protected:
 
 	// death animation: knocked back into the air, spins and fades, then removed
 	bool dying = false;
+	bool scored = false; // the kill has been added to the score
 	float deathTimer = 0;
 	static constexpr float DEATH_TIME = 0.7f;
 
@@ -83,6 +84,12 @@ protected:
 public:
 	Soldier* target;
 	float drawScale = PIXEL_SCALE; // how much the picture is enlarged when drawn
+	// returns the points for this kill the first time it is called after the enemy died, 0 otherwise
+	int takeKillPoints() {
+		if (isAlive() || scored) return 0;
+		scored = true;
+		return typeOfEnemy == 1 ? 200 : 100; // shield soldier is worth more
+	}
 	Enemy(float x, float y, float wd, float ht, int hp,
 		int typeOfEnemy, int damageDeals, float normalFireRate,
 		EnemyAiState* currentState)
@@ -149,7 +156,7 @@ class ShieldedSoldier :public Enemy {
 	sf::Texture texture;
 public:
 	ShieldedSoldier(float x, float y, float wd, float ht, float hp)
-		: Enemy(x, y, wd, ht, hp, 0, 10, 1, new RoamingAround()) {
+		: Enemy(x, y, wd, ht, hp, 1, 10, 1, new RoamingAround()) { // type 1 = shield soldier
 		texture.loadFromFile("25I-0504_25I-0644_Assets/shielded.png");
 		sprite.setTexture(texture);
 		setPictures(texture, nullptr, 0);
