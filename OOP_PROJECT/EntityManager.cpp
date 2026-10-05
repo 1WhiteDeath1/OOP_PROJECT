@@ -252,7 +252,7 @@ void EntityManager::checkProjectileCollisions() {
 		if (!projectiles[i] || !projectiles[i]->getActive() || !projectiles[i]->isFromPlayer()) continue;
 
 		for (int j = 0; j < MAX_ENEMIES;j++) {
-			if (!enemies[j] || !enemies[j]->getActive()) {
+			if (!enemies[j] || !enemies[j]->getActive() || !enemies[j]->isAlive()) {
 				continue;
 			}
 
@@ -387,7 +387,7 @@ void EntityManager::checkMeleeCollisions() {
 		return;
 	}
 	for (int j = 0; j < MAX_ENEMIES;j++) {
-		if (!enemies[j] || !enemies[j]->getActive()) {
+		if (!enemies[j] || !enemies[j]->getActive() || !enemies[j]->isAlive()) {
 			continue;
 		}
 		if (currCharacter->checkMeleeCollision(*enemies[j])) {
@@ -404,7 +404,7 @@ void EntityManager::checkEnemyPlayerCollisions() {
 	if (!currCharacter || !currCharacter->getActive()) return;
 
 	for (int j = 0; j < MAX_ENEMIES; j++) {
-		if (!enemies[j] || !enemies[j]->getActive()) continue;
+		if (!enemies[j] || !enemies[j]->getActive() || !enemies[j]->isAlive()) continue;
 
 		if (currCharacter->collision(*enemies[j])) {
 			//int type = enemies[j]->getEnemyType();

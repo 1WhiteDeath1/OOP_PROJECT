@@ -67,6 +67,11 @@ protected:
 	EnemyAiState* currentAiState;
 	Projectile* projectile;
 
+	// death animation: knocked back into the air, spins and fades, then removed
+	bool dying = false;
+	float deathTimer = 0;
+	static constexpr float DEATH_TIME = 0.7f;
+
 	// pictures: the standing picture (each soldier type has its own texture) and an optional
 	// walking strip of frames side by side. no strip = the standing picture just bounces
 	const Texture* standTex = nullptr;
@@ -90,6 +95,7 @@ public:
 		delete projectile;
 	}
 	void update(float dt, const World& w) override;
+	void die() override;   // starts the death animation instead of disappearing at once
 	void onHitByProjectile(Projectile* p);
 
 

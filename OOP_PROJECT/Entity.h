@@ -20,14 +20,15 @@ protected:
 	float width, height;
 	bool isActive = true;
 	int hitFrames = 0; // frames left of the red "got hit" flash
+	Uint8 alpha = 255; // see-through-ness of the sprite (255 = solid), used to fade out
 
 	// tints the sprite red for a few frames after a hit, normal colour otherwise
 	void applyHitTint() {
 		if (hitFrames > 0) {
-			sprite.setColor(Color(255, 90, 90));
+			sprite.setColor(Color(255, 90, 90, alpha));
 			hitFrames--;
 		}
-		else sprite.setColor(Color::White);
+		else sprite.setColor(Color(255, 255, 255, alpha));
 	}
 public:
 	Entity(float x, float y, float w, float h) : x(x), y(y), width(w), height(h) {}

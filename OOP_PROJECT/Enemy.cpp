@@ -92,7 +92,26 @@ EnemyAiState* Descending::update(Enemy* enemy, float dt, const World& w) {
 
 
 
+void Enemy::die() {
+	dying = true;
+	deathTimer = DEATH_TIME;
+	// thrown back away from the player and up into the air
+	bool playerOnRight = target != nullptr && target->getX() > x;
+	velocityX = playerOnRight ? -180.f : 180.f;
+	velocityY = -380.f;
+	touchingGround = false;
+}
+
 void Enemy::update(float dt, const World& w) {
+	if (dying) {
+		// no AI while dying, just fly back and fall
+		deathTimer -= dt;
+		applyGravity(dt);
+		changeXandY(dt, w);
+		if (touchingGround) velocityX *= 0.8f; // slide to a stop on the ground
+		if (deathTimer <= 0) isActive = false; // now the EntityManager deletes it
+		return;
+	}
 	if (!currentAiState)
 		return;
 	EnemyAiState* next = currentAiState->update(this, dt, w);
@@ -130,6 +149,17 @@ void Enemy::setPictures(const Texture& stand, const char* walkFile, int frames) 
 }
 
 void Enemy::drawEnemy(RenderWindow& w, const Camera& cam, bool pictureFacesLeft) {
+	if (dying) {
+		// how far into the animation: 0 at the start, 1 at the end
+		float t = 1 - deathTimer / DEATH_TIME;
+		alpha = (Uint8)(255 * (1 - t));                           // fade out
+		if ((int)(t * 12) % 2 == 1) alpha /= 3;                   // and blink
+		float spin = (velocityX > 0 ? 1 : -1) * 80 * t;           // tip over backwards
+		sprite.setTexture(*standTex, true);
+		bool flyingRight = velocityX > 0;
+		drawSprite(w, cam, drawScale, pictureFacesLeft ? !flyingRight : flyingRight, 0, spin);
+		return;
+	}
 	bool walking = touchingGround && std::abs(velocityX) > 10;
 
 	// face the way it walks, or the player when standing still; flip the picture if it faces the other way
