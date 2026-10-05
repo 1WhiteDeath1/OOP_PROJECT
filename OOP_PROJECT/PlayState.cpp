@@ -5,7 +5,11 @@
 using namespace std;
 
 void PlayState::enter() {
-	levelManager.loadLevel(1, world, entityManager);
+	levelManager.loadLevel(mission, world, entityManager);
+	// mission 1 in the morning, mission 2 in the late afternoon (sunset comes soon), the boss at night
+	if (mission == 1) dayNight.setTime(5);
+	else if (mission == 2) dayNight.setTime(38);
+	else dayNight.setTime(70);
 	SoundManager::playMusic();
 
 	font.loadFromFile("TEXT/font1.ttf");
@@ -25,6 +29,17 @@ void PlayState::enter() {
 	popupText.setFont(font);
 	popupText.setCharacterSize(24);
 	popupText.setOutlineThickness(2);
+
+	introText.setFont(font);
+	introText.setCharacterSize(56);
+	introText.setFillColor(Color::White);
+	introText.setOutlineColor(Color::Black);
+	introText.setOutlineThickness(4);
+	const char* names[3] = { "MOUNTAIN PASS", "COASTLINE", "REBEL BASE" };
+	introText.setString("MISSION " + to_string(mission) + "\n" + names[mission - 1]);
+	FloatRect ib = introText.getLocalBounds();
+	introText.setOrigin(ib.left + ib.width / 2.f, ib.top + ib.height / 2.f);
+	introText.setPosition(Camera::screenW / 2.f, 300);
 
 	bannerText.setFont(font);
 	bannerText.setCharacterSize(72);
@@ -63,10 +78,14 @@ void PlayState::update(float frameTime) {
 
 	if (endTimer > 0) {
 		endTimer -= frameTime;
-		if (endTimer <= 0) gsManager.changeState(new MenuState(gsManager));
+		if (endTimer <= 0) {
+			if (missionDone) gsManager.changeState(new PlayState(gsManager, mission + 1, score.getPoints())); // next mission, keep the score
+			else gsManager.changeState(new MenuState(gsManager));
+		}
 		return;
 	}
 
+	if (introTimer > 0) introTimer -= frameTime;
 	dayNight.update(frameTime);
 	score.update(frameTime);
 	weather.update(frameTime);
@@ -99,16 +118,18 @@ void PlayState::update(float frameTime) {
 		SoundManager::stopMusic();
 		SoundManager::play(SoundManager::GAME_OVER);
 	}
-	else if (levelManager.isLevelFinished(entityManager)) {
-		bannerText.setString("MISSION COMPLETE");
-		endTimer = 3;
+	else if (levelManager.isLevelFinished(entityManager, currCharacter->getX())) {
+		missionDone = levelManager.nextLevelAvalaible();
+		if (missionDone) bannerText.setString("MISSION " + to_string(mission) + " COMPLETE");
+		else bannerText.setString("YOU WIN!\nFINAL SCORE " + to_string(score.getPoints()));
+		endTimer = missionDone ? 3.f : 6.f;
 		Score::saveHighScore(score.getPoints());
 		SoundManager::stopMusic();
 		SoundManager::play(SoundManager::MISSION_COMPLETE);
 	}
 
 	//hud
-	string hud = string(currCharacter->getName()) +
+	string hud = "MISSION " + to_string(mission) + "   " + string(currCharacter->getName()) +
 		"   HP " + to_string(currCharacter->getHp()) +
 		"   Lives " + to_string(currCharacter->getLives()) +
 		"   Grenades " + to_string(currCharacter->getGrenadeCount());
@@ -130,6 +151,27 @@ void PlayState::update(float frameTime) {
 }
 
 
+void PlayState::drawGoalFlag(RenderWindow& w) {
+	int col = levelManager.getGoalColumn();
+	if (col <= 0) return; // the boss mission has no flag
+	float groundY = world.surfaceY(col);
+	float poleX = camera.toScreenX(col * (float)World::CELL + 32);
+
+	RectangleShape pole(Vector2f(8, 220));
+	pole.setFillColor(Color(200, 200, 200));
+	pole.setPosition(poleX, camera.toScreenY(groundY - 220));
+	w.draw(pole);
+
+	// a red triangle flag waving at the top of the pole
+	ConvexShape flag(3);
+	flag.setPoint(0, Vector2f(0, 0));
+	flag.setPoint(1, Vector2f(90, 30));
+	flag.setPoint(2, Vector2f(0, 60));
+	flag.setFillColor(Color(220, 40, 40));
+	flag.setPosition(poleX + 8, camera.toScreenY(groundY - 215));
+	w.draw(flag);
+}
+
 void PlayState::render(RenderWindow& w) {
 	RectangleShape sky(Vector2f((float)Camera::screenW, (float)Camera::screenH));
 	// clouds: pull the sky colour towards grey (its own average), works for both day and night
@@ -144,6 +186,7 @@ void PlayState::render(RenderWindow& w) {
 	if (cloudiness == 0) dayNight.drawSunAndMoon(w); // hidden behind the clouds when it rains or snows, drawn before the level so hills cover it
 
 	world.render(w, camera);
+	drawGoalFlag(w);
 	entityManager.render(w, camera);
 	weather.render(w); // rain in front of the level, the night layer below darkens it too
 
@@ -155,6 +198,8 @@ void PlayState::render(RenderWindow& w) {
 	score.renderPopups(w, camera, popupText);
 	w.draw(hudText);
 	w.draw(scoreText);
+
+	if (introTimer > 0 && endTimer <= 0) w.draw(introText);
 
 	if (endTimer > 0 || paused) {
 		FloatRect b = bannerText.getLocalBounds();

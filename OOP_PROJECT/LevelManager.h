@@ -6,7 +6,7 @@ class LevelManager
 {
 private:
 	int currLevel = 1;
-	int MAX = 1;
+	int MAX = 3; // missions 1, 2 and 3 (the boss)
 	Level* level = nullptr;
 public:
 	LevelManager() {}
@@ -19,12 +19,13 @@ public:
 		level->setUP(em);
 	}
 
-	bool isLevelFinished(const EntityManager& em) const {
-		if (em.getEnemyCount() == 0) {
-			return true;
-		}
-		return false;
+	// missions with a goal flag end when the player reaches it, the last one when every enemy is gone
+	bool isLevelFinished(const EntityManager& em, float playerX) const {
+		if (level && level->getGoalColumn() > 0)
+			return playerX >= level->getGoalColumn() * World::CELL;
+		return em.getEnemyCount() == 0;
 	}
+	int getGoalColumn() const { return level ? level->getGoalColumn() : 0; }
 	int getCurrLevel() const {
 		return currLevel;
 	}

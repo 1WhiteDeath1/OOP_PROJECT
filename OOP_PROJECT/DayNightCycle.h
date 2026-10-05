@@ -15,6 +15,7 @@ public:
 	static const int DAY_LENGTH = 120;
 
 	void update(float dt);
+	void setTime(float t) { timeOfDay = t; } // jump to a time of day (each mission starts at its own time)
 
 	// 1 = full daylight, 0 = middle of the night
 	float getBrightness() const;
