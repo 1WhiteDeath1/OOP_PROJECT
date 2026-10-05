@@ -5,12 +5,6 @@ It was made as an Object Oriented Programming course project (roll numbers **25I
 
 ![Gameplay](docs/screenshots/day.png)
 
-## Gameplay video
-
-[![Gameplay video](docs/screenshots/video_thumb.png)](docs/gameplay.mp4)
-
-Click the picture to watch the gameplay video (1.5 minutes, with sound). It shows all three missions, the vehicles, the power-ups, the weather and day/night cycle, and the boss fight. The boss's health was lowered for the recording so the whole fight fits in the video.
-
 ---
 
 ## Features
