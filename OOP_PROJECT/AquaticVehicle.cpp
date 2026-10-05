@@ -205,22 +205,22 @@ float fireY=y+height/2;
 // one shot per call: the missiles take priority over the gun
 if ((sf::Keyboard::isKeyPressed(sf::Keyboard::D)) && horizontalMissileAmmo>0)
 {
-projectile=new Rocket(fireX,fireY,right?1:-1,0,true,15);
+projectile=new Rocket(fireX,fireY,right?1:-1,0,true,40);
 horizontalMissileAmmo--;
 }
 else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W)) && verticalMissileAmmo>0)
 {
-projectile=new Rocket(x+width/2,y-20,0,-1,true,15);
+projectile=new Rocket(x+width/2,y-20,0,-1,true,40);
 verticalMissileAmmo--;
 }
 else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::A)) && reverseProjectileAmmo>0)
 {
-projectile=new Rocket(right?x-20:x+width,fireY,right?-1:1,0,true,15);
+projectile=new Rocket(right?x-20:x+width,fireY,right?-1:1,0,true,40);
 reverseProjectileAmmo--;
 }
 else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)))
 {
-projectile=new Bullet(fireX,fireY,dx,dy,true,5);
+projectile=new Bullet(fireX,fireY,dx,dy,true,10);
 }
 }
 
@@ -364,7 +364,7 @@ void EnemySub::attack() {
 		dx=right?1:-1;
 		dy=0;
 	}
-	projectile=new Rocket(x+(right?width:-20),y+height/2,dx,dy,false,10);
+	projectile=new Rocket(x+(right?width:-20),y+height/2,dx,dy,false,20);
 }
 
 

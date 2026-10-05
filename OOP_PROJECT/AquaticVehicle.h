@@ -33,7 +33,7 @@ fitSprite();
 class EnemySub :public AquaticVehicle {
 Soldier * playerToHit=nullptr;
 public:
-	EnemySub(float x, float y, float wd, float ht, float fr, int vd) :AquaticVehicle(x, y, wd, ht, 7, fr, vd) {
+	EnemySub(float x, float y, float wd, float ht, float fr, int vd) :AquaticVehicle(x, y, wd, ht, 80, fr, vd) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/enemySub.png");
 		sprite.setTexture(texture);
 		fitSprite();

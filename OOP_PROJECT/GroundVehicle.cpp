@@ -70,7 +70,7 @@ void M15Bradley::attack() {
 		dx=right?1:-1;
 		dy=0;
 	}
-	projectile=new Rocket(x+(right?width:-20),y+20,dx,dy,false,10);
+	projectile=new Rocket(x+(right?width:-20),y+20,dx,dy,false,20);
 
 
 
@@ -339,7 +339,7 @@ int index=angle+45;
 
 float dx=right?cos_values[index]:( - cos_values[index]);
 float dy=-sin_values[index]; // screen y grows downwards, so aiming up is a negative dy
-projectile=new Rocket(x+(right?width:-20),y+20,dx,dy,true,15);
+projectile=new Rocket(x+(right?width:-20),y+20,dx,dy,true,40);
 
 
 }
@@ -578,7 +578,7 @@ int index=angle+45;
 
 float dx=right?cos_values[index]:( - cos_values[index]);
 float dy=-sin_values[index];
-projectile=new Rocket(x+(right?width:-20),y+20,dx,dy,true,15);
+projectile=new Rocket(x+(right?width:-20),y+20,dx,dy,true,40);
 
 }
 void AmphibiousSlug::render(sf::RenderWindow& w, const Camera& cam) {

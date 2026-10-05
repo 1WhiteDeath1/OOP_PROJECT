@@ -32,8 +32,8 @@ public:
 
 
 		currState = new NormalState();
-		currLives = 2;
-		totalLives = 2;
+		currLives = 1;
+		totalLives = 1;
 		grenadeCount = 10;
 		inventory[0] = new Pistol();
 

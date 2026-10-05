@@ -129,7 +129,7 @@ class RebelSoldier :public Enemy {
 	sf::Texture texture;
 public:
 	RebelSoldier(float x, float y, float wd, float ht, float hp)
-		: Enemy(x, y, wd, ht, hp, 0, 5, 1, new RoamingAround()) {
+		: Enemy(x, y, wd, ht, hp, 0, 10, 1, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/rebel.png");
 		sprite.setTexture(texture);
 		setPictures(texture, "25I-0504_25I-0644_Assets/bazooka_walk.png", 11);
@@ -143,7 +143,7 @@ class ShieldedSoldier :public Enemy {
 	sf::Texture texture;
 public:
 	ShieldedSoldier(float x, float y, float wd, float ht, float hp)
-		: Enemy(x, y, wd, ht, hp, 0, 5, 1, new RoamingAround()) {
+		: Enemy(x, y, wd, ht, hp, 0, 10, 1, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/shielded.png");
 		sprite.setTexture(texture);
 		setPictures(texture, nullptr, 0);
@@ -160,7 +160,7 @@ class BazookaSoldier :public Enemy {
 	sf::Texture texture;
 public:
 	BazookaSoldier(float x, float y, float wd, float ht, float hp)
-		: Enemy(x, y, wd, ht, hp, 0, 5, 3, new RoamingAround()) {
+		: Enemy(x, y, wd, ht, hp, 0, 10, 3, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/bazooka.png");
 		sprite.setTexture(texture);
 		setPictures(texture, "25I-0504_25I-0644_Assets/bazooka_walk.png", 11);
@@ -173,7 +173,7 @@ class GrenadeSoldier :public Enemy {
 	sf::Texture texture;
 public:
 	GrenadeSoldier(float x, float y, float wd, float ht, float hp)
-		: Enemy(x, y, wd, ht, hp, 0, 5, 2.5f, new RoamingAround()) {
+		: Enemy(x, y, wd, ht, hp, 0, 10, 2.5f, new RoamingAround()) {
 		texture.loadFromFile("25I-0504_25I-0644_Assets/grenade_soldier.png");
 		sprite.setTexture(texture);
 		setPictures(texture, "25I-0504_25I-0644_Assets/rebel_run.png", 12);

@@ -263,14 +263,14 @@ float fireY=y+height/2;
 
 if ((sf::Keyboard::isKeyPressed(sf::Keyboard::R)) && missileCountDown<=0 && missileCount>0)
 {
-projectile=new Rocket(fireX,fireY,dx,dy,true,15);
+projectile=new Rocket(fireX,fireY,dx,dy,true,40);
 missileCount--;
 missileCountDown=1;
 
 }
 else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)))
 {
-projectile=new Bullet(fireX,fireY,dx,dy,true,5);
+projectile=new Bullet(fireX,fireY,dx,dy,true,10);
 }
 
 

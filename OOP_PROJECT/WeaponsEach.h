@@ -204,7 +204,7 @@ public:
 		coolDown = fireRate;
 		float dx, dy;
 		getDirection(angle, facingRight, dx, dy);
-		return new Bullet(x, y, dx, dy, true, 3);
+		return new Bullet(x, y, dx, dy, true, 10);
 	}
 
 };
@@ -221,7 +221,7 @@ public:
 		currAmmo -= 1;
 		float dx, dy;
 		getDirection(angle, facingRight, dx, dy);
-		return new Bullet(x, y, dx, dy, true, 3);
+		return new Bullet(x, y, dx, dy, true, 8);
 	}
 };
 
@@ -236,7 +236,7 @@ public:
 		currAmmo -= 1;
 		float dx, dy;
 		getDirection(angle, facingRight, dx, dy);
-		return new Rocket(x, y, dx, dy, true, 5);
+		return new Rocket(x, y, dx, dy, true, 40);
 	}
 };
 
@@ -251,7 +251,7 @@ public:
 		currAmmo -= 1;
 		float dx, dy;
 		getDirection(angle, facingRight, dx, dy);
-		return new FireStream(x, y, dx, dy, true, 2);
+		return new FireStream(x, y, dx, dy, true, 6);
 	}
 };
 

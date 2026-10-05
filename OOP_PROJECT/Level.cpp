@@ -68,16 +68,16 @@ void Level::setUP(EntityManager& em) const {
 		const spawn& sp = enemySpawn[i];
 
 		if (sp.type == 0) {
-			e = new RebelSoldier(sp.x, sp.y, EnemyWidth, EnemyHeight, 30);
+			e = new RebelSoldier(sp.x, sp.y, EnemyWidth, EnemyHeight, 20);
 		}
 		else if (sp.type == 1) {
-			e = new ShieldedSoldier(sp.x, sp.y, EnemyWidth, EnemyHeight, 30);
+			e = new ShieldedSoldier(sp.x, sp.y, EnemyWidth, EnemyHeight, 40);
 		}
 		else if (sp.type == 2) {
-			e = new BazookaSoldier(sp.x, sp.y, EnemyWidth, EnemyHeight, 25);
+			e = new BazookaSoldier(sp.x, sp.y, EnemyWidth, EnemyHeight, 20);
 		}
 		else if (sp.type == 3) {
-			e = new GrenadeSoldier(sp.x, sp.y, EnemyWidth, EnemyHeight ,25);
+			e = new GrenadeSoldier(sp.x, sp.y, EnemyWidth, EnemyHeight ,20);
 		}
 
 		if (e) em.addEnemy(e);
@@ -100,7 +100,7 @@ void Level::setUP(EntityManager& em) const {
 			v = new SlugMariner(sp.x, sp.y, vw, vh, 30, 0.3f, 1);
 		}
 		else if (sp.type == 3) {
-			v = new FlyingTara(sp.x, sp.y, vw, vh, 10, 3.f, 1, sp.y);
+			v = new FlyingTara(sp.x, sp.y, vw, vh, 60, 3.f, 1, sp.y);
 		}
 		else if (sp.type == 4) {
 			v = new EnemySub(sp.x, sp.y, vw, vh, 2.f, 1);
@@ -125,7 +125,7 @@ void Level::setUP(EntityManager& em) const {
 			texture = "25I-0504_25I-0644_Assets/hmg.png";
 		}
 		else if (sp.type == 1) {
-			w = new RocketLauncher(5);
+			w = new RocketLauncher(10);
 			texture = "25I-0504_25I-0644_Assets/RocketLauncher.png";
 		}
 		else if (sp.type == 2) {

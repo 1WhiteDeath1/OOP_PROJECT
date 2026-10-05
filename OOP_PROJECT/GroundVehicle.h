@@ -15,7 +15,7 @@ class M15Bradley :public GroundVehicle {
 	Soldier* playerToHit;
 
 public:
-	M15Bradley(float x, float y, float wd, float ht,float fr, int vd) :GroundVehicle(x, y, wd, ht, 7, fr, vd) {
+	M15Bradley(float x, float y, float wd, float ht,float fr, int vd) :GroundVehicle(x, y, wd, ht, 120, fr, vd) {
 	playerToHit=nullptr;
 	texture.loadFromFile("25I-0504_25I-0644_Assets/M15Bradley.png");
 	sprite.setTexture(texture);

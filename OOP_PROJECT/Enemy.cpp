@@ -165,7 +165,7 @@ Projectile* Enemy::getProjectile() {
 void RebelSoldier::throwProjectile() {
 	float dx, dy;
 	aimAtTarget(dx, dy);
-	projectile = new Bullet(getX() + width / 2, getY() + 30, dx, dy, false, 3);
+	projectile = new Bullet(getX() + width / 2, getY() + 30, dx, dy, false, 10);
 }
 void RebelSoldier::render(sf::RenderWindow& w, const Camera& cam) {
 	drawEnemy(w, cam, true); // the rebel pictures face left
@@ -174,7 +174,7 @@ void RebelSoldier::render(sf::RenderWindow& w, const Camera& cam) {
 void ShieldedSoldier::throwProjectile() {
 	float dx, dy;
 	aimAtTarget(dx, dy);
-	projectile = new Bullet(getX() + width / 2, getY() + 30, dx, dy, false, 3);
+	projectile = new Bullet(getX() + width / 2, getY() + 30, dx, dy, false, 10);
 }
 void ShieldedSoldier::TakeNormalDamage(Projectile* p) {
 	bool bulletIsRight = p->getX() > getX();
@@ -190,7 +190,7 @@ void ShieldedSoldier::render(sf::RenderWindow& w, const Camera& cam) {
 void BazookaSoldier::throwProjectile() {
 	float dx, dy;
 	aimAtTarget(dx, dy);
-	projectile = new Rocket(getX() + width / 2, getY() + 30, dx, dy, false, 5);
+	projectile = new Rocket(getX() + width / 2, getY() + 30, dx, dy, false, 20);
 }
 void BazookaSoldier::render(sf::RenderWindow& w, const Camera& cam) {
 	drawEnemy(w, cam, true); // the rebel pictures face left

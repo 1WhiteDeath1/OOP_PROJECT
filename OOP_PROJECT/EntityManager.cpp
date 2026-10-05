@@ -389,7 +389,7 @@ void EntityManager::checkMeleeCollisions() {
 			continue;
 		}
 		if (currCharacter->checkMeleeCollision(*enemies[j])) {
-			enemies[j]->takeDamage(30);
+			enemies[j]->takeDamage(50); // knife
 		}
 	}
 }
