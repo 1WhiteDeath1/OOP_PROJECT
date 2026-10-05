@@ -220,7 +220,9 @@ public:
 		coolDown = fireRate;
 		currAmmo -= 1;
 		float dx, dy;
-		getDirection(angle, facingRight, dx, dy);
+		// a machine gun isn't perfectly accurate: each bullet goes up to 3 degrees off the aim
+		float spread = (float)(rand() % 7 - 3);
+		getDirection(angle + spread, facingRight, dx, dy);
 		return new Bullet(x, y, dx, dy, true, 8);
 	}
 };

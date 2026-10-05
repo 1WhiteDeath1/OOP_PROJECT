@@ -212,8 +212,8 @@ void EntityManager::update(float frameTime, const World& w) {
 	if (player && player->isPiloting() && !player->getVehicle()->isVehicleOccupied())
 		player->dismountVehicle();
 
-	checkGrenadeBlast();
 	checkProjectileCollisions();
+	checkGrenadeBlast(); // after the direct hits, so a rocket that just hit something also explodes
 	checkEnemyPlayerCollisions();
 	checkCollectiblesCollisions();
 	checkEnemyProjectilePlayerCollisions();
@@ -424,7 +424,10 @@ void EntityManager::checkVehicleEntry() {
 
 void EntityManager::checkGrenadeBlast() {
 	for (int i = 0; i < MAX_PROJECTILES;i++) {
-		if (!projectiles[i] || !projectiles[i]->didExplode() || projectiles[i]->getBlastRadius() <= 0) {
+		if (!projectiles[i] || projectiles[i]->getBlastRadius() <= 0) continue;
+		// grenades explode on their fuse; the player's rockets explode when they hit something (they became inactive)
+		bool rocketHit = !projectiles[i]->getActive() && projectiles[i]->isFromPlayer();
+		if (!projectiles[i]->didExplode() && !rocketHit) {
 			continue;
 		}
 
