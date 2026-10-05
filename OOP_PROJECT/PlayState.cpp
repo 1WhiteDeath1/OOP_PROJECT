@@ -1,10 +1,12 @@
 #include "PlayState.h"
 #include "MenuState.h"
+#include "SoundManager.h"
 #include <string>
 using namespace std;
 
 void PlayState::enter() {
 	levelManager.loadLevel(1, world, entityManager);
+	SoundManager::playMusic();
 
 	font.loadFromFile("TEXT/font1.ttf");
 	hudText.setFont(font);
@@ -21,6 +23,10 @@ void PlayState::enter() {
 	bannerText.setOutlineThickness(4);
 }
 
+void PlayState::exit() {
+	SoundManager::stopMusic(); // leaving the game (menu / next state): music off
+}
+
 void PlayState::handleInput() {
 	// escape leaves the game and goes back to the main menu
 	if (Keyboard::isKeyPressed(Keyboard::Escape))
@@ -33,6 +39,11 @@ void PlayState::handleInput() {
 		bannerText.setString(paused ? "PAUSED" : "");
 	}
 	pauseHeld = pauseKey;
+
+	// M turns all sound on / off
+	bool muteKey = Keyboard::isKeyPressed(Keyboard::M);
+	if (muteKey && !muteHeld) SoundManager::toggleMute();
+	muteHeld = muteKey;
 }
 
 void PlayState::update(float frameTime) {
@@ -53,7 +64,10 @@ void PlayState::update(float frameTime) {
 	camera.follow(currCharacter->getX(), currCharacter->getY());
 	float shake = entityManager.takeShake();
 	if (shake > 0) camera.shake(shake, 0.35f);
-	if (lastHp >= 0 && currCharacter->getHp() < lastHp) camera.shake(4, 0.2f); // small shake when you get hit
+	if (lastHp >= 0 && currCharacter->getHp() < lastHp) {
+		camera.shake(4, 0.2f); // small shake and a sound when you get hit
+		SoundManager::play(SoundManager::HURT, 70);
+	}
 	lastHp = currCharacter->getHp();
 	camera.updateShake(frameTime);
 
@@ -68,10 +82,14 @@ void PlayState::update(float frameTime) {
 	if (player.allDead()) {
 		bannerText.setString("GAME OVER");
 		endTimer = 3;
+		SoundManager::stopMusic();
+		SoundManager::play(SoundManager::GAME_OVER);
 	}
 	else if (levelManager.isLevelFinished(entityManager)) {
 		bannerText.setString("MISSION COMPLETE");
 		endTimer = 3;
+		SoundManager::stopMusic();
+		SoundManager::play(SoundManager::MISSION_COMPLETE);
 	}
 
 	//hud
@@ -85,7 +103,7 @@ void PlayState::update(float frameTime) {
 	if (player.isPiloting()) hud += "   Vehicle HP " + to_string(player.getVehicle()->getHp());
 	hud += "   Enemies " + to_string(entityManager.getEnemyCount());
 	hud += "   " + string(dayNight.getTimeName()) + ", " + weather.getWeather().getName();
-	hud += "\nA/D move  W jump  Space fire  Up/Down aim  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit  P pause  Esc menu";
+	hud += "\nA/D move  W jump  Space fire  Up/Down aim  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit  P pause  M mute  Esc menu";
 	hudText.setString(hud);
 }
 

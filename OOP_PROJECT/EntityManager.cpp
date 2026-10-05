@@ -1,6 +1,7 @@
 #include "EntityManager.h"
 #include "Soldier.h"
 #include "Enemy.h"
+#include "SoundManager.h"
 
 //#define DEBUG_HITBOXES
 
@@ -47,6 +48,7 @@ void EntityManager::addExplosion(float x, float y, float height) {
 	for (int i = 0; i < MAX_EXPLOSIONS; i++) {
 		if (!explosions[i].isActive()) {
 			explosions[i].start(x, y, height);
+			SoundManager::play(SoundManager::EXPLOSION, height > 200 ? 100.f : 80.f);
 			float shake = height / 25; // 150px explosion = 6px shake, vehicle = 10px
 			if (shake > shakeRequest) shakeRequest = shake;
 			return;
@@ -101,7 +103,10 @@ void EntityManager::update(float frameTime, const World& w) {
 			enemies[i]->update(frameTime, w);
 
 			Projectile* ep = enemies[i]->getProjectile();
-			if (ep) addProjectile(ep);
+			if (ep) {
+				addProjectile(ep);
+				SoundManager::play(ep->getBlastRadius() > 0 ? SoundManager::ROCKET : SoundManager::SHOOT, 30); // enemies are quieter
+			}
 		}
 
 
@@ -114,7 +119,10 @@ void EntityManager::update(float frameTime, const World& w) {
 			vehicles[i]->update(frameTime, w);
 
 			Projectile* vp = vehicles[i]->getProjectile();
-			if (vp) addProjectile(vp);
+			if (vp) {
+				addProjectile(vp);
+				SoundManager::play(vp->getBlastRadius() > 0 ? SoundManager::ROCKET : SoundManager::SHOOT, vp->isFromPlayer() ? 60.f : 35.f);
+			}
 		}
 	}
 

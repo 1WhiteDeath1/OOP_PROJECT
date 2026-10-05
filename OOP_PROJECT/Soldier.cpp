@@ -1,4 +1,5 @@
 #include "Soldier.h"
+#include "SoundManager.h"
 
 
 Soldier::Soldier(float x, float y, float w, float h, int hp) : DamagableEntity(x, y, w, h, hp) {
@@ -14,6 +15,7 @@ void Soldier::jump() {
 	if (touchingGround) {
 		velocityY = -jumpStrength;
 		isJumping = true;
+		SoundManager::play(SoundManager::JUMP, 50);
 		touchingGround = false;
 	}
 }

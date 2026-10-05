@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "WeaponsEach.h"
+#include "SoundManager.h"
 EnemyAiState* RoamingAround::update(Enemy* enemy, float dt, const World& w) {
 	if (enemy->target == nullptr)
 		return nullptr;
@@ -94,6 +95,7 @@ EnemyAiState* Descending::update(Enemy* enemy, float dt, const World& w) {
 
 void Enemy::die() {
 	dying = true;
+	SoundManager::play(SoundManager::ENEMY_DEATH, 70);
 	deathTimer = DEATH_TIME;
 	// thrown back away from the player and up into the air
 	bool playerOnRight = target != nullptr && target->getX() > x;

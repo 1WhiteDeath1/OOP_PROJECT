@@ -2,6 +2,7 @@
 #include "Weapon.h"
 #include "Soldier.h"
 #include "Camera.h"
+#include "SoundManager.h"
 #include <SFML/Graphics.hpp>
 
 
@@ -51,6 +52,7 @@ public:
 
 	void collect(Soldier* s) {
 		s->setWeapon(1, weapon);
+		SoundManager::play(SoundManager::PICKUP);
 		given = weapon;
 		weapon = nullptr;
 		pickUPGUY = s;

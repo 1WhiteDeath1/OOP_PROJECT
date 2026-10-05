@@ -23,6 +23,7 @@
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ProjectileWeapon.cpp" />
     <ClCompile Include="Soldier.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="StraightProjectile.cpp" />
     <ClCompile Include="TransformativeState.cpp" />
     <ClCompile Include="Weapon.cpp" />
@@ -56,6 +57,7 @@
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="ProjectileWeapon.h" />
     <ClInclude Include="Soldier.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="StraightProjectile.h" />
     <ClInclude Include="TransformativeState.h" />
     <ClInclude Include="Vehicle.h" />

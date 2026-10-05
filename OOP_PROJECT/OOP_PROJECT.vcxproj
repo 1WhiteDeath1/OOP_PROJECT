@@ -111,7 +111,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>F:\PROJECT MAFIA\SFML-2.6.2\lib;C:\SFML-2.6.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,7 +129,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>F:\PROJECT MAFIA\SFML-2.6.2\lib;C:\SFML-2.6.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -157,6 +157,7 @@
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ProjectileWeapon.cpp" />
     <ClCompile Include="Soldier.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="StraightProjectile.cpp" />
     <ClCompile Include="TransformativeState.cpp" />
     <ClCompile Include="Vehicle.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="ProjectileWeapon.h" />
     <ClInclude Include="Soldier.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="StraightProjectile.h" />
     <ClInclude Include="TransformativeState.h" />
     <ClInclude Include="Vehicle.h" />

@@ -28,13 +28,14 @@ class PlayState : public GameState {
 	bool paused = false;
 	int lastHp = -1; // to notice when the player gets hit
 	bool pauseHeld = false; // so holding P doesn't flip pause on and off every frame
+	bool muteHeld = false;
 public:
 	PlayState(GameStateManager& gsm) : gsManager(gsm), player(2 * World::CELL, world.surfaceY(2) - 96) {
 		entityManager.setPlayer(&player);
 	}
 	void handleInput() override;
 	void enter()           override;
-	void exit()            override {}
+	void exit()            override;
 	void update(float dt)  override;
 	void render(RenderWindow& w) override;
 };

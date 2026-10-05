@@ -1,4 +1,5 @@
 #include "PlayerSoldier.h"
+#include "SoundManager.h"
 
 
 void PlayerSoldier::update(float frameTime, const World& w) {
@@ -67,7 +68,10 @@ void PlayerSoldier::die() {
 Projectile* PlayerSoldier::fire() {
 	if (!canShoot()) return nullptr;
 	Projectile* p = fireWeapon();
-	if (p) muzzleFrames = 3; // a shot was fired: show the flash for 3 frames
+	if (p) {
+		muzzleFrames = 3; // a shot was fired: show the flash for 3 frames
+		SoundManager::play(p->getBlastRadius() > 0 ? SoundManager::ROCKET : SoundManager::SHOOT, 60);
+	}
 	return p;
 }
 
