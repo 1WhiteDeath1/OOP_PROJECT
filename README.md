@@ -5,11 +5,6 @@ It was made as an Object Oriented Programming course project (roll numbers **25I
 
 ![Gameplay](docs/screenshots/day.png)
 
-| | |
-|---|---|
-| ![Grenade explosion](docs/screenshots/combat.png) | ![Metal Slug vehicle](docs/screenshots/vehicle.png) |
-| ![Night and rain](docs/screenshots/night.png) | ![Main menu](docs/screenshots/menu.png) |
-
 ---
 
 ## Features
@@ -27,6 +22,49 @@ It was made as an Object Oriented Programming course project (roll numbers **25I
 - **Day and night cycle:** the sky changes colour, the sun and moon move across it, and the level gets darker at night.
 - **Weather:** clear, rain and snow on a repeating schedule. Rain and snow turn the sky grey.
 - **Effects:** explosions, walking animations, a HUD, pause, game over and mission complete screens.
+
+## Screenshots
+
+### Main menu
+![Main menu](docs/screenshots/menu.png)
+
+### Playable characters
+Marco, Tarma, Eri and Fio. Press **Z** to switch.
+![Characters](docs/screenshots/characters.png)
+
+### Weapons and combat
+| Heavy Machine Gun pickup | Grenade explosion |
+|---|---|
+| ![Heavy Machine Gun](docs/screenshots/weapon_hmg.png) | ![Grenade explosion](docs/screenshots/grenade_explosion.png) |
+
+### Enemies
+| Shield soldier and bazooka soldier | Grenade soldier |
+|---|---|
+| ![Shield and bazooka soldiers](docs/screenshots/enemies_shield_bazooka.png) | ![Grenade soldier](docs/screenshots/enemy_grenade.png) |
+| **Flying Tara bomber** | **M-15A Bradley tank** |
+| ![Flying Tara](docs/screenshots/enemy_flying_tara.png) | ![Bradley tank](docs/screenshots/enemy_bradley_tank.png) |
+
+### Vehicles
+| Metal Slug tank | Slug Flyer plane |
+|---|---|
+| ![Metal Slug](docs/screenshots/vehicle_metal_slug.png) | ![Slug Flyer](docs/screenshots/vehicle_slug_flyer.png) |
+| **Slug Mariner vs. enemy submarine** | |
+| ![Slug Mariner](docs/screenshots/vehicle_slug_mariner.png) | |
+
+### Day and night cycle
+| Sunset | Night |
+|---|---|
+| ![Sunset](docs/screenshots/sunset.png) | ![Night with moon](docs/screenshots/night_moon.png) |
+
+### Weather
+| Rain (at night) | Snow |
+|---|---|
+| ![Rain](docs/screenshots/weather_rain_night.png) | ![Snow](docs/screenshots/weather_snow.png) |
+
+### End screens
+| Mission complete | Game over |
+|---|---|
+| ![Mission complete](docs/screenshots/mission_complete.png) | ![Game over](docs/screenshots/game_over.png) |
 
 ## Controls
 
