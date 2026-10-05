@@ -15,6 +15,10 @@ EntityManager::EntityManager() {
 		vehicles[i] = nullptr;
 	for (int i = 0; i < MAX_COLLECTIBLES; i++)
 		collectibles[i] = nullptr;
+	for (int i = 0; i < MAX_DROPS; i++)
+		drops[i] = nullptr;
+	for (int i = 0; i < MAX_PRISONERS; i++)
+		prisoners[i] = nullptr;
 
 }
 
@@ -42,6 +46,53 @@ void EntityManager::addWeapon(WeaponCollectible* wC) {
 	}
 }
 
+
+void EntityManager::addDrop(ItemDrop* d) {
+	for (int i = 0; i < MAX_DROPS; i++) {
+		if (!drops[i]) { drops[i] = d; return; }
+	}
+	delete d; // no room
+}
+
+void EntityManager::addPrisoner(Prisoner* p) {
+	for (int i = 0; i < MAX_PRISONERS; i++) {
+		if (!prisoners[i]) { prisoners[i] = p; return; }
+	}
+	delete p;
+}
+
+void EntityManager::checkPickups() {
+	if (!player || player->isPiloting()) return;
+	PlayerSoldier* s = player->getActive();
+	if (!s || !s->getActive()) return;
+
+	for (int i = 0; i < MAX_DROPS; i++) {
+		if (!drops[i] || !drops[i]->getActive() || !s->collision(*drops[i])) continue;
+		if (drops[i]->getType() == ItemDrop::HEALTH) s->heal(40);
+		else if (drops[i]->getType() == ItemDrop::GRENADES) s->addGrenades(5);
+		else {
+			// ammo: refill the special weapon, or get a machine gun if there is none
+			Weapon* special = s->getActiveWeaponSlot(1);
+			if (special && special->hasAmmo()) special->addAmmo(40);
+			else s->setWeapon(1, new HeavyMachineGun(80));
+		}
+		drops[i]->setActive(false);
+		SoundManager::play(SoundManager::PICKUP);
+	}
+
+	for (int i = 0; i < MAX_PRISONERS; i++) {
+		if (!prisoners[i] || prisoners[i]->isFreed() || !s->collision(*prisoners[i])) continue;
+		prisoners[i]->free();
+		// thank-you gift: 1000 points and a random special weapon
+		if (score) score->add(1000, prisoners[i]->getX() + 32, prisoners[i]->getY());
+		int gift = rand() % 4;
+		if (gift == 0) s->setWeapon(1, new HeavyMachineGun(100));
+		else if (gift == 1) s->setWeapon(1, new RocketLauncher(15));
+		else if (gift == 2) s->setWeapon(1, new FlameShot(150));
+		else s->setWeapon(1, new LaserGun(20));
+		SoundManager::play(SoundManager::PICKUP);
+	}
+}
 
 void EntityManager::addExplosion(float x, float y, float height) {
 	// use the first explosion that isn't playing; if all 20 are busy this one is just skipped
@@ -126,6 +177,12 @@ void EntityManager::update(float frameTime, const World& w) {
 		}
 	}
 
+	for (int i = 0; i < MAX_DROPS; i++)
+		if (drops[i]) drops[i]->update(frameTime, w);
+	for (int i = 0; i < MAX_PRISONERS; i++)
+		if (prisoners[i]) prisoners[i]->update(frameTime, w);
+	checkPickups();
+
 	//updating weapons collectibles
 	for (int i = 0; i < MAX_COLLECTIBLES;i++) {
 		if (collectibles[i]) collectibles[i]->update();
@@ -155,7 +212,12 @@ void EntityManager::update(float frameTime, const World& w) {
 		for (int i = 0; i < MAX_ENEMIES; i++) {
 			if (!enemies[i]) continue;
 			int pts = enemies[i]->takeKillPoints();
-			if (pts > 0) score->add(pts, enemies[i]->getX() + enemies[i]->getWidth() / 2, enemies[i]->getY());
+			if (pts > 0) {
+				score->add(pts, enemies[i]->getX() + enemies[i]->getWidth() / 2, enemies[i]->getY());
+				// 1 in 3 enemies drops something
+				if (rand() % 3 == 0)
+					addDrop(new ItemDrop(enemies[i]->getX() + 12, enemies[i]->getY() + 40, (ItemDrop::Type)(rand() % ItemDrop::TYPE_COUNT)));
+			}
 		}
 	}
 
@@ -184,6 +246,12 @@ void EntityManager::update(float frameTime, const World& w) {
 			vCount -= 1;
 		}
 	}
+
+	// used up item drops and prisoners that ran away
+	for (int i = 0; i < MAX_DROPS; i++)
+		if (drops[i] && !drops[i]->getActive()) { delete drops[i]; drops[i] = nullptr; }
+	for (int i = 0; i < MAX_PRISONERS; i++)
+		if (prisoners[i] && !prisoners[i]->getActive()) { delete prisoners[i]; prisoners[i] = nullptr; }
 
 	//projectiles
 	for (int i = 0; i < MAX_PROJECTILES;i++) {
@@ -235,6 +303,10 @@ void EntityManager::render(RenderWindow& w, const Camera& cam) {
 			collectibles[i]->render(w, cam);
 		}
 	}
+	for (int i = 0; i < MAX_PRISONERS; i++)
+		if (prisoners[i]) prisoners[i]->render(w, cam);
+	for (int i = 0; i < MAX_DROPS; i++)
+		if (drops[i]) drops[i]->render(w, cam);
 
 
 
@@ -479,4 +551,6 @@ EntityManager::~EntityManager() {
 		delete collectibles[i];
 		collectibles[i] = nullptr;
 	}
+	for (int i = 0; i < MAX_DROPS; i++) delete drops[i];
+	for (int i = 0; i < MAX_PRISONERS; i++) delete prisoners[i];
 }

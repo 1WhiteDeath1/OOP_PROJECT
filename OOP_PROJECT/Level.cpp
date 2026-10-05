@@ -59,6 +59,11 @@ void Level::level1(const World& w) {
 	weaponSpawn[wCount++] = { 1, 80 * World::CELL, isOnGround(w, 80, weaponHeight) };   // RocketLauncher
 	weaponSpawn[wCount++] = { 3, 100 * World::CELL, isOnGround(w, 100, weaponHeight) };   // LaserGun
 
+	//prisoners to rescue
+	prisonerSpawn[pCount++] = { 0, 28 * World::CELL, isOnGround(w, 28, 70) };
+	prisonerSpawn[pCount++] = { 0, 75 * World::CELL, isOnGround(w, 75, 70) };
+	prisonerSpawn[pCount++] = { 0, 120 * World::CELL, isOnGround(w, 120, 70) };
+
 }
 
 void Level::setUP(EntityManager& em) const {
@@ -139,4 +144,6 @@ void Level::setUP(EntityManager& em) const {
 
 		if (w) em.addWeapon(new WeaponCollectible(sp.x, sp.y, w, texture));
 	}
+	for (int i = 0; i < pCount; i++)
+		em.addPrisoner(new Prisoner(prisonerSpawn[i].x, prisonerSpawn[i].y));
 }

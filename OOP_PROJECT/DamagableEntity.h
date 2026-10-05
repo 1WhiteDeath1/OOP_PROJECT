@@ -32,6 +32,7 @@ public:
 	bool isAlive() const { return currentHp > 0;}
 	
 	int getHp() const { return currentHp; }
+	void heal(int amount) { currentHp += amount; if (currentHp > maxHp) currentHp = maxHp; }
 	int getMaXHp() const { return maxHp; }
 	void setPosition(float X, float Y);
 	virtual ~DamagableEntity() = default;

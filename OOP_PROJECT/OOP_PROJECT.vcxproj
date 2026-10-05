@@ -151,6 +151,7 @@
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="Pickups.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerSoldier.cpp" />
     <ClCompile Include="PlayState.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="MenuState.h" />
+    <ClInclude Include="Pickups.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerSoldier.h" />
     <ClInclude Include="PlayState.h" />

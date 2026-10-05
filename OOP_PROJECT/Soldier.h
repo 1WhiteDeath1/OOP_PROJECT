@@ -37,6 +37,7 @@ public:
 	void changeAngle(float angle);
 	void respawn(float spawnX, float spawnY);
 	void setWeapon(int slot, Weapon* wp);
+	void addGrenades(int n) { grenadeCount += n; }
 
 	void accelerate(float amount) {
 		velocityX += amount;

@@ -10,6 +10,7 @@
 #include "Enemy.h"
 #include "Explosion.h"
 #include "Score.h"
+#include "Pickups.h"
 
 using namespace sf;
 
@@ -21,6 +22,8 @@ class EntityManager
 	static const int MAX_VEHICLES = 10;
 	static const int MAX_COLLECTIBLES = 15;
 	static const int MAX_EXPLOSIONS = 20;
+	static const int MAX_DROPS = 30;
+	static const int MAX_PRISONERS = 10;
 
 
 	Projectile* projectiles[MAX_PROJECTILES];
@@ -30,6 +33,8 @@ class EntityManager
 	WeaponCollectible* collectibles[MAX_COLLECTIBLES];
 	Vehicle* vehicles[MAX_VEHICLES];
 	Explosion explosions[MAX_EXPLOSIONS]; // plain objects, reused when they finish
+	ItemDrop* drops[MAX_DROPS];
+	Prisoner* prisoners[MAX_PRISONERS];
 
 	int pCount = 0;
 	int eCount = 0;
@@ -46,6 +51,8 @@ public:
 	void addVehicle(Vehicle* v);
 	void addWeapon(WeaponCollectible* wC);
 	void addExplosion(float x, float y, float height);
+	void addDrop(ItemDrop* d);
+	void addPrisoner(Prisoner* p);
 	void setPlayer(Player* p) { player = p; }
 	void setScore(Score* s) { score = s; }
 
@@ -64,6 +71,7 @@ public:
 	void checkVehicleEntry();
 
 	void checkGrenadeBlast();
+	void checkPickups(); // item drops and prisoners touched by the player
 
 	static bool overlaps(const Entity& a, const Entity& b);
 };

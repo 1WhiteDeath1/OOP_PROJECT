@@ -17,11 +17,13 @@ class Level
 	spawn enemySpawn[20];
 	spawn vehicleSpawn[20];
 	spawn weaponSpawn[15];
+	spawn prisonerSpawn[10];
 
 
 	int eCount = 0;
 	int vCount = 0;
 	int wCount = 0;
+	int pCount = 0;
 
 	void level1(const World& w);
 
