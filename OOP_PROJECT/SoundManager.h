@@ -7,7 +7,7 @@ using namespace sf;
 class SoundManager
 {
 public:
-	enum Effect { SHOOT, ROCKET, EXPLOSION, JUMP, PICKUP, HURT, ENEMY_DEATH, MISSION_COMPLETE, GAME_OVER, EFFECT_COUNT };
+	enum Effect { SHOOT, ROCKET, EXPLOSION, JUMP, PICKUP, HURT, ENEMY_DEATH, MISSION_COMPLETE, GAME_OVER, BOSS, EFFECT_COUNT };
 
 	static void play(Effect e, float volume = 100);
 	static void playMusic();

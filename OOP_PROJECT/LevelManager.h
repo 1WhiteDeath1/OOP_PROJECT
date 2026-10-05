@@ -19,11 +19,11 @@ public:
 		level->setUP(em);
 	}
 
-	// missions with a goal flag end when the player reaches it, the last one when every enemy is gone
+	// missions with a goal flag end when the player reaches it, the boss mission when the boss is destroyed
 	bool isLevelFinished(const EntityManager& em, float playerX) const {
 		if (level && level->getGoalColumn() > 0)
 			return playerX >= level->getGoalColumn() * World::CELL;
-		return em.getEnemyCount() == 0;
+		return em.isBossDefeated();
 	}
 	int getGoalColumn() const { return level ? level->getGoalColumn() : 0; }
 	void update(float dt, float playerX, const World& w, EntityManager& em) {

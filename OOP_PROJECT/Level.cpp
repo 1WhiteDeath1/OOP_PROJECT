@@ -88,6 +88,8 @@ void Level::level2(const World& w) {
 // mission 3, rebel base: flat desert at night, the boss waits here
 void Level::level3(const World& w) {
 	goalColumn = 0; // no flag, the mission ends when the boss is destroyed
+	bossX = 45 * (float)World::CELL;
+	bossY = isOnGround(w, 45, BossTank::BOSS_H, BossTank::BOSS_W);
 	enemyAt(0, 12, w); enemyAt(1, 20, w); enemyAt(2, 26, w); enemyAt(3, 34, w);
 
 	vehicleAt(0, 5, w);     // a metal slug to fight the boss with
@@ -197,4 +199,6 @@ void Level::setUP(EntityManager& em) const {
 	}
 	for (int i = 0; i < pCount; i++)
 		em.addPrisoner(new Prisoner(prisonerSpawn[i].x, prisonerSpawn[i].y));
+	if (bossX >= 0)
+		em.addEnemy(new BossTank(bossX, bossY));
 }

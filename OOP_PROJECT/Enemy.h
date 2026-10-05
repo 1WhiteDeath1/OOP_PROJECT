@@ -80,7 +80,9 @@ protected:
 	int walkFrames = 0;
 	void setPictures(const Texture& stand, const char* walkFile, int frames);
 	void drawEnemy(RenderWindow& w, const Camera& cam, bool pictureFacesLeft);
+public:
 	void aimAtTarget(float& dx, float& dy) const; // unit direction from the enemy's gun to the target
+protected:
 public:
 	Soldier* target;
 	float drawScale = PIXEL_SCALE; // how much the picture is enlarged when drawn
@@ -88,7 +90,8 @@ public:
 	int takeKillPoints() {
 		if (isAlive() || scored) return 0;
 		scored = true;
-		return typeOfEnemy == 1 ? 200 : 100; // shield soldier is worth more
+		if (typeOfEnemy == 4) return 5000;     // the boss
+		return typeOfEnemy == 1 ? 200 : 100;   // shield soldier is worth more
 	}
 	Enemy(float x, float y, float wd, float ht, int hp,
 		int typeOfEnemy, int damageDeals, float normalFireRate,
@@ -103,6 +106,9 @@ public:
 	}
 	void update(float dt, const World& w) override;
 	void die() override;   // starts the death animation instead of disappearing at once
+	virtual bool isBoss() const { return false; }
+	// lets an enemy ask the EntityManager for an explosion at (ex, ey); used by the boss while it blows up
+	virtual bool takeExplosion(float& ex, float& ey) { return false; }
 	void onHitByProjectile(Projectile* p);
 
 

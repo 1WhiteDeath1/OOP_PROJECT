@@ -4,6 +4,7 @@
 #include "GroundVehicle.h"
 #include "AerialVehicle.h"
 #include "AquaticVehicle.h"
+#include "Boss.h"
 
 struct spawn {
 	int type;
@@ -26,6 +27,7 @@ class Level
 	int pCount = 0;
 
 	int goalColumn = 0; // reaching this column finishes the mission (0 = no goal flag)
+	float bossX = -1, bossY = 0; // where the boss starts (mission 3 only)
 
 	// waves: extra enemies that appear ahead of the player as they move on
 	int nextWaveColumn = 20; // the next wave comes when the player passes this column

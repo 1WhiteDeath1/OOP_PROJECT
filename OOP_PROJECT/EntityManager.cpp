@@ -47,6 +47,12 @@ void EntityManager::addWeapon(WeaponCollectible* wC) {
 }
 
 
+const Enemy* EntityManager::getBoss() const {
+	for (int i = 0; i < MAX_ENEMIES; i++)
+		if (enemies[i] && enemies[i]->isBoss()) return enemies[i];
+	return nullptr;
+}
+
 void EntityManager::addDrop(ItemDrop* d) {
 	for (int i = 0; i < MAX_DROPS; i++) {
 		if (!drops[i]) { drops[i] = d; return; }
@@ -155,6 +161,9 @@ void EntityManager::update(float frameTime, const World& w) {
 		if (enemies[i]->getActive()) {
 			enemies[i]->update(frameTime, w);
 
+			float ex, ey;
+			if (enemies[i]->takeExplosion(ex, ey)) addExplosion(ex, ey, 180); // the boss blowing up
+
 			Projectile* ep = enemies[i]->getProjectile();
 			if (ep) {
 				addProjectile(ep);
@@ -226,6 +235,7 @@ void EntityManager::update(float frameTime, const World& w) {
 	//updating enemies
 	for (int i = 0; i < MAX_ENEMIES;i++) {
 		if (enemies[i] && !enemies[i]->getActive()) {
+			if (enemies[i]->isBoss()) bossDefeated = true; // finished blowing up
 			delete enemies[i];
 			enemies[i] = nullptr;
 			eCount -= 1;

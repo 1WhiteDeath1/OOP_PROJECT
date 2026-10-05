@@ -9,7 +9,7 @@ void PlayState::enter() {
 	// mission 1 in the morning, mission 2 in the late afternoon (sunset comes soon), the boss at night
 	if (mission == 1) dayNight.setTime(5);
 	else if (mission == 2) dayNight.setTime(38);
-	else dayNight.setTime(70);
+	else dayNight.setTime(48); // the boss fight starts at sunset and goes into the night
 	SoundManager::playMusic();
 
 	font.loadFromFile("TEXT/font1.ttf");
@@ -199,6 +199,25 @@ void PlayState::render(RenderWindow& w) {
 	score.renderPopups(w, camera, popupText);
 	w.draw(hudText);
 	w.draw(scoreText);
+
+	// boss health bar across the top
+	const Enemy* boss = entityManager.getBoss();
+	if (boss) {
+		RectangleShape back(Vector2f(604, 28)), bar(Vector2f(600.f * boss->getHp() / boss->getMaXHp(), 24));
+		back.setFillColor(Color(0, 0, 0, 180));
+		back.setPosition(Camera::screenW / 2.f - 302, 110);
+		bar.setFillColor(Color(220, 40, 30));
+		bar.setPosition(Camera::screenW / 2.f - 300, 112);
+		w.draw(back);
+		w.draw(bar);
+		popupText.setString("REBEL TANK");
+		popupText.setFillColor(Color::White);
+		popupText.setOutlineColor(Color::Black);
+		FloatRect nb = popupText.getLocalBounds();
+		popupText.setOrigin(nb.width / 2, 0);
+		popupText.setPosition(Camera::screenW / 2.f, 78);
+		w.draw(popupText);
+	}
 
 	if (introTimer > 0 && endTimer <= 0) w.draw(introText);
 

@@ -43,6 +43,7 @@ class EntityManager
 	int vCount = 0;
 	float coolDown = 0;
 	float shakeRequest = 0; // strongest screen shake asked for this frame
+	bool bossDefeated = false;
 public:
 	EntityManager();
 	~EntityManager();
@@ -61,6 +62,8 @@ public:
 
 	int getEnemyCount() const { return eCount; }
 	float takeShake() { float s = shakeRequest; shakeRequest = 0; return s; }
+	const Enemy* getBoss() const;                         // the boss if it is in the level (alive or blowing up)
+	bool isBossDefeated() const { return bossDefeated; }
 
 	void checkProjectileWorldCollisions(World& w);
 	void checkProjectileCollisions();

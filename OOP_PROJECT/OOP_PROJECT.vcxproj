@@ -136,6 +136,7 @@
     <ClCompile Include="AerialVehicle.cpp" />
     <ClCompile Include="AquaticVehicle.cpp" />
     <ClCompile Include="BallisticProjectile.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DamagableEntity.cpp" />
     <ClCompile Include="DayNightCycle.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="AerialVehicle.h" />
     <ClInclude Include="AquaticVehicle.h" />
     <ClInclude Include="BallisticProjectile.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DamagableEntity.h" />
     <ClInclude Include="DayNightCycle.h" />

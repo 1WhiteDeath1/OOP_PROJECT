@@ -11,7 +11,7 @@ void SoundManager::load() {
 	// same order as the Effect enum
 	const char* files[EFFECT_COUNT] = {
 		"shoot.wav", "rocket.wav", "explosion.wav", "jump.wav", "pickup.wav",
-		"hurt.wav", "enemy_death.wav", "mission_complete.wav", "game_over.wav"
+		"hurt.wav", "enemy_death.wav", "mission_complete.wav", "game_over.wav", "boss.wav"
 	};
 	for (int i = 0; i < EFFECT_COUNT; i++)
 		buffers[i].loadFromFile(std::string("25I-0504_25I-0644_Assets/sounds/") + files[i]);
