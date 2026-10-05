@@ -94,7 +94,13 @@ void PlayState::update(float frameTime) {
 	levelManager.update(frameTime, player.getActive()->getX(), world, entityManager); // enemy waves
 
 	PlayerSoldier* currCharacter = player.getActive();
-	camera.follow(currCharacter->getX(), currCharacter->getY());
+	// look ahead: the camera slides to show more of the screen in front of the player, so enemies
+	// are seen earlier. it eases over (a third of the way each 0.1s) instead of jumping when turning
+	float lookTarget = currCharacter->isFacingRight() ? 250.f : -250.f;
+	float ease = frameTime * 3;
+	if (ease > 1) ease = 1;
+	lookAhead += (lookTarget - lookAhead) * ease;
+	camera.follow(currCharacter->getX() + lookAhead, currCharacter->getY());
 	float shake = entityManager.takeShake();
 	if (shake > 0) camera.shake(shake, 0.35f);
 	if (lastHp >= 0 && currCharacter->getHp() < lastHp) {

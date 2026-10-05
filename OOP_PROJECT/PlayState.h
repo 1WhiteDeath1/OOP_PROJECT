@@ -35,6 +35,7 @@ class PlayState : public GameState {
 	Text introText;
 	bool paused = false;
 	int lastHp = -1; // to notice when the player gets hit
+	float lookAhead = 0; // how far the camera looks ahead of the player (eases towards +-250)
 	bool pauseHeld = false; // so holding P doesn't flip pause on and off every frame
 	bool muteHeld = false;
 public:
