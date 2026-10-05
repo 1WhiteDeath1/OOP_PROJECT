@@ -66,7 +66,9 @@ void PlayerSoldier::die() {
 
 Projectile* PlayerSoldier::fire() {
 	if (!canShoot()) return nullptr;
-	return fireWeapon();
+	Projectile* p = fireWeapon();
+	if (p) muzzleFrames = 3; // a shot was fired: show the flash for 3 frames
+	return p;
 }
 
 const char* PlayerSoldier::getName() const
@@ -84,4 +86,5 @@ void PlayerSoldier::render(sf::RenderWindow& window, const Camera& cam)
 	float lift, lean;
 	walkBounce(touchingGround, lift, lean);
 	drawSprite(window, cam, drawScale, !facingRight, lift, lean);
+	drawMuzzleFlash(window, cam, facingRight ? x + width + 8 : x - 8, y + 56); // at the gun barrel
 }

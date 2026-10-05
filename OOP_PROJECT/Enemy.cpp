@@ -115,6 +115,7 @@ void Enemy::update(float dt, const World& w) {
 	if (!currentAiState)
 		return;
 	EnemyAiState* next = currentAiState->update(this, dt, w);
+	if (projectile && typeOfEnemy != 3) muzzleFrames = 3; // it just fired (grenades have no flash)
 	if (next)
 	{
 		delete currentAiState;
@@ -180,6 +181,8 @@ void Enemy::drawEnemy(RenderWindow& w, const Camera& cam, bool pictureFacesLeft)
 		if (walkFrames == 0) walkBounce(touchingGround, lift, lean); // no strip: bounce instead
 		drawSprite(w, cam, drawScale, mirrored, lift, lean);
 	}
+	bool gunRight = target != nullptr && target->getX() > getX();
+	drawMuzzleFlash(w, cam, gunRight ? x + width + 8 : x - 8, y + 30);
 }
 
 void Enemy::changeXandY(float dt, const World& w) {

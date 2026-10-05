@@ -21,6 +21,21 @@ protected:
 	bool isActive = true;
 	int hitFrames = 0; // frames left of the red "got hit" flash
 	Uint8 alpha = 255; // see-through-ness of the sprite (255 = solid), used to fade out
+	int muzzleFrames = 0; // frames left of the muzzle flash after shooting
+
+	// a short yellow flash at the end of the gun (world position mx, my)
+	void drawMuzzleFlash(RenderWindow& window, const Camera& cam, float mx, float my) {
+		if (muzzleFrames <= 0) return;
+		muzzleFrames--;
+		CircleShape outer(11.f), inner(6.f);
+		outer.setOrigin(11.f, 11.f); inner.setOrigin(6.f, 6.f);
+		outer.setFillColor(Color(255, 150, 30, 220));
+		inner.setFillColor(Color(255, 250, 200));
+		outer.setPosition(cam.toScreenX(mx), cam.toScreenY(my));
+		inner.setPosition(cam.toScreenX(mx), cam.toScreenY(my));
+		window.draw(outer);
+		window.draw(inner);
+	}
 
 	// tints the sprite red for a few frames after a hit, normal colour otherwise
 	void applyHitTint() {

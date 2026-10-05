@@ -179,7 +179,7 @@ class GrenadeSoldier :public Enemy {
 	sf::Texture texture;
 public:
 	GrenadeSoldier(float x, float y, float wd, float ht, float hp)
-		: Enemy(x, y, wd, ht, hp, 0, 10, 2.5f, new RoamingAround()) {
+		: Enemy(x, y, wd, ht, hp, 3, 10, 2.5f, new RoamingAround()) { // type 3 = grenade soldier
 		texture.loadFromFile("25I-0504_25I-0644_Assets/grenade_soldier.png");
 		sprite.setTexture(texture);
 		setPictures(texture, "25I-0504_25I-0644_Assets/rebel_run.png", 12);
