@@ -11,6 +11,7 @@ private:
 	float stateTimer;
 	bool powerUPActive;
 	float powerUPTimer;
+	float powerUPCooldown = 0; // seconds until Q can be used again
 	bool isDead;
 	float drawScale; // how much the picture is enlarged when drawn
 
@@ -82,6 +83,10 @@ public:
 
 	void activePowerUp() override;
 	void die() override;
+	void takeDamage(int amount) override;   // Fio's shield blocks damage
+	void spreadShots(Projectile* extra[2]); // Tarma's power up: two more bullets at +-15 degrees
+	const char* getPowerUpName() const;
+	float getPowerUpCooldown() const { return powerUPCooldown; }
 	const char* getName() const override;
 	
 
@@ -116,8 +121,9 @@ public:
 
 
 	Projectile* throwGrenade() {
-		if (grenadeCount <= 0) return nullptr;
-		grenadeCount -= 1;
+		bool unlimited = powerUPActive && characterType == 2; // Eri's power up: grenades don't run out
+		if (grenadeCount <= 0 && !unlimited) return nullptr;
+		if (!unlimited) grenadeCount -= 1;
 		float spawnX = facingRight ? (x + width) : x;
 		float spawnY = y + height / 3;
 

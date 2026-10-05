@@ -61,7 +61,13 @@ void Player::handleInput(float frameTime, const World& w, EntityManager& eManage
 		//firing
 		if (Keyboard::isKeyPressed(Keyboard::Space)) {
 			Projectile* p = curr->fire();
-			if (p) eManager.addProjectile(p);
+			if (p) {
+				eManager.addProjectile(p);
+				// Tarma's spread shot adds two more bullets with every shot
+				Projectile* extra[2];
+				curr->spreadShots(extra);
+				for (int i = 0; i < 2; i++) if (extra[i]) eManager.addProjectile(extra[i]);
+			}
 		}
 		//gernading
 		bool grenadeKey = Keyboard::isKeyPressed(Keyboard::T);

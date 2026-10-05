@@ -142,7 +142,10 @@ void PlayState::update(float frameTime) {
 		"   Grenades " + to_string(currCharacter->getGrenadeCount());
 	Weapon* special = currCharacter->getActiveWeaponSlot(1);
 	if (special && special->hasAmmo()) hud += "   Ammo " + to_string(special->getAmmo());
-	if (currCharacter->getPowerUpActive()) hud += "   POWER UP!";
+	// power up: its name while it is on, otherwise ready / seconds until it is ready again
+	if (currCharacter->getPowerUpActive()) hud += "   " + string(currCharacter->getPowerUpName()) + "!";
+	else if (currCharacter->getPowerUpCooldown() > 0) hud += "   Power up in " + to_string((int)currCharacter->getPowerUpCooldown() + 1) + "s";
+	else hud += "   Q: " + string(currCharacter->getPowerUpName()) + " ready";
 	if (player.isPiloting()) hud += "   Vehicle HP " + to_string(player.getVehicle()->getHp());
 	hud += "   Enemies " + to_string(entityManager.getEnemyCount());
 	hud += "   " + string(dayNight.getTimeName()) + ", " + weather.getWeather().getName();

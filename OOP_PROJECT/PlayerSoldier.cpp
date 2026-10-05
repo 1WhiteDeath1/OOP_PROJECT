@@ -19,13 +19,15 @@ void PlayerSoldier::update(float frameTime, const World& w) {
 		powerUPTimer -= frameTime;
 		if (powerUPTimer <= 0) {
 			powerUPActive = false;
+			powerUPCooldown = 20; // ready again in 20 seconds
 		}
 	}
+	else if (powerUPCooldown > 0) powerUPCooldown -= frameTime;
 
 	movement(frameTime, w);
 
-	//for weapon to cooldown, and keep updateing (faster cooldown = higher fire rate, power up doubles it)
-	float fireRate = fireRateMultiplier * (powerUPActive ? 2.f : 1.f);
+	//for weapon to cooldown, and keep updateing (faster cooldown = higher fire rate, Marco's power up doubles it)
+	float fireRate = fireRateMultiplier * ((powerUPActive && characterType == 0) ? 2.f : 1.f);
 	for (int i = 0; i < 2; i++)
 		if (inventory[i]) inventory[i]->update(frameTime * fireRate);
 }
@@ -45,14 +47,40 @@ void PlayerSoldier::infect(int type) {
 }
 
 void PlayerSoldier::activePowerUp() {
-	if (powerUPActive) return;
+	if (powerUPActive || powerUPCooldown > 0) return;
 
+	// every character has their own power up (see getPowerUpName), each lasts a few seconds
+	// and can be used again 20 seconds after it ends
 	powerUPActive = true;
+	if (characterType == 0) powerUPTimer = 10.f;      // Marco: double fire rate
+	else if (characterType == 1) powerUPTimer = 10.f; // Tarma: 3-way spread shot
+	else if (characterType == 2) powerUPTimer = 8.f;  // Eri: unlimited grenades
+	else powerUPTimer = 6.f;                          // Fio: shield, no damage
+	SoundManager::play(SoundManager::PICKUP);
+}
 
-	if (characterType == 0) powerUPTimer = 10.f;
-	else if (characterType == 1) powerUPTimer = 20.f;
-	else if (characterType == 2) powerUPTimer = 10.f;
-	else if (characterType == 3) powerUPTimer = 10.f;
+const char* PlayerSoldier::getPowerUpName() const {
+	if (characterType == 0) return "RAPID FIRE";
+	if (characterType == 1) return "SPREAD SHOT";
+	if (characterType == 2) return "GRENADE STORM";
+	return "SHIELD";
+}
+
+void PlayerSoldier::takeDamage(int amount) {
+	if (powerUPActive && characterType == 3) return; // Fio's shield is up
+	Soldier::takeDamage(amount);
+}
+
+void PlayerSoldier::spreadShots(Projectile* extra[2]) {
+	extra[0] = extra[1] = nullptr;
+	if (!powerUPActive || characterType != 1) return;
+	float fireX = facingRight ? (x + width) : x;
+	float fireY = y + height / 2;
+	for (int i = 0; i < 2; i++) {
+		float dx, dy;
+		ProjectileWeapon::getDirection(aimAngle + (i == 0 ? 15.f : -15.f), facingRight, dx, dy);
+		extra[i] = new Bullet(fireX, fireY, dx, dy, true, 10);
+	}
 }
 
 void PlayerSoldier::die() {
@@ -90,5 +118,16 @@ void PlayerSoldier::render(sf::RenderWindow& window, const Camera& cam)
 	float lift, lean;
 	walkBounce(touchingGround, lift, lean);
 	drawSprite(window, cam, drawScale, !facingRight, lift, lean);
+
+	// Fio's shield: a see-through blue bubble around her while it is up
+	if (powerUPActive && characterType == 3) {
+		CircleShape bubble(70.f);
+		bubble.setOrigin(70.f, 70.f);
+		bubble.setPosition(cam.toScreenX(x + width / 2), cam.toScreenY(y + height / 2));
+		bubble.setFillColor(Color(80, 160, 255, 60));
+		bubble.setOutlineColor(Color(140, 200, 255, 200));
+		bubble.setOutlineThickness(3);
+		window.draw(bubble);
+	}
 	drawMuzzleFlash(window, cam, facingRight ? x + width + 8 : x - 8, y + 56); // at the gun barrel
 }
