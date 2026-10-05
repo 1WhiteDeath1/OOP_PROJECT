@@ -280,6 +280,7 @@ carryPilot();
 }
 void SlugMariner::render(sf::RenderWindow& w, const Camera& cam) {
 	sprite.setPosition(cam.toScreenX(x),cam.toScreenY(y));
+	applyHitTint();
 	w.draw(sprite);
 }
 void EnemySub::move(float dt, const World& w) {
@@ -329,6 +330,7 @@ move(dt, w);
 }
 void EnemySub::render(sf::RenderWindow& w, const Camera& cam) {
 	sprite.setPosition(cam.toScreenX(x),cam.toScreenY(y));
+	applyHitTint();
 	w.draw(sprite);
 }
 void EnemySub::attack() {

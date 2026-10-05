@@ -87,6 +87,7 @@ move(dt, w);
 }
 void M15Bradley::render(sf::RenderWindow& w, const Camera& cam) {
 	sprite.setPosition(cam.toScreenX(x),cam.toScreenY(y));
+	applyHitTint();
 	w.draw(sprite);
 
 }
@@ -347,6 +348,7 @@ projectile=new Rocket(x+(right?width:-20),y+20,dx,dy,true,40);
 
 void MetalSlug::render(sf::RenderWindow& w, const Camera& cam) {
 	sprite.setPosition(cam.toScreenX(x),cam.toScreenY(y));
+	applyHitTint();
 	w.draw(sprite);
 
 }
@@ -583,6 +585,7 @@ projectile=new Rocket(x+(right?width:-20),y+20,dx,dy,true,40);
 }
 void AmphibiousSlug::render(sf::RenderWindow& w, const Camera& cam) {
 	sprite.setPosition(cam.toScreenX(x),cam.toScreenY(y));
+	applyHitTint();
 	w.draw(sprite);
 
 }

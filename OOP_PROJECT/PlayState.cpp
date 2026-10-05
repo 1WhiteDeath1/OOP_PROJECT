@@ -51,6 +51,11 @@ void PlayState::update(float frameTime) {
 
 	PlayerSoldier* currCharacter = player.getActive();
 	camera.follow(currCharacter->getX(), currCharacter->getY());
+	float shake = entityManager.takeShake();
+	if (shake > 0) camera.shake(shake, 0.35f);
+	if (lastHp >= 0 && currCharacter->getHp() < lastHp) camera.shake(4, 0.2f); // small shake when you get hit
+	lastHp = currCharacter->getHp();
+	camera.updateShake(frameTime);
 
 	//camera clamping
 	if (camera.x < 0) camera.x = 0;

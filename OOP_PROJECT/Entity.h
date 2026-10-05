@@ -19,6 +19,16 @@ protected:
 	Texture texture;
 	float width, height;
 	bool isActive = true;
+	int hitFrames = 0; // frames left of the red "got hit" flash
+
+	// tints the sprite red for a few frames after a hit, normal colour otherwise
+	void applyHitTint() {
+		if (hitFrames > 0) {
+			sprite.setColor(Color(255, 90, 90));
+			hitFrames--;
+		}
+		else sprite.setColor(Color::White);
+	}
 public:
 	Entity(float x, float y, float w, float h) : x(x), y(y), width(w), height(h) {}
 	virtual void update(float dt, const World& w) = 0;
@@ -51,6 +61,7 @@ public:
 		sprite.setScale(mirrored ? -scale : scale, scale);
 		sprite.setRotation(lean);
 		sprite.setPosition(cam.toScreenX(x + width / 2.f), cam.toScreenY(y + height - lift));
+		applyHitTint();
 		window.draw(sprite);
 	}
 

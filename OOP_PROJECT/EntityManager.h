@@ -35,6 +35,7 @@ class EntityManager
 	int wCount = 0;
 	int vCount = 0;
 	float coolDown = 0;
+	float shakeRequest = 0; // strongest screen shake asked for this frame
 public:
 	EntityManager();
 	~EntityManager();
@@ -49,6 +50,7 @@ public:
 	void render(RenderWindow& w, const Camera& cam);
 
 	int getEnemyCount() const { return eCount; }
+	float takeShake() { float s = shakeRequest; shakeRequest = 0; return s; }
 
 	void checkProjectileWorldCollisions(World& w);
 	void checkProjectileCollisions();

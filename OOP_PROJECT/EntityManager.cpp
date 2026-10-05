@@ -47,6 +47,8 @@ void EntityManager::addExplosion(float x, float y, float height) {
 	for (int i = 0; i < MAX_EXPLOSIONS; i++) {
 		if (!explosions[i].isActive()) {
 			explosions[i].start(x, y, height);
+			float shake = height / 25; // 150px explosion = 6px shake, vehicle = 10px
+			if (shake > shakeRequest) shakeRequest = shake;
 			return;
 		}
 	}

@@ -20,6 +20,7 @@ move(dt, w);
 }
 void FlyingTara::render(sf::RenderWindow& w, const Camera& cam) {
     sprite.setPosition(cam.toScreenX(x), cam.toScreenY(y));
+    applyHitTint();
     w.draw(sprite);
 }
 void FlyingTara::move(float dt, const World& w) {
@@ -278,6 +279,7 @@ projectile=new Bullet(fireX,fireY,dx,dy,true,10);
 }
 void SlugFlyer::render(sf::RenderWindow& w, const Camera& cam) {
 	sprite.setPosition(cam.toScreenX(x),cam.toScreenY(y));
+	applyHitTint();
 	w.draw(sprite);
 
 }

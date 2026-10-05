@@ -57,6 +57,7 @@ void DamagableEntity::checkGroundCollisions(const World& w) {
 }
 
 void DamagableEntity::takeDamage(int amount) {
+	hitFrames = 5; // flash red for 5 frames
 	currentHp -= amount;
 	if (currentHp <= 0) {
 		currentHp = 0;
