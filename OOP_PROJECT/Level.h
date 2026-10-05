@@ -27,6 +27,11 @@ class Level
 
 	int goalColumn = 0; // reaching this column finishes the mission (0 = no goal flag)
 
+	// waves: extra enemies that appear ahead of the player as they move on
+	int nextWaveColumn = 20; // the next wave comes when the player passes this column
+	float waveTimer = 15;    // missions without a goal flag get a wave every 15 seconds instead
+	void spawnWave(float playerX, const World& w, EntityManager& em) const;
+
 	void enemyAt(int type, int col, const World& w);
 	void vehicleAt(int type, int col, const World& w);
 	void weaponAt(int type, int col, const World& w);
@@ -41,6 +46,8 @@ public:
 	Level(int level, const World& w);
 
 	void setUP(EntityManager& eManager) const;
+	void checkWaves(float dt, float playerX, const World& w, EntityManager& em);
+	static Enemy* makeEnemy(int type, float x, float y); // 0 rebel, 1 shield, 2 bazooka, 3 grenade
 	int getGoalColumn() const { return goalColumn; }
 
 };

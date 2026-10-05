@@ -118,7 +118,9 @@ void EntityManager::addProjectile(Projectile* p) {
 	}
 }
 void EntityManager::addEnemy(Enemy* e) {
+	if (!e) return;
 	if (eCount >= MAX_ENEMIES) {
+		delete e; // no room: don't leak it
 		return;
 	}
 	for (int i = 0; i < MAX_ENEMIES;i++) {

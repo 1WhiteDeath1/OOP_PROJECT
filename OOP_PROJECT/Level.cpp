@@ -96,25 +96,46 @@ void Level::level3(const World& w) {
 	prisonerAt(10, w);
 }
 
+Enemy* Level::makeEnemy(int type, float x, float y) {
+	if (type == 0) return new RebelSoldier(x, y, EnemyWidth, EnemyHeight, 20);
+	if (type == 1) return new ShieldedSoldier(x, y, EnemyWidth, EnemyHeight, 40);
+	if (type == 2) return new BazookaSoldier(x, y, EnemyWidth, EnemyHeight, 20);
+	if (type == 3) return new GrenadeSoldier(x, y, EnemyWidth, EnemyHeight, 20);
+	return nullptr;
+}
+
+void Level::spawnWave(float playerX, const World& w, EntityManager& em) const {
+	// (mission + 1) soldiers just off the right edge of the screen, a column apart, random types
+	int playerCol = (int)(playerX / World::CELL);
+	for (int i = 0; i < level + 1; i++) {
+		int col = playerCol + 15 + i * 2;
+		if (col >= World::WIDTH - 2) break;
+		em.addEnemy(makeEnemy(rand() % 4, col * (float)World::CELL, w.surfaceY(col) - EnemyHeight));
+	}
+}
+
+void Level::checkWaves(float dt, float playerX, const World& w, EntityManager& em) {
+	if (goalColumn > 0) {
+		// passed the next wave column (and not right at the end): send a wave, the next one 22 columns later
+		if (playerX >= nextWaveColumn * World::CELL && nextWaveColumn < goalColumn - 15) {
+			spawnWave(playerX, w, em);
+			nextWaveColumn += 22;
+		}
+	}
+	else {
+		// no flag (the boss mission): reinforcements every 15 seconds
+		waveTimer -= dt;
+		if (waveTimer <= 0) {
+			spawnWave(playerX, w, em);
+			waveTimer = 15;
+		}
+	}
+}
+
 void Level::setUP(EntityManager& em) const {
 	for (int i = 0; i < eCount;i++) {
-
-		Enemy* e = nullptr;
 		const spawn& sp = enemySpawn[i];
-
-		if (sp.type == 0) {
-			e = new RebelSoldier(sp.x, sp.y, EnemyWidth, EnemyHeight, 20);
-		}
-		else if (sp.type == 1) {
-			e = new ShieldedSoldier(sp.x, sp.y, EnemyWidth, EnemyHeight, 40);
-		}
-		else if (sp.type == 2) {
-			e = new BazookaSoldier(sp.x, sp.y, EnemyWidth, EnemyHeight, 20);
-		}
-		else if (sp.type == 3) {
-			e = new GrenadeSoldier(sp.x, sp.y, EnemyWidth, EnemyHeight ,20);
-		}
-
+		Enemy* e = makeEnemy(sp.type, sp.x, sp.y);
 		if (e) em.addEnemy(e);
 	}
 

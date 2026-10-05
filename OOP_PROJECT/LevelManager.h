@@ -26,6 +26,9 @@ public:
 		return em.getEnemyCount() == 0;
 	}
 	int getGoalColumn() const { return level ? level->getGoalColumn() : 0; }
+	void update(float dt, float playerX, const World& w, EntityManager& em) {
+		if (level) level->checkWaves(dt, playerX, w, em);
+	}
 	int getCurrLevel() const {
 		return currLevel;
 	}

@@ -91,6 +91,7 @@ void PlayState::update(float frameTime) {
 	weather.update(frameTime);
 	player.handleInput(frameTime, world, entityManager);
 	entityManager.update(frameTime, world);
+	levelManager.update(frameTime, player.getActive()->getX(), world, entityManager); // enemy waves
 
 	PlayerSoldier* currCharacter = player.getActive();
 	camera.follow(currCharacter->getX(), currCharacter->getY());
