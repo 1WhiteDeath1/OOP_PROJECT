@@ -17,7 +17,9 @@ float Level::isOnGround(const World& w,int col, int eHeight, int eWidth) const {
 }
 
 Level::Level(int level, const World& w) : level(level) {
-	level1(w);
+	if (level == 1) level1(w);
+	else if (level == 2) level2(w);
+	else level3(w);
 }
 
 int EnemyHeight = 96;
@@ -30,40 +32,68 @@ int weaponHeight = 32;
 float vehicleWidth[7]  = { 146, 190, 149, 192, 223, 192, 146 };
 float vehicleHeight[7] = { 134, 125,  78,  91, 118, 187, 134 };
 
+// small helpers so the spawn lists below stay short: put something on the ground at a column
+void Level::enemyAt(int type, int col, const World& w) {
+	if (eCount < 20) enemySpawn[eCount++] = { type, col * (float)World::CELL, isOnGround(w, col, EnemyHeight) };
+}
+void Level::vehicleAt(int type, int col, const World& w) {
+	if (vCount < 20) vehicleSpawn[vCount++] = { type, col * (float)World::CELL, isOnGround(w, col, (int)vehicleHeight[type], (int)vehicleWidth[type]) };
+}
+void Level::weaponAt(int type, int col, const World& w) {
+	if (wCount < 15) weaponSpawn[wCount++] = { type, col * (float)World::CELL, isOnGround(w, col, weaponHeight) };
+}
+void Level::prisonerAt(int col, const World& w) {
+	if (pCount < 10) prisonerSpawn[pCount++] = { 0, col * (float)World::CELL, isOnGround(w, col, 70) };
+}
+
+// enemy types: 0 = rebel, 1 = shield soldier, 2 = bazooka, 3 = grenade soldier
+// vehicles: 0 MetalSlug, 1 SlugFlyer, 2 SlugMariner, 3 FlyingTara, 4 EnemySub, 5 M15Bradley, 6 AmphibiousSlug
+// weapons: 0 HeavyMachineGun, 1 RocketLauncher, 2 FlameShot, 3 LaserGun
+
+// mission 1, mountain pass: rocky hills (0-90) then plains, goal at the far right
 void Level::level1(const World& w) {
-	//enemies
-	enemySpawn[eCount++] = { 0, 20 * World::CELL, isOnGround(w,20, EnemyHeight) };//rebel 
-	enemySpawn[eCount++] = { 0, 35 * World::CELL, isOnGround(w,35, EnemyHeight) };//rebel 
-	enemySpawn[eCount++] = { 1, 50 * World::CELL, isOnGround(w,50, EnemyHeight) };//rebel 
-	enemySpawn[eCount++] = { 2, 70 * World::CELL, isOnGround(w,70, EnemyHeight) };//rebel 
-	enemySpawn[eCount++] = { 3, 85 * World::CELL, isOnGround(w,85, EnemyHeight) };//rebel 
-	enemySpawn[eCount++] = { 0, 100 * World::CELL, isOnGround(w,100, EnemyHeight) };//rebel 
-	enemySpawn[eCount++] = { 1, 115 * World::CELL, isOnGround(w,115, EnemyHeight) };//rebel 
+	goalColumn = 195;
+	enemyAt(0, 18, w); enemyAt(3, 26, w); enemyAt(2, 34, w); enemyAt(0, 42, w); enemyAt(1, 50, w); enemyAt(0, 58, w);
+	enemyAt(2, 72, w); enemyAt(3, 84, w); enemyAt(0, 100, w); enemyAt(1, 112, w); enemyAt(2, 125, w); enemyAt(0, 140, w);
+	enemyAt(3, 150, w); enemyAt(1, 165, w); enemyAt(2, 178, w); enemyAt(0, 186, w);
 
+	vehicleAt(1, 6, w);     // slug flyer near the start
+	vehicleAt(0, 64, w);    // metal slug in the hills
+	vehicleSpawn[vCount++] = { 3, 120 * (float)World::CELL, isOnGround(w, 120, (int)vehicleHeight[3]) - 300 }; // flying tara, hovers
+	vehicleAt(5, 160, w);   // bradley tank guarding the end
 
-	//vehicles
+	weaponAt(0, 12, w); weaponAt(1, 70, w); weaponAt(2, 130, w);
+	prisonerAt(30, w); prisonerAt(95, w); prisonerAt(150, w);
+}
 
-	vehicleSpawn[vCount++] = { 1, 6 * World::CELL, isOnGround(w, 6, vehicleHeight[1], vehicleWidth[1]) };  // SlugFlyer
-	vehicleSpawn[vCount++] = { 0,  60 * World::CELL, isOnGround(w, 60, vehicleHeight[0], vehicleWidth[0]) };  // MetalSlug
-	vehicleSpawn[vCount++] = { 3, 70 * World::CELL, isOnGround(w,70, vehicleHeight[3], vehicleWidth[3]) - 300 };  // FlyingTara, hovers above the ground
-	vehicleSpawn[vCount++] = { 5, 110 * World::CELL, isOnGround(w, 110, vehicleHeight[5], vehicleWidth[5]) };  // M15Bradley
-	vehicleSpawn[vCount++] = { 6, 128 * World::CELL, isOnGround(w, 128, vehicleHeight[6], vehicleWidth[6]) };  // AmphibiousSlug
-	vehicleSpawn[vCount++] = { 2, 140 * World::CELL, isOnGround(w, 140, vehicleHeight[2], vehicleWidth[2]) };  // SlugMariner, resting on the sea bed
-	vehicleSpawn[vCount++] = { 4, 175 * World::CELL, (World::seaLEVEL + 2) * World::CELL };  // EnemySub
+// mission 2, coastline: plains (0-110) then the sea, goal at the end of the sea bed
+void Level::level2(const World& w) {
+	goalColumn = 196;
+	enemyAt(0, 15, w); enemyAt(2, 22, w); enemyAt(1, 30, w); enemyAt(3, 38, w); enemyAt(0, 46, w); enemyAt(2, 55, w);
+	enemyAt(3, 63, w); enemyAt(1, 72, w); enemyAt(0, 80, w); enemyAt(2, 90, w); enemyAt(3, 100, w);
+	enemyAt(0, 130, w); enemyAt(2, 150, w); enemyAt(0, 170, w); enemyAt(1, 185, w);
 
-	//weapons collectibles
+	vehicleAt(0, 8, w);     // metal slug at the start
+	vehicleAt(5, 60, w);    // bradley tank
+	vehicleSpawn[vCount++] = { 3, 85 * (float)World::CELL, isOnGround(w, 85, (int)vehicleHeight[3]) - 300 };
+	vehicleAt(6, 104, w);   // amphibious slug at the shore
+	vehicleAt(2, 115, w);   // slug mariner on the sea bed
+	vehicleSpawn[vCount++] = { 4, 140 * (float)World::CELL, (World::seaLEVEL + 2) * (float)World::CELL }; // enemy subs
+	vehicleSpawn[vCount++] = { 4, 175 * (float)World::CELL, (World::seaLEVEL + 2) * (float)World::CELL };
 
-	//   0=HeavyMachineGun  1=RocketLauncher  2=FlameShot  3=LaserGun
-	weaponSpawn[wCount++] = { 0, 15 * World::CELL, isOnGround(w, 15, weaponHeight) };   // HeavyMachineGun
-	weaponSpawn[wCount++] = { 2, 45 * World::CELL, isOnGround(w, 45, weaponHeight) };   // FlameShot
-	weaponSpawn[wCount++] = { 1, 80 * World::CELL, isOnGround(w, 80, weaponHeight) };   // RocketLauncher
-	weaponSpawn[wCount++] = { 3, 100 * World::CELL, isOnGround(w, 100, weaponHeight) };   // LaserGun
+	weaponAt(3, 50, w); weaponAt(1, 95, w);
+	prisonerAt(40, w); prisonerAt(98, w); prisonerAt(160, w);
+}
 
-	//prisoners to rescue
-	prisonerSpawn[pCount++] = { 0, 28 * World::CELL, isOnGround(w, 28, 70) };
-	prisonerSpawn[pCount++] = { 0, 75 * World::CELL, isOnGround(w, 75, 70) };
-	prisonerSpawn[pCount++] = { 0, 120 * World::CELL, isOnGround(w, 120, 70) };
+// mission 3, rebel base: flat desert at night, the boss waits here
+void Level::level3(const World& w) {
+	goalColumn = 0; // no flag, the mission ends when the boss is destroyed
+	enemyAt(0, 12, w); enemyAt(1, 20, w); enemyAt(2, 26, w); enemyAt(3, 34, w);
 
+	vehicleAt(0, 5, w);     // a metal slug to fight the boss with
+
+	weaponAt(0, 8, w); weaponAt(1, 15, w);
+	prisonerAt(10, w);
 }
 
 void Level::setUP(EntityManager& em) const {

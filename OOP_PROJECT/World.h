@@ -17,9 +17,11 @@ private:
 
 	void setTile(int row, int col, int type, bool solid, bool water);
 
-	void generateAerial();
-	void generatePlains();
-	void generateAquatic();
+	// each one fills the columns from..to-1 with its kind of terrain
+	void generateAerial(int from, int to);
+	void generatePlains(int from, int to);
+	void generateAquatic(int from, int to);
+	void generateDesert(int from, int to);
 	int clamp(int val, int min, int max);
 
 public:
@@ -27,15 +29,13 @@ public:
 	static const int HEIGHT = 40;
 	static const int WIDTH = 200;
 
-	static const int aerialEND = 66;
-	static const int plainsEND = 133;
 	static const int seaLEVEL = 28;
 
 	static const int G = 10;
 
 	Voxel grid[HEIGHT][WIDTH];
 
-	World();
+	World(int mission = 1); // every mission has its own layout
 	void render(RenderWindow& w, const Camera& c);
 	bool isSolid(float wX, float wY) const;
 	bool isWater(float wX, float wY) const;

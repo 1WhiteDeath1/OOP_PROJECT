@@ -8,16 +8,24 @@ int World::clamp(int val, int min, int max) {
 }
 
 
-World::World() {
+World::World(int mission) {
     stoneTex.loadFromFile("25I-0504_25I-0644_Assets/stone.png");
     grassTex.loadFromFile("25I-0504_25I-0644_Assets/grass.png");
     dirtTex.loadFromFile("25I-0504_25I-0644_Assets/dirt.png");
     sandTex.loadFromFile("25I-0504_25I-0644_Assets/sand.png");
     waterTex.loadFromFile("25I-0504_25I-0644_Assets/water.png");
 
-    generateAerial();
-    generatePlains();
-    generateAquatic();
+    if (mission == 1) {          // mountain pass: rocky hills, then plains
+        generateAerial(0, 90);
+        generatePlains(90, WIDTH);
+    }
+    else if (mission == 2) {     // coastline: plains, then the sea
+        generatePlains(0, 110);
+        generateAquatic(110, WIDTH);
+    }
+    else {                       // rebel base: flat desert, room to fight the boss
+        generateDesert(0, WIDTH);
+    }
 
 }
 
@@ -64,18 +72,18 @@ void World::setTile(int row, int col, int type, bool solid, bool water) {
 
 
 
-void World::generateAerial() {
+void World::generateAerial(int from, int to) {
     int surfaceHeight = 14;
     int flatLeft = 4; // columns left before the ground is allowed to step
 
-    for (int i = 0; i < aerialEND;i++) {
+    for (int i = from; i < to;i++) {
         // keep the ground flat for a few columns so every step is a ledge you can stand on,
         // then step 1 block (sometimes 2, still under the ~2.5 block jump height)
         if (flatLeft == 0) {
             int rigidness = (rand() % 2 == 0) ? 1 : -1;
             if (rand() % 4 == 0) rigidness *= 2;
             // near the end, stair down towards the plains so the two biomes meet with a normal step
-            if (i > aerialEND - 20) rigidness = (surfaceHeight < 16) ? 2 : 1;
+            if (i > to - 20) rigidness = (surfaceHeight < 16) ? 2 : 1;
             surfaceHeight += rigidness;
             surfaceHeight = clamp(surfaceHeight, 9, 18);
             flatLeft = 3 + rand() % 3; // 3 to 5 columns wide
@@ -88,11 +96,11 @@ void World::generateAerial() {
     }
 }
 
-void World::generatePlains() {
+void World::generatePlains(int from, int to) {
     int surfaceHeight = 20;
     int flatLeft = 5;
 
-    for (int i = aerialEND; i < plainsEND;i++) {
+    for (int i = from; i < to;i++) {
         // plains are gentler: long flat stretches with 1 block steps
         if (flatLeft == 0) {
             int rigidness = (rand() % 2 == 0) ? 1 : -1;
@@ -113,11 +121,11 @@ void World::generatePlains() {
 }
 
 
-void World::generateAquatic() {
+void World::generateAquatic(int from, int to) {
     int bed = 34;
     int flatLeft = 4;
 
-    for (int i = plainsEND; i < WIDTH;i++) {
+    for (int i = from; i < to;i++) {
         // sea bed rises and falls in wide 1 block steps instead of a new random depth every column
         if (flatLeft == 0) {
             bed += (rand() % 2 == 0) ? 1 : -1;
@@ -143,6 +151,24 @@ void World::generateAquatic() {
 
 
 
+
+void World::generateDesert(int from, int to) {
+    int surfaceHeight = 21;
+    int flatLeft = 12;
+
+    for (int i = from; i < to; i++) {
+        // mostly flat sand with an odd 1 block bump, so the boss fight has room
+        if (flatLeft == 0) {
+            surfaceHeight = (surfaceHeight == 21) ? 20 : 21;
+            flatLeft = (surfaceHeight == 20) ? 3 + rand() % 3 : 10 + rand() % 10;
+        }
+        flatLeft--;
+
+        for (int j = surfaceHeight; j < HEIGHT; j++) {
+            setTile(j, i, 4, true, false);
+        }
+    }
+}
 
 void World::render(RenderWindow& w, const Camera& cam) {
     for (int i = 0; i <HEIGHT; i++) {
