@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd".claude/" 
+
+# game output
+OOP_PROJECT/highscore.txt
+OOP_PROJECT/screenshot_*.png

@@ -31,6 +31,11 @@ void PlayState::enter() {
 	popupText.setCharacterSize(24);
 	popupText.setOutlineThickness(2);
 
+	helpText.setFont(font);
+	helpText.setCharacterSize(18);
+	helpText.setOutlineColor(Color::Black);
+	helpText.setOutlineThickness(2);
+
 	barText.setFont(font);
 	barText.setCharacterSize(20);
 	barText.setFillColor(Color::White);
@@ -101,6 +106,7 @@ void PlayState::update(float frameTime) {
 	dayNight.update(frameTime);
 	score.update(frameTime);
 	barBlink += frameTime;
+	if (helpTimer > 0) helpTimer -= frameTime;
 	weather.update(frameTime);
 	player.handleInput(frameTime, world, entityManager, camera);
 	entityManager.update(frameTime, world);
@@ -150,7 +156,6 @@ void PlayState::update(float frameTime) {
 
 	//hud
 	string hud = "MISSION " + to_string(mission) + "   " + string(currCharacter->getName()) +
-		"   HP " + to_string(currCharacter->getHp()) +
 		"   Lives " + to_string(currCharacter->getLives()) +
 		"   Grenades " + to_string(currCharacter->getGrenadeCount());
 	Weapon* special = currCharacter->getActiveWeaponSlot(1);
@@ -159,7 +164,6 @@ void PlayState::update(float frameTime) {
 	if (currCharacter->getPowerUpActive()) hud += "   " + string(currCharacter->getPowerUpName()) + "!";
 	else if (currCharacter->getPowerUpCooldown() > 0) hud += "   Power up in " + to_string((int)currCharacter->getPowerUpCooldown() + 1) + "s";
 	else hud += "   Q: " + string(currCharacter->getPowerUpName()) + " ready";
-	if (player.isPiloting()) hud += "   Vehicle HP " + to_string(player.getVehicle()->getHp());
 	hud += "   Enemies " + to_string(entityManager.getEnemyCount());
 	hud += "   " + string(dayNight.getTimeName()) + ", " + weather.getWeather().getName();
 	// score in the top right, with the combo multiplier while a combo is going
@@ -170,11 +174,11 @@ void PlayState::update(float frameTime) {
 	scoreText.setPosition(Camera::screenW - sb.width - 30, 60);
 
 	hud += Aim::mouseMode ? "   Aim: MOUSE" : "   Aim: ARROWS";
-	if (Aim::mouseMode)
-		hud += "\nA/D move  W jump  Mouse aim  Click/Space fire  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit  Tab arrow aim  P pause  M mute  Esc menu";
-	else
-		hud += "\nA/D move  W jump  Space fire  Up/Down aim  Left/Right turn  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit  Tab mouse aim  P pause  M mute  Esc menu";
 	hudText.setString(hud);
+	if (Aim::mouseMode)
+		helpText.setString("A/D move   W jump   MOUSE aim   CLICK/SPACE fire   T grenade   R knife   Q power up   Z switch   E/U vehicle   TAB arrow aim   P pause   M mute   ESC menu");
+	else
+		helpText.setString("A/D move   W jump   SPACE fire   UP/DOWN aim   LEFT/RIGHT turn   T grenade   R knife   Q power up   Z switch   E/U vehicle   TAB mouse aim   P pause   M mute   ESC menu");
 }
 
 
@@ -267,7 +271,29 @@ void PlayState::render(RenderWindow& w) {
 	if (endTimer <= 0) player.renderAim(w, camera, world);
 
 	score.renderPopups(w, camera, popupText);
+	// a see-through dark panel behind the hud text so it reads on any sky
+	FloatRect hb = hudText.getGlobalBounds();
+	RectangleShape hudBack(Vector2f(hb.width + 24, hb.height + 18));
+	hudBack.setPosition(hb.left - 12, hb.top - 9);
+	hudBack.setFillColor(Color(0, 0, 0, 110));
+	w.draw(hudBack);
 	w.draw(hudText);
+
+	// the controls along the bottom: the first 10 seconds (fading out over the last one) and while paused
+	float helpAlpha = paused ? 1.f : (helpTimer > 1 ? 1.f : (helpTimer > 0 ? helpTimer : 0.f));
+	if (helpAlpha > 0 && endTimer <= 0) {
+		helpText.setFillColor(Color(255, 255, 255, (Uint8)(255 * helpAlpha)));
+		helpText.setOutlineColor(Color(0, 0, 0, (Uint8)(255 * helpAlpha)));
+		FloatRect cb = helpText.getLocalBounds();
+		helpText.setOrigin(cb.left + cb.width / 2, 0);
+		helpText.setPosition(Camera::screenW / 2.f, Camera::screenH - 40.f);
+		RectangleShape helpBack(Vector2f(cb.width + 40, 34));
+		helpBack.setOrigin((cb.width + 40) / 2, 0);
+		helpBack.setPosition(Camera::screenW / 2.f, Camera::screenH - 46.f);
+		helpBack.setFillColor(Color(0, 0, 0, (Uint8)(130 * helpAlpha)));
+		w.draw(helpBack);
+		w.draw(helpText);
+	}
 	w.draw(scoreText);
 	drawHealthBars(w);
 
@@ -290,12 +316,53 @@ void PlayState::render(RenderWindow& w) {
 		w.draw(popupText);
 	}
 
-	if (introTimer > 0 && endTimer <= 0) w.draw(introText);
+	if (introTimer > 0 && endTimer <= 0) {
+		// the mission title fades in over the first half second and out over the last one
+		float a = introTimer > 2.5f ? (3 - introTimer) / 0.5f : (introTimer < 1 ? introTimer : 1.f);
+		if (a < 0) a = 0;
+		if (a > 1) a = 1;
+		introText.setFillColor(Color(255, 255, 255, (Uint8)(255 * a)));
+		introText.setOutlineColor(Color(0, 0, 0, (Uint8)(255 * a)));
+		w.draw(introText);
+	}
 
 	if (endTimer > 0 || paused) {
 		FloatRect b = bannerText.getLocalBounds();
 		bannerText.setOrigin(b.left + b.width / 2.f, b.top + b.height / 2.f);
 		bannerText.setPosition(Camera::screenW / 2.f, Camera::screenH / 2.f);
+		// darken the game behind the banner
+		RectangleShape dim(Vector2f((float)Camera::screenW, (float)Camera::screenH));
+		dim.setFillColor(Color(0, 0, 0, 120));
+		w.draw(dim);
 		w.draw(bannerText);
 	}
+
+	// aiming with the mouse: hide the arrow and draw a crosshair at the mouse instead
+	bool crosshair = Aim::usingMouse() && !paused && endTimer <= 0;
+	w.setMouseCursorVisible(!crosshair);
+	if (crosshair) {
+		float mx = (float)Aim::mouse.x, my = (float)Aim::mouse.y;
+		CircleShape ring(13.f);
+		ring.setOrigin(13.f, 13.f);
+		ring.setPosition(mx, my);
+		ring.setFillColor(Color::Transparent);
+		ring.setOutlineColor(Color::White);
+		ring.setOutlineThickness(2);
+		w.draw(ring);
+		RectangleShape line(Vector2f(10, 2));
+		line.setFillColor(Color::White);
+		line.setOrigin(5, 1);
+		const float offX[4] = { -20, 20, 0, 0 }, offY[4] = { 0, 0, -20, 20 };
+		for (int k = 0; k < 4; k++) {
+			line.setRotation(k < 2 ? 0.f : 90.f);
+			line.setPosition(mx + offX[k], my + offY[k]);
+			w.draw(line);
+		}
+		CircleShape centre(2.f);
+		centre.setOrigin(2.f, 2.f);
+		centre.setPosition(mx, my);
+		centre.setFillColor(Color(255, 80, 60));
+		w.draw(centre);
+	}
+
 }

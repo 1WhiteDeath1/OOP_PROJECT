@@ -34,6 +34,8 @@ class PlayState : public GameState {
 	bool missionDone = false; // the end timer leads to the next mission instead of the menu
 	Text introText;
 	Text barText;      // the numbers on the health bars
+	Text helpText;     // the controls, along the bottom
+	float helpTimer = 10; // the controls show for the first 10 seconds (and while paused)
 	float barBlink = 0; // clock for the low health blink
 	bool paused = false;
 	int lastHp = -1; // to notice when the player gets hit
