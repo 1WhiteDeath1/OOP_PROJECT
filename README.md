@@ -28,12 +28,17 @@ It was made as an Object Oriented Programming course project (roll numbers **25I
   - Fio: shield
 - **Every game has a different random world**, built from a tile (voxel) grid.
 - **Weapons:** pistol, Heavy Machine Gun, Rocket Launcher, Flame Shot and Laser Gun pickups, plus grenades and a knife.
+- **Aiming:**
+  - a dotted line shows where your next shot will go and stops at walls
+  - the arrow keys aim up and down and turn you around without walking
+  - press **Tab** for mouse aim: aim all the way round, even behind you, and click to fire. A crosshair replaces the cursor
+  - aiming works the same inside vehicles
 - **Enemies with a state-machine AI** (roaming → chasing → attacking):
   - Rebel soldier
   - Bazooka soldier
   - Grenade soldier
-  - Shield soldier, who blocks bullets from the front
-- **Vehicles you can drive:** Metal Slug tank, Slug Flyer plane, Slug Mariner submarine and Amphibious Slug.
+  - Shield soldier, who blocks bullets from the front (a spark shows the block). Hit him from behind, or use grenades
+- **Vehicles you can drive:** Metal Slug tank, Slug Flyer plane, Slug Mariner submarine and Amphibious Slug. Vehicles visibly turn around when they change direction.
 - **Enemy vehicles:** M-15A Bradley tank, Flying Tara bomber and an enemy submarine.
 - **Day and night cycle:** the sky changes colour, the sun and moon move across it, and the level gets darker at night.
 - **Weather:** clear, rain and snow on a repeating schedule. Rain and snow turn the sky grey.
@@ -44,12 +49,26 @@ It was made as an Object Oriented Programming course project (roll numbers **25I
   - muzzle flashes and walking animations
   - rocket splash damage
   - a camera that looks ahead
-- **HUD and screens:** mission titles, pause, game over and win screens.
+- **HUD and screens:**
+  - health bars in the top right, for you and for the vehicle you're driving
+  - the controls along the bottom when a mission starts and while paused
+  - mission titles that fade in and out, pause, game over and win screens
+  - **F12** saves a screenshot
 
 ## Screenshots
 
 ### Main menu
+Pick with the arrow keys or the mouse. **Tab** switches between arrow-key and mouse aiming.
 ![Main menu](docs/screenshots/menu.png)
+
+### Aiming
+| Mission start: health bar and controls | Aiming with the arrow keys |
+|---|---|
+| ![HUD and controls](docs/screenshots/hud_controls.png) | ![Aim marker](docs/screenshots/aim_marker.png) |
+| **Mouse aim all the way round (here up and behind)** | **Firing at the mouse** |
+| ![Mouse aim 360](docs/screenshots/mouse_aim_360.png) | ![Mouse aim firing](docs/screenshots/mouse_aim_fire.png) |
+| **Aiming from a vehicle, with its health bar** | **The Slug Flyer turned around** |
+| ![Vehicle aim](docs/screenshots/vehicle_aim.png) | ![Vehicle turned](docs/screenshots/vehicle_turned.png) |
 
 ### Missions and boss
 | Mission 1: Mountain Pass | Mission 2: Coastline |
@@ -111,6 +130,8 @@ Marco, Tarma, Eri and Fio. Press **Z** to switch.
 | **W** | Jump |
 | **Space** | Fire |
 | **Up / Down** | Aim up / down |
+| **Left / Right** | Turn around without walking |
+| **Tab** | Switch to mouse aim (and back). With the mouse: aim anywhere, **left click** to fire |
 | **T** | Throw grenade |
 | **R** | Knife |
 | **Q** | Character power-up (different for each character, 20 s cooldown) |
@@ -119,11 +140,13 @@ Marco, Tarma, Eri and Fio. Press **Z** to switch.
 | **U** | Exit the vehicle |
 | **P** | Pause |
 | **M** | Mute / unmute sound |
+| **F12** | Save a screenshot (`screenshot_<time>.png` next to the game) |
 | **Esc** | Back to the menu (quits from the menu) |
-| **Enter / Up / Down** | Menu navigation |
+| **Enter / Up / Down** or the **mouse** | Menu navigation |
 
 **Inside vehicles:**
-- Metal Slug: A/D to drive, W to jump, Space for the cannon.
+- Metal Slug: A/D to drive, W to jump, Up/Down to aim the cannon, Space to fire it.
+- In every vehicle, mouse aim (Tab) aims the guns at the mouse.
 - Flyer, Mariner and Amphibious Slug: arrow keys to move.
 - Slug Flyer: R fires missiles.
 - Slug Mariner: D, W and A fire missiles forward, up and backward.
