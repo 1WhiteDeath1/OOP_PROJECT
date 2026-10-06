@@ -179,6 +179,7 @@ void EntityManager::update(float frameTime, const World& w) {
 	for (int i = 0; i < MAX_VEHICLES;i++) {
 		if (vehicles[i] && vehicles[i]->getActive()) {
 			vehicles[i]->update(frameTime, w);
+			vehicles[i]->updateFacing(frameTime);
 
 			Projectile* vp = vehicles[i]->getProjectile();
 			if (vp) {
@@ -204,6 +205,7 @@ void EntityManager::update(float frameTime, const World& w) {
 		if (!projectiles[i]) continue;
 
 		if (projectiles[i]->getActive()) {
+			projectiles[i]->rememberPosition();
 			projectiles[i]->update(frameTime, w);
 		}
 	}
@@ -360,7 +362,9 @@ void EntityManager::checkProjectileCollisions() {
 				continue;
 			}
 
-			if (projectiles[i]->collision(*enemies[j])) {
+			// the real hitbox (Entity::collision shrinks both boxes a lot, which is right for walking
+			// into things but made bullets go through the head, legs and sides of enemies)
+			if (projectiles[i]->hitOnTheWay(*enemies[j])) {
 				enemies[j]->onHitByProjectile(projectiles[i]);
 				if (!projectiles[i]->getActive()) break;
 			}
@@ -370,7 +374,7 @@ void EntityManager::checkProjectileCollisions() {
 		for (int j = 0; j < MAX_VEHICLES && projectiles[i]->getActive(); j++) {
 			if (!vehicles[j] || !vehicles[j]->getActive() || !vehicles[j]->isEnemy()) continue;
 
-			if (overlaps(*projectiles[i], *vehicles[j])) {
+			if (projectiles[i]->hitOnTheWay(*vehicles[j])) {
 				projectiles[i]->applyDamage(vehicles[j]);
 				if (projectiles[i]->diesOnHit()) projectiles[i]->setActive(false);
 			}

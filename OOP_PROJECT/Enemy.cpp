@@ -212,14 +212,33 @@ void ShieldedSoldier::throwProjectile() {
 	projectile = new Bullet(getX() + width / 2, getY() + 30, dx, dy, false, 10);
 }
 void ShieldedSoldier::TakeNormalDamage(Projectile* p) {
-	bool bulletIsRight = p->getX() > getX();
-	bool enemyIsRight = (target != nullptr) && (target->getX() > getX());
-	if (bulletIsRight != enemyIsRight)
-		p->applyDamage(this);
+	// the shield is on the side facing the player. a shot flying left came from the right, so it is
+	// blocked when the player (and the shield) is on the right, and the other way round. this used to
+	// compare positions after the bullet was already inside the hitbox, so it only blocked from one side
+	bool shieldOnRight = (target != nullptr) && (target->getX() > getX());
+	bool shotFromRight = p->getDirX() < 0;
+	if (shotFromRight != shieldOnRight) {
+		p->applyDamage(this); // hit from behind
+		return;
+	}
+	// blocked: a spark where the shot hit the shield
+	sparkFrames = 6;
+	sparkX = shieldOnRight ? x + width : x;
+	sparkY = p->getY();
 }
 void ShieldedSoldier::takeExplosionDamage(Projectile* p) { p->applyDamage(this); }
 void ShieldedSoldier::render(sf::RenderWindow& w, const Camera& cam) {
 	drawEnemy(w, cam, false); // the knight picture faces right (shield in front)
+	if (sparkFrames > 0) {
+		sparkFrames--;
+		CircleShape spark(5.f + sparkFrames * 1.5f);
+		spark.setOrigin(spark.getRadius(), spark.getRadius());
+		spark.setFillColor(Color(255, 255, 200, 230));
+		spark.setOutlineColor(Color(255, 200, 60, 200));
+		spark.setOutlineThickness(2);
+		spark.setPosition(cam.toScreenX(sparkX), cam.toScreenY(sparkY));
+		w.draw(spark);
+	}
 }
 
 void BazookaSoldier::throwProjectile() {

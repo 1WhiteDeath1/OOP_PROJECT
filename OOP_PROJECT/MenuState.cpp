@@ -1,6 +1,7 @@
 #include "MenuState.h"
 #include "PlayState.h"
 #include "Score.h"
+#include "Aim.h"
 #include <string>
 
 MenuState::MenuState(GameStateManager& gsm) : gsManager(gsm) {}
@@ -31,10 +32,21 @@ void MenuState::enter() {
 	highScoreText.setOrigin(b.width / 2, 0);
 	highScoreText.setPosition(800, 790);
 
+	aimText.setFont(font);
+	aimText.setCharacterSize(26);
+	aimText.setFillColor(Color::White);
+	aimText.setOutlineColor(Color::Black);
+	aimText.setOutlineThickness(2);
+
 
 }
 
 void MenuState::handleInput() {
+	// Tab: aim with the arrow keys or with the mouse (can also be switched during the game)
+	bool tabKey = Keyboard::isKeyPressed(Keyboard::Tab);
+	if (tabKey && !tabHeld) Aim::mouseMode = !Aim::mouseMode;
+	tabHeld = tabKey;
+
 	if (!keyHeld) {
 		if (Keyboard::isKeyPressed(Keyboard::Up)) {
 			choice = choice <= 0 ? 0 : choice - 1;
@@ -78,5 +90,11 @@ void MenuState::render(RenderWindow& w) {
 	w.draw(survivalSprite);
 	w.draw(exitSprite);
 	w.draw(highScoreText);
+
+	aimText.setString(Aim::mouseMode ? "AIM: MOUSE   (Tab to change)" : "AIM: ARROW KEYS   (Tab to change)");
+	FloatRect ab = aimText.getLocalBounds();
+	aimText.setOrigin(ab.width / 2, 0);
+	aimText.setPosition(800, 845);
+	w.draw(aimText);
 
 }

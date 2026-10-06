@@ -13,6 +13,8 @@ class MenuState: public GameState
 	Texture survivalTex, exitTex;
 	Font font;
 	Text highScoreText;
+	Text aimText; // the aim option line
+	bool tabHeld = false;
 	Sprite survivalSprite, exitSprite;
 	
 	int choice = 0;  // 0=survival, 1=exit

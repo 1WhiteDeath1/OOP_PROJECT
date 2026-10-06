@@ -160,6 +160,8 @@ public:
 
 class ShieldedSoldier :public Enemy {
 	sf::Texture texture;
+	int sparkFrames = 0;       // frames left of the spark after the shield blocks a shot
+	float sparkX = 0, sparkY = 0;
 public:
 	ShieldedSoldier(float x, float y, float wd, float ht, float hp)
 		: Enemy(x, y, wd, ht, hp, 1, 10, 1, new RoamingAround()) { // type 1 = shield soldier

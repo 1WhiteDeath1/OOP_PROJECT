@@ -44,6 +44,10 @@ public:
 	void move(float dt, const World& w)override;
 	void update(float dt, const World& w)override;
 	void render(sf::RenderWindow& w, const Camera& cam)override;
+	void getGunPosition(float& gx, float& gy) const override {
+		Vehicle::getGunPosition(gx, gy);
+		gy = y + height / 2; // the guns are under the middle of the plane
+	}
 
 
 };

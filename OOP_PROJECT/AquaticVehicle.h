@@ -28,6 +28,10 @@ fitSprite();
 	void move(float dt, const World& w) override;
 	void update(float dt, const World& w) override;
 	void render(sf::RenderWindow& w, const Camera& cam) override;
+	void getGunPosition(float& gx, float& gy) const override {
+		Vehicle::getGunPosition(gx, gy);
+		gy = y + height / 2; // the gun is in the middle of the sub
+	}
 };
 
 class EnemySub :public AquaticVehicle {
@@ -37,6 +41,7 @@ public:
 		texture.loadFromFile("25I-0504_25I-0644_Assets/enemySub.png");
 		sprite.setTexture(texture);
 		fitSprite();
+		pictureFacesRight=false;
 	}
 	bool isEnemy() const override { return true; }
 	void setTarget(Soldier* s) override { playerToHit = s; }

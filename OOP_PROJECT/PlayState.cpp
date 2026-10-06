@@ -1,6 +1,7 @@
 #include "PlayState.h"
 #include "MenuState.h"
 #include "SoundManager.h"
+#include "Aim.h"
 #include <string>
 using namespace std;
 
@@ -29,6 +30,12 @@ void PlayState::enter() {
 	popupText.setFont(font);
 	popupText.setCharacterSize(24);
 	popupText.setOutlineThickness(2);
+
+	barText.setFont(font);
+	barText.setCharacterSize(20);
+	barText.setFillColor(Color::White);
+	barText.setOutlineColor(Color::Black);
+	barText.setOutlineThickness(2);
 
 	introText.setFont(font);
 	introText.setCharacterSize(56);
@@ -71,6 +78,11 @@ void PlayState::handleInput() {
 	bool muteKey = Keyboard::isKeyPressed(Keyboard::M);
 	if (muteKey && !muteHeld) SoundManager::toggleMute();
 	muteHeld = muteKey;
+
+	// Tab switches aiming between the arrow keys and the mouse
+	bool aimKey = Keyboard::isKeyPressed(Keyboard::Tab);
+	if (aimKey && !aimToggleHeld) Aim::mouseMode = !Aim::mouseMode;
+	aimToggleHeld = aimKey;
 }
 
 void PlayState::update(float frameTime) {
@@ -88,8 +100,9 @@ void PlayState::update(float frameTime) {
 	if (introTimer > 0) introTimer -= frameTime;
 	dayNight.update(frameTime);
 	score.update(frameTime);
+	barBlink += frameTime;
 	weather.update(frameTime);
-	player.handleInput(frameTime, world, entityManager);
+	player.handleInput(frameTime, world, entityManager, camera);
 	entityManager.update(frameTime, world);
 	levelManager.update(frameTime, player.getActive()->getX(), world, entityManager); // enemy waves
 
@@ -156,7 +169,11 @@ void PlayState::update(float frameTime) {
 	FloatRect sb = scoreText.getLocalBounds();
 	scoreText.setPosition(Camera::screenW - sb.width - 30, 60);
 
-	hud += "\nA/D move  W jump  Space fire  Up/Down aim  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit  P pause  M mute  Esc menu";
+	hud += Aim::mouseMode ? "   Aim: MOUSE" : "   Aim: ARROWS";
+	if (Aim::mouseMode)
+		hud += "\nA/D move  W jump  Mouse aim  Click/Space fire  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit  Tab arrow aim  P pause  M mute  Esc menu";
+	else
+		hud += "\nA/D move  W jump  Space fire  Up/Down aim  Left/Right turn  T grenade  R knife  Q power up  Z switch  E enter vehicle  U exit  Tab mouse aim  P pause  M mute  Esc menu";
 	hudText.setString(hud);
 }
 
@@ -182,6 +199,47 @@ void PlayState::drawGoalFlag(RenderWindow& w) {
 	w.draw(flag);
 }
 
+// one bar in the top right under the score: dark back, coloured part for the hp left, "label hp/max" on it
+void PlayState::drawBar(RenderWindow& w, float y, const std::string& label, int hp, int maxHp, Color full) {
+	const float barW = 320, barH = 26;
+	float x = Camera::screenW - barW - 30;
+	float part = maxHp > 0 ? (float)hp / maxHp : 0;
+	if (part < 0) part = 0;
+	if (part > 1) part = 1;
+
+	RectangleShape back(Vector2f(barW + 4, barH + 4));
+	back.setPosition(x - 2, y - 2);
+	back.setFillColor(Color(0, 0, 0, 180));
+	back.setOutlineColor(Color(255, 255, 255, 200));
+	back.setOutlineThickness(1);
+	w.draw(back);
+
+	// the colour goes yellow under half and red under a quarter (and blinks when almost dead)
+	Color c = full;
+	if (part < 0.25f) c = Color(220, 40, 30);
+	else if (part < 0.5f) c = Color(240, 200, 40);
+	if (part < 0.25f && (int)(barBlink * 4) % 2 == 0) c = Color(255, 120, 100);
+	RectangleShape bar(Vector2f(barW * part, barH));
+	bar.setPosition(x, y);
+	bar.setFillColor(c);
+	w.draw(bar);
+
+	barText.setString(label + "  " + to_string(hp) + " / " + to_string(maxHp));
+	FloatRect tb = barText.getLocalBounds();
+	barText.setOrigin(tb.left + tb.width / 2, tb.top + tb.height / 2);
+	barText.setPosition(x + barW / 2, y + barH / 2);
+	w.draw(barText);
+}
+
+void PlayState::drawHealthBars(RenderWindow& w) {
+	PlayerSoldier* s = player.getActive();
+	if (!s) return;
+	drawBar(w, 112, s->getName(), s->getHp(), s->getMaXHp(), Color(60, 200, 70));
+	// while driving, the vehicle takes the hits, so show its health too
+	if (player.isPiloting())
+		drawBar(w, 148, "VEHICLE", player.getVehicle()->getHp(), player.getVehicle()->getMaXHp(), Color(70, 150, 230));
+}
+
 void PlayState::render(RenderWindow& w) {
 	RectangleShape sky(Vector2f((float)Camera::screenW, (float)Camera::screenH));
 	// clouds: pull the sky colour towards grey (its own average), works for both day and night
@@ -205,9 +263,13 @@ void PlayState::render(RenderWindow& w) {
 	night.setFillColor(dayNight.getNightOverlay());
 	w.draw(night);
 
+	// where the next shot will go, drawn over the night layer so it can always be seen
+	if (endTimer <= 0) player.renderAim(w, camera, world);
+
 	score.renderPopups(w, camera, popupText);
 	w.draw(hudText);
 	w.draw(scoreText);
+	drawHealthBars(w);
 
 	// boss health bar across the top
 	const Enemy* boss = entityManager.getBoss();

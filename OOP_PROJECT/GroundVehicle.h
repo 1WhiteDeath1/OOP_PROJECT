@@ -20,6 +20,7 @@ public:
 	texture.loadFromFile("25I-0504_25I-0644_Assets/M15Bradley.png");
 	sprite.setTexture(texture);
 	fitSprite();
+	pictureFacesRight=false;
 	}
 	void attack() override;
 	void move(float dt, const World& w) override;

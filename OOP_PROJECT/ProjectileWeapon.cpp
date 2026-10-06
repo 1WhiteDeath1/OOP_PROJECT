@@ -1,4 +1,5 @@
 #include "ProjectileWeapon.h"
+#include <cmath>
 
 
 const float ProjectileWeapon::sin_values[91] = {
@@ -189,15 +190,37 @@ const float ProjectileWeapon::cos_values[91] = {
      0.7071f  // 45
 };
 
+void ProjectileWeapon::lookUp(float deg, float& s, float& c) {
+    // the tables have whole degrees, so go part of the way to the next one (0.5 degrees = half way)
+    int i = (int)std::floor(deg);
+    if (i < -45) i = -45;
+    if (i > 44) i = 44;
+    float part = deg - i;
+    if (part < 0) part = 0;
+    if (part > 1) part = 1;
+    s = sin_values[i + 45] + (sin_values[i + 46] - sin_values[i + 45]) * part;
+    c = cos_values[i + 45] + (cos_values[i + 46] - cos_values[i + 45]) * part;
+}
+
 void ProjectileWeapon::getDirection(float a, bool facingRight, float& x, float& y) {
-    int angle = (int)a;
+    // the aim goes from -90 (straight down) to 90 (straight up) in front of the soldier, so together with
+    // the facing it covers the full circle. past 90 it comes down behind: same as facing the other way
+    if (a > 90) { a = 180 - a; facingRight = !facingRight; }
+    if (a < -90) { a = -180 - a; facingRight = !facingRight; }
 
-    if (angle < -45) angle = -45;
-    if (angle > 45) angle = 45;
-
-    int index = angle + 45;
-    float sinVal = sin_values[index];
-    float cosVal = cos_values[index];
+    // the tables only go to 45 degrees, past that: sin(a) = cos(90 - a) and cos(a) = sin(90 - a)
+    float sinVal, cosVal;
+    if (a > 45) {
+        lookUp(90 - a, cosVal, sinVal);
+    }
+    else if (a < -45) {
+        lookUp(-90 - a, cosVal, sinVal); // sin(a) = -cos(-90 - a), cos(a) = -sin(-90 - a)
+        sinVal = -sinVal;
+        cosVal = -cosVal;
+    }
+    else {
+        lookUp(a, sinVal, cosVal);
+    }
 
     x = facingRight ? cosVal : -cosVal;
     y = -sinVal;

@@ -30,9 +30,14 @@ public:
 		// the vehicle belongs to the EntityManager, it deletes it
 	}
 
-	void handleInput(float frameTime, const World& w, EntityManager& eManager);
+	void handleInput(float frameTime, const World& w, EntityManager& eManager, const Camera& cam);
 	void update(float frameTime, const World& w);
 	void render(RenderWindow& windowm, const Camera& cam);
+
+	// aiming
+	void aimWithMouse(const Camera& cam);
+	void getGunPosition(float& gx, float& gy) const; // where the next shot comes out (soldier or vehicle gun)
+	void renderAim(RenderWindow& window, const Camera& cam, const World& w) const; // the dotted line where the shot will go
 
 	void switchCharacter();
 	void mountVehicle(Vehicle* v);

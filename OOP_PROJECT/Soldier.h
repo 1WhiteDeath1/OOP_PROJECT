@@ -24,6 +24,7 @@ protected:
 	float jumpStrength = 700;
 
 	bool meleeActive = false;
+	bool mouseAiming = false; // while the mouse aims, it decides which way the soldier faces (not the movement keys)
 public:
 	Soldier(float x, float y, float w, float h, int hp);
 	virtual ~Soldier();
@@ -44,7 +45,17 @@ public:
 	}
 
 	void setFacing(bool right) {
+		if (!mouseAiming) facingRight = right;
+	}
+
+	// used by the mouse aim: face that way and point the gun at that angle, -90 (down) to 90 (up),
+	// so with the facing the mouse can aim all the way round (the arrow keys stay within +-45)
+	void setMouseAiming(bool on) { mouseAiming = on; }
+	void aimAt(bool right, float angle) {
 		facingRight = right;
+		if (angle > 90) angle = 90;
+		if (angle < -90) angle = -90;
+		aimAngle = angle;
 	}
 
 	Projectile* fireWeapon();

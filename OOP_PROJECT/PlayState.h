@@ -33,11 +33,14 @@ class PlayState : public GameState {
 	float introTimer = 3; // the mission title shows for the first 3 seconds
 	bool missionDone = false; // the end timer leads to the next mission instead of the menu
 	Text introText;
+	Text barText;      // the numbers on the health bars
+	float barBlink = 0; // clock for the low health blink
 	bool paused = false;
 	int lastHp = -1; // to notice when the player gets hit
 	float lookAhead = 0; // how far the camera looks ahead of the player (eases towards +-250)
 	bool pauseHeld = false; // so holding P doesn't flip pause on and off every frame
 	bool muteHeld = false;
+	bool aimToggleHeld = false; // same for Tab (mouse aim on / off)
 public:
 	// the score is carried over from the mission before
 	PlayState(GameStateManager& gsm, int mission = 1, int startScore = 0)
@@ -51,4 +54,6 @@ public:
 	void update(float dt)  override;
 	void render(RenderWindow& w) override;
 	void drawGoalFlag(RenderWindow& w);
+	void drawBar(RenderWindow& w, float y, const std::string& label, int hp, int maxHp, Color full);
+	void drawHealthBars(RenderWindow& w);
 };

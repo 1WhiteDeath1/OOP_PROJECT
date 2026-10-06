@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "MenuState.h"
+#include "Aim.h"
 using namespace sf;
 
 Game::Game() : window(VideoMode(1600, 900), "Metal Slug", Style::Close) {
@@ -23,6 +24,11 @@ void Game::run() {
 			window.close();
 			break;
 		}
+
+		// the mouse position for aiming, turned into game pixels (in case the window is shown at another size)
+		Vector2f m = window.mapPixelToCoords(Mouse::getPosition(window));
+		Aim::mouse = Vector2i((int)m.x, (int)m.y);
+		Aim::focused = window.hasFocus();
 
 		stateManager.handleInput();
 		stateManager.update(frameTime);

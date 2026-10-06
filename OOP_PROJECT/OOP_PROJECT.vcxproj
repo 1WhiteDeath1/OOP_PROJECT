@@ -173,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AerialVehicle.h" />
+    <ClInclude Include="Aim.h" />
     <ClInclude Include="AquaticVehicle.h" />
     <ClInclude Include="BallisticProjectile.h" />
     <ClInclude Include="Boss.h" />
